@@ -8,15 +8,18 @@ interface CategoryBadgeProps {
   icon: keyof typeof Ionicons.glyphMap;
   label: string;
   color?: string;
+  fixedColors?: boolean; // Pour forcer des couleurs fixes indépendamment du thème
 }
 
 const CategoryBadge: React.FC<CategoryBadgeProps> = ({
   icon,
   label,
   color,
+  fixedColors = false,
 }) => {
   const { colors } = useTheme();
-  const badgeColor = color || colors.primary;
+  // Si fixedColors est true, on utilise la couleur fournie ou une couleur fixe
+  const badgeColor = fixedColors ? (color || '#38BDF8') : (color || colors.primary);
   return (
     <View style={[styles.container, { backgroundColor: badgeColor + '20' }]}>
       <Ionicons name={icon} size={16} color={badgeColor} />

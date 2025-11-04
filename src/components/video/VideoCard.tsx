@@ -27,7 +27,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onPress }) => {
   const { colors } = useTheme();
   return (
     <TouchableWithoutFeedback onPress={onPress}>
-      <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <View style={styles.container}>
         {/* Background Image/Thumbnail */}
         <Image source={{ uri: video.thumbnail }} style={styles.thumbnail} />
 
@@ -45,8 +45,12 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onPress }) => {
             icon={video.category.icon as any}
             label={video.category.name}
             color={video.category.color}
+            fixedColors={true}
           />
-          <DurationBadge duration={video.duration} />
+          <DurationBadge 
+            duration={video.duration} 
+            fixedColors={true}
+          />
         </View>
 
         {/* Bottom Section - Main Info */}
@@ -57,17 +61,17 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onPress }) => {
               source={{ uri: video.creator.avatar }}
               style={styles.avatar}
             />
-            <Text style={[styles.creatorName, { color: colors.textPrimary }]}>{video.creator.name}</Text>
+            <Text style={styles.creatorName}>{video.creator.name}</Text>
             {video.creator.verified && (
-              <Text style={[styles.verified, { color: colors.primary }]}>✓</Text>
+              <Text style={styles.verified}>✓</Text>
             )}
           </View>
 
           {/* Title */}
-          <Text style={[styles.title, { color: colors.textPrimary }]}>{video.title}</Text>
+          <Text style={styles.title}>{video.title}</Text>
 
           {/* Description */}
-          <Text style={[styles.description, { color: colors.textSecondary }]} numberOfLines={2}>
+          <Text style={styles.description} numberOfLines={2}>
             {video.description}
           </Text>
 
@@ -85,6 +89,7 @@ const styles = StyleSheet.create({
   container: {
     width,
     height,
+    backgroundColor: '#0A0F1E', // Fond sombre fixe pour les vidéos
   },
   thumbnail: {
     width: '100%',
@@ -133,22 +138,26 @@ const styles = StyleSheet.create({
     fontSize: FONTS.sizes.md,
     fontWeight: FONTS.weights.semiBold,
     marginLeft: SPACING.md,
+    color: '#FFFFFF', // Texte blanc fixe
   },
   verified: {
     fontSize: FONTS.sizes.md,
     marginLeft: SPACING.xs,
+    color: '#38BDF8', // Couleur primaire fixe
   },
   title: {
     fontSize: FONTS.sizes.xxxl,
     fontWeight: FONTS.weights.bold,
     lineHeight: 38,
     marginBottom: SPACING.md,
+    color: '#FFFFFF', // Texte blanc fixe
   },
   description: {
     fontSize: FONTS.sizes.md,
     fontWeight: FONTS.weights.regular,
     lineHeight: 22,
     marginBottom: SPACING.lg,
+    color: '#CBD5E1', // Texte secondaire fixe
   },
   matchContainer: {
     alignSelf: 'flex-start',

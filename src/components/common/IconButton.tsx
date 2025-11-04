@@ -18,6 +18,7 @@ interface IconButtonProps {
   active?: boolean;
   size?: keyof typeof ICON_SIZES;
   style?: ViewStyle;
+  fixedColors?: boolean; // Pour forcer des couleurs fixes indépendamment du thème
 }
 
 const IconButton: React.FC<IconButtonProps> = ({
@@ -28,6 +29,7 @@ const IconButton: React.FC<IconButtonProps> = ({
   active = false,
   size = 'md',
   style,
+  fixedColors = false,
 }) => {
   const { colors } = useTheme();
   const iconSize = ICON_SIZES[size];
@@ -42,13 +44,15 @@ const IconButton: React.FC<IconButtonProps> = ({
         <Ionicons
           name={icon}
           size={iconSize}
-          color={active ? colors.primary : colors.textPrimary}
+          color={active 
+            ? (fixedColors ? '#38BDF8' : colors.primary) 
+            : (fixedColors ? '#FFFFFF' : colors.textPrimary)}
         />
         {count !== undefined && count > 0 && (
-          <Text style={[styles.count, { color: colors.textPrimary }]}>{formatCount(count)}</Text>
+          <Text style={[styles.count, { color: fixedColors ? '#FFFFFF' : colors.textPrimary }]}>{formatCount(count)}</Text>
         )}
       </View>
-      {label && <Text style={[styles.label, { color: colors.textPrimary }]}>{label}</Text>}
+      {label && <Text style={[styles.label, { color: fixedColors ? '#FFFFFF' : colors.textPrimary }]}>{label}</Text>}
     </TouchableOpacity>
   );
 };

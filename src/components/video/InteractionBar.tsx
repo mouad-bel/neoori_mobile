@@ -57,6 +57,7 @@ const InteractionBar: React.FC<InteractionBarProps> = ({ video }) => {
         count={video.engagement.likes}
         active={liked}
         size="lg"
+        fixedColors={true}
       />
       <View style={{ marginTop: SPACING.sm }} />
       <IconButton
@@ -64,6 +65,7 @@ const InteractionBar: React.FC<InteractionBarProps> = ({ video }) => {
         onPress={handleComment}
         count={video.engagement.comments}
         size="lg"
+        fixedColors={true}
       />
       <View style={{ marginTop: SPACING.sm }} />
       <IconButton
@@ -71,6 +73,7 @@ const InteractionBar: React.FC<InteractionBarProps> = ({ video }) => {
         onPress={handleShare}
         count={video.engagement.shares}
         size="lg"
+        fixedColors={true}
       />
       <View style={{ marginTop: SPACING.sm }} />
       <IconButton
@@ -78,6 +81,7 @@ const InteractionBar: React.FC<InteractionBarProps> = ({ video }) => {
         onPress={handleBookmark}
         active={bookmarked}
         size="lg"
+        fixedColors={true}
       />
       <View style={styles.spacer} />
       <IconButton
@@ -86,6 +90,7 @@ const InteractionBar: React.FC<InteractionBarProps> = ({ video }) => {
         active={true}
         size="lg"
         style={styles.aiButton}
+        fixedColors={true}
       />
     </View>
   );
