@@ -69,10 +69,6 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onPress }) => {
             {video.description}
           </Text>
 
-          {/* Match Badge */}
-          <View style={styles.matchContainer}>
-            <MatchBadge percentage={video.matchPercentage} />
-          </View>
         </View>
         </View>
 

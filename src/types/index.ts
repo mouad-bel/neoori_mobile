@@ -89,6 +89,7 @@ export type MainDrawerParamList = {
   Formations: undefined;
   Offres: undefined;
   About: undefined;
+  AccessibilityDemo: undefined;
 };
 
 export type RouteConfig = {

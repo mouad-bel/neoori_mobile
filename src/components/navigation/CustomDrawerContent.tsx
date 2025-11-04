@@ -11,11 +11,14 @@ import {
 } from '@react-navigation/drawer';
 import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../../store/AuthContext';
-import { COLORS, FONTS, SPACING, BORDER_RADIUS } from '../../constants/theme';
+import { useTheme } from '../../store/ThemeContext';
+import { FONTS, SPACING, BORDER_RADIUS } from '../../constants/theme';
+import ThemeToggle from '../ui/ThemeToggle';
 import { DRAWER_ROUTES } from '../../constants/routes';
 
 const CustomDrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
   const { logout } = useAuth();
+  const { colors } = useTheme();
 
   const handleLogout = async () => {
     try {
@@ -34,21 +37,26 @@ const CustomDrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
     return (
       <View key={route.name}>
         {showSectionHeader && route.section && (
-          <Text style={styles.sectionHeader}>{route.section}</Text>
+          <Text style={[styles.sectionHeader, { color: colors.textSecondary }]}>
+            {route.section}
+          </Text>
         )}
         <TouchableOpacity
           style={[styles.menuItem, isActive && styles.menuItemActive]}
           onPress={() => props.navigation.navigate(route.name)}
+          accessibilityRole="button"
+          accessibilityLabel={route.label}
         >
           <Ionicons
             name={route.icon as any}
             size={24}
-            color={isActive ? COLORS.primary : COLORS.textSecondary}
+            color={isActive ? colors.primary : colors.textSecondary}
           />
           <Text
             style={[
               styles.menuLabel,
-              isActive && styles.menuLabelActive,
+              { color: colors.textSecondary },
+              isActive && { color: colors.primary, fontWeight: '600' },
             ]}
           >
             {route.label}
@@ -59,7 +67,7 @@ const CustomDrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
   };
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <DrawerContentScrollView
         {...props}
       >
@@ -69,11 +77,21 @@ const CustomDrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
         </View>
       </DrawerContentScrollView>
 
-      {/* Logout Button */}
-      <View style={styles.footer}>
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Ionicons name="log-out-outline" size={24} color={COLORS.error} />
-          <Text style={styles.logoutText}>Déconnexion</Text>
+      {/* Settings and Logout */}
+      <View style={[styles.footer, { borderTopColor: colors.cardBackground }]}>
+        <View style={styles.settingsRow}>
+          <Text style={[styles.settingsLabel, { color: colors.textSecondary }]}>Thème</Text>
+          <ThemeToggle />
+        </View>
+        
+        <TouchableOpacity 
+          style={styles.logoutButton} 
+          onPress={handleLogout}
+          accessibilityLabel="Se déconnecter"
+          accessibilityRole="button"
+        >
+          <Ionicons name="log-out-outline" size={24} color={colors.error} />
+          <Text style={[styles.logoutText, { color: colors.error }]}>Déconnexion</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -83,7 +101,6 @@ const CustomDrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
   },
   scrollContent: {
     paddingTop: SPACING.md,
@@ -94,7 +111,6 @@ const styles = StyleSheet.create({
   sectionHeader: {
     fontSize: FONTS.sizes.xs,
     fontWeight: '600',
-    color: COLORS.textSecondary,
     paddingHorizontal: SPACING.lg,
     paddingVertical: SPACING.md,
     marginTop: SPACING.md,
@@ -108,22 +124,27 @@ const styles = StyleSheet.create({
     borderRadius: BORDER_RADIUS.sm,
   },
   menuItemActive: {
-    backgroundColor: COLORS.primary + '20',
+    backgroundColor: 'rgba(56, 189, 248, 0.2)', // Bleu avec transparence
   },
   menuLabel: {
     fontSize: FONTS.sizes.md,
-    color: COLORS.textSecondary,
     marginLeft: SPACING.md,
     fontWeight: '500',
-  },
-  menuLabelActive: {
-    color: COLORS.primary,
-    fontWeight: '600',
   },
   footer: {
     padding: SPACING.lg,
     borderTopWidth: 1,
-    borderTopColor: COLORS.cardBackground,
+  },
+  settingsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    paddingVertical: SPACING.md,
+    marginBottom: SPACING.md,
+  },
+  settingsLabel: {
+    fontSize: FONTS.sizes.md,
+    fontWeight: '500',
   },
   logoutButton: {
     flexDirection: 'row',
@@ -132,7 +153,6 @@ const styles = StyleSheet.create({
   },
   logoutText: {
     fontSize: FONTS.sizes.md,
-    color: COLORS.error,
     marginLeft: SPACING.md,
     fontWeight: '500',
   },

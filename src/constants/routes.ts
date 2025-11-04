@@ -46,5 +46,11 @@ export const DRAWER_ROUTES: RouteConfig[] = [
     label: 'À propos',
     section: 'SUPPORT & RESSOURCES',
   },
+  {
+    name: 'AccessibilityDemo',
+    icon: 'color-palette',
+    label: 'Accessibilité',
+    section: 'SUPPORT & RESSOURCES',
+  },
 ];
 

@@ -1,7 +1,7 @@
 import React from 'react';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import { MainDrawerParamList } from '../types';
-import { COLORS } from '../constants/theme';
+import { useTheme } from '../store/ThemeContext';
 
 // Screens
 import FlowScreen from '../screens/FlowScreen';
@@ -11,6 +11,7 @@ import CapsulesScreen from '../screens/CapsulesScreen';
 import FormationsScreen from '../screens/FormationsScreen';
 import OffresScreen from '../screens/OffresScreen';
 import AboutScreen from '../screens/AboutScreen';
+import AccessibilityDemoScreen from '../screens/AccessibilityDemoScreen';
 
 // Components
 import CustomDrawerContent from '../components/navigation/CustomDrawerContent';
@@ -19,13 +20,15 @@ import CustomHeader from '../components/navigation/CustomHeader';
 const Drawer = createDrawerNavigator<MainDrawerParamList>();
 
 const DrawerNavigator = () => {
+  const { colors } = useTheme();
+  
   return (
     <Drawer.Navigator
       initialRouteName="Flow"
       drawerContent={(props) => <CustomDrawerContent {...props} />}
       screenOptions={{
         drawerStyle: {
-          backgroundColor: COLORS.background,
+          backgroundColor: colors.background,
           width: 280,
         },
       }}
@@ -65,6 +68,11 @@ const DrawerNavigator = () => {
       <Drawer.Screen
         name="About"
         component={AboutScreen}
+        options={{ headerShown: false }}
+      />
+      <Drawer.Screen
+        name="AccessibilityDemo"
+        component={AccessibilityDemoScreen}
         options={{ headerShown: false }}
       />
     </Drawer.Navigator>
