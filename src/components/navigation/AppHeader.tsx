@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { COLORS, FONTS, SPACING, BORDER_RADIUS } from '../../constants/theme';
+import { FONTS, SPACING, BORDER_RADIUS } from '../../constants/theme';
+import { useTheme } from '../../store/ThemeContext';
 
 interface AppHeaderProps {
   onMenuPress?: () => void;
@@ -22,34 +23,54 @@ const AppHeader: React.FC<AppHeaderProps> = ({
   transparent = false,
   style = {},
 }) => {
+  const { colors } = useTheme();
   return (
     <View style={[
       styles.container, 
-      transparent ? styles.transparentBg : styles.solidBg,
+      transparent ? 
+        { backgroundColor: 'rgba(10, 15, 30, 0.9)' } : 
+        { 
+          backgroundColor: colors.background,
+          borderBottomWidth: 1,
+          borderBottomColor: colors.cardBackground 
+        },
       style
     ]}>
       <View style={styles.leftSection}>
         {onMenuPress && (
-          <TouchableOpacity onPress={onMenuPress} style={styles.menuButton}>
-            <Ionicons name="menu" size={28} color={COLORS.textPrimary} />
+          <TouchableOpacity 
+            onPress={onMenuPress} 
+            style={styles.menuButton}
+            accessibilityRole="button"
+            accessibilityLabel="Menu"
+          >
+            <Ionicons name="menu" size={28} color={colors.textPrimary} />
           </TouchableOpacity>
         )}
         {showLogo && (
           <View style={styles.logoContainer}>
-            <Text style={styles.logoTitle}>{title}</Text>
+            <Text style={[styles.logoTitle, { color: colors.textPrimary }]}>{title}</Text>
           </View>
         )}
       </View>
 
       <View style={styles.rightSection}>
         {showNotifications && (
-          <TouchableOpacity style={styles.iconButton}>
-            <Ionicons name="notifications-outline" size={24} color={COLORS.textPrimary} />
+          <TouchableOpacity 
+            style={styles.iconButton}
+            accessibilityRole="button"
+            accessibilityLabel="Notifications"
+          >
+            <Ionicons name="notifications-outline" size={24} color={colors.textPrimary} />
           </TouchableOpacity>
         )}
         {showChat && (
-          <TouchableOpacity style={styles.iconButton}>
-            <Ionicons name="chatbubble-outline" size={24} color={COLORS.textPrimary} />
+          <TouchableOpacity 
+            style={styles.iconButton}
+            accessibilityRole="button"
+            accessibilityLabel="Messages"
+          >
+            <Ionicons name="chatbubble-outline" size={24} color={colors.textPrimary} />
           </TouchableOpacity>
         )}
       </View>
@@ -71,14 +92,7 @@ const styles = StyleSheet.create({
     paddingTop: 50,
     zIndex: 100,
   },
-  transparentBg: {
-    backgroundColor: 'rgba(10, 15, 30, 0.9)',
-  },
-  solidBg: {
-    backgroundColor: COLORS.background,
-    borderBottomWidth: 1,
-    borderBottomColor: COLORS.cardBackground,
-  },
+  // Styles de fond gérés dynamiquement dans le composant
   leftSection: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -94,19 +108,16 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: BORDER_RADIUS.sm,
-    backgroundColor: COLORS.primary,
     alignItems: 'center',
     justifyContent: 'center',
   },
   logoText: {
     fontSize: 20,
     fontWeight: '700',
-    color: COLORS.background,
   },
   logoTitle: {
     fontSize: FONTS.sizes.xl,
     fontWeight: '700',
-    color: COLORS.textPrimary,
     marginLeft: SPACING.md,
   },
   rightSection: {

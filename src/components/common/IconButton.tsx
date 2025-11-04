@@ -7,7 +7,8 @@ import {
   ViewStyle,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { COLORS, FONTS, SPACING, ICON_SIZES } from '../../constants/theme';
+import { FONTS, SPACING, ICON_SIZES } from '../../constants/theme';
+import { useTheme } from '../../store/ThemeContext';
 
 interface IconButtonProps {
   icon: keyof typeof Ionicons.glyphMap;
@@ -28,6 +29,7 @@ const IconButton: React.FC<IconButtonProps> = ({
   size = 'md',
   style,
 }) => {
+  const { colors } = useTheme();
   const iconSize = ICON_SIZES[size];
 
   return (
@@ -40,13 +42,13 @@ const IconButton: React.FC<IconButtonProps> = ({
         <Ionicons
           name={icon}
           size={iconSize}
-          color={active ? COLORS.primary : COLORS.textPrimary}
+          color={active ? colors.primary : colors.textPrimary}
         />
         {count !== undefined && count > 0 && (
-          <Text style={styles.count}>{formatCount(count)}</Text>
+          <Text style={[styles.count, { color: colors.textPrimary }]}>{formatCount(count)}</Text>
         )}
       </View>
-      {label && <Text style={styles.label}>{label}</Text>}
+      {label && <Text style={[styles.label, { color: colors.textPrimary }]}>{label}</Text>}
     </TouchableOpacity>
   );
 };
@@ -73,16 +75,14 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: COLORS.semiTransparent,
+    backgroundColor: 'rgba(30, 41, 59, 0.8)', // Couleur semi-transparente fixe
   },
   count: {
-    color: COLORS.textPrimary,
     fontSize: FONTS.sizes.xs,
     fontWeight: FONTS.weights.semiBold,
     marginTop: SPACING.xs,
   },
   label: {
-    color: COLORS.textPrimary,
     fontSize: FONTS.sizes.xs,
     fontWeight: FONTS.weights.regular,
     marginTop: SPACING.xs,

@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { COLORS, FONTS, SPACING, BORDER_RADIUS } from '../../constants/theme';
+import { FONTS, SPACING, BORDER_RADIUS } from '../../constants/theme';
+import { useTheme } from '../../store/ThemeContext';
 
 interface CategoryBadgeProps {
   icon: keyof typeof Ionicons.glyphMap;
@@ -12,12 +13,14 @@ interface CategoryBadgeProps {
 const CategoryBadge: React.FC<CategoryBadgeProps> = ({
   icon,
   label,
-  color = COLORS.primary,
+  color,
 }) => {
+  const { colors } = useTheme();
+  const badgeColor = color || colors.primary;
   return (
-    <View style={[styles.container, { backgroundColor: color + '20' }]}>
-      <Ionicons name={icon} size={16} color={color} />
-      <Text style={[styles.label, { color }]}>{label}</Text>
+    <View style={[styles.container, { backgroundColor: badgeColor + '20' }]}>
+      <Ionicons name={icon} size={16} color={badgeColor} />
+      <Text style={[styles.label, { color: badgeColor }]}>{label}</Text>
     </View>
   );
 };

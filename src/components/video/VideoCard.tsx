@@ -8,7 +8,8 @@ import {
   TouchableWithoutFeedback,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { COLORS, FONTS, SPACING } from '../../constants/theme';
+import { FONTS, SPACING } from '../../constants/theme';
+import { useTheme } from '../../store/ThemeContext';
 import { VideoContent } from '../../types';
 import CategoryBadge from '../common/CategoryBadge';
 import MatchBadge from '../common/MatchBadge';
@@ -23,9 +24,10 @@ interface VideoCardProps {
 }
 
 const VideoCard: React.FC<VideoCardProps> = ({ video, onPress }) => {
+  const { colors } = useTheme();
   return (
     <TouchableWithoutFeedback onPress={onPress}>
-      <View style={styles.container}>
+      <View style={[styles.container, { backgroundColor: colors.background }]}>
         {/* Background Image/Thumbnail */}
         <Image source={{ uri: video.thumbnail }} style={styles.thumbnail} />
 
@@ -55,17 +57,17 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onPress }) => {
               source={{ uri: video.creator.avatar }}
               style={styles.avatar}
             />
-            <Text style={styles.creatorName}>{video.creator.name}</Text>
+            <Text style={[styles.creatorName, { color: colors.textPrimary }]}>{video.creator.name}</Text>
             {video.creator.verified && (
-              <Text style={styles.verified}>✓</Text>
+              <Text style={[styles.verified, { color: colors.primary }]}>✓</Text>
             )}
           </View>
 
           {/* Title */}
-          <Text style={styles.title}>{video.title}</Text>
+          <Text style={[styles.title, { color: colors.textPrimary }]}>{video.title}</Text>
 
           {/* Description */}
-          <Text style={styles.description} numberOfLines={2}>
+          <Text style={[styles.description, { color: colors.textSecondary }]} numberOfLines={2}>
             {video.description}
           </Text>
 
@@ -83,7 +85,6 @@ const styles = StyleSheet.create({
   container: {
     width,
     height,
-    backgroundColor: COLORS.background,
   },
   thumbnail: {
     width: '100%',
@@ -126,28 +127,24 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     borderWidth: 2,
-    borderColor: COLORS.primary,
+    borderColor: '#22D3EE', // Couleur primaire fixe
   },
   creatorName: {
-    color: COLORS.textPrimary,
     fontSize: FONTS.sizes.md,
     fontWeight: FONTS.weights.semiBold,
     marginLeft: SPACING.md,
   },
   verified: {
-    color: COLORS.primary,
     fontSize: FONTS.sizes.md,
     marginLeft: SPACING.xs,
   },
   title: {
-    color: COLORS.textPrimary,
     fontSize: FONTS.sizes.xxxl,
     fontWeight: FONTS.weights.bold,
     lineHeight: 38,
     marginBottom: SPACING.md,
   },
   description: {
-    color: COLORS.textSecondary,
     fontSize: FONTS.sizes.md,
     fontWeight: FONTS.weights.regular,
     lineHeight: 22,

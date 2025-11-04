@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
-import { SPACING, COLORS } from '../../constants/theme';
+import { SPACING } from '../../constants/theme';
+import { useTheme } from '../../store/ThemeContext';
 import IconButton from '../common/IconButton';
 import { VideoContent } from '../../types';
 import { useVideo } from '../../store/VideoContext';
@@ -10,6 +11,7 @@ interface InteractionBarProps {
 }
 
 const InteractionBar: React.FC<InteractionBarProps> = ({ video }) => {
+  const { colors } = useTheme();
   const {
     toggleLike,
     toggleBookmark,
@@ -100,7 +102,7 @@ const styles = StyleSheet.create({
     height: SPACING.lg,
   },
   aiButton: {
-    backgroundColor: COLORS.primary + '30',
+    backgroundColor: 'rgba(56, 189, 248, 0.2)', // Couleur primaire semi-transparente fixe
     borderRadius: 24,
   },
 });

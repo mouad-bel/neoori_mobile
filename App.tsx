@@ -1,9 +1,8 @@
 import React from 'react';
-import { StatusBar } from 'expo-status-bar';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { NavigationContainer } from '@react-navigation/native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import { StyleSheet, useColorScheme } from 'react-native';
+import { StyleSheet } from 'react-native';
 
 // Providers
 import { AuthProvider } from './src/store/AuthContext';
@@ -13,10 +12,10 @@ import { ThemeProvider } from './src/store/ThemeContext';
 // Navigation
 import RootNavigator from './src/navigation/RootNavigator';
 
-// Theme
-import { COLORS } from './src/constants/theme';
-import { useTheme } from './src/store/ThemeContext';
+// Components
+import StatusBarManager from './src/components/ui/StatusBarManager';
 
+// Nous ne pouvons pas utiliser useTheme ici car il doit être utilisé à l'intérieur du ThemeProvider
 export default function App() {
   return (
     <GestureHandlerRootView style={styles.container}>
@@ -25,7 +24,7 @@ export default function App() {
           <AuthProvider>
             <VideoProvider>
               <NavigationContainer>
-                <StatusBar style="light" />
+                <StatusBarManager />
                 <RootNavigator />
               </NavigationContainer>
             </VideoProvider>
