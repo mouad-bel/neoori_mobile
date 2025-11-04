@@ -64,7 +64,7 @@ const FlowScreen = () => {
         windowSize={5}
         removeClippedSubviews={true}
       />
-      {showHeader && <AppHeader onMenuPress={() => navigation.openDrawer()} transparent={true} />}
+      {showHeader && <AppHeader onMenuPress={() => navigation.openDrawer()} />}
     </View>
   );
 };
