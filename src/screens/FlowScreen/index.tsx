@@ -10,7 +10,7 @@ import { useNavigation } from '@react-navigation/native';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { useVideo } from '../../store/VideoContext';
 import VideoCard from '../../components/video/VideoCard';
-import FlowHeader from './FlowHeader';
+import AppHeader from '../../components/navigation/AppHeader';
 import { VideoContent, MainDrawerParamList } from '../../types';
 
 const { height } = Dimensions.get('window');
@@ -64,7 +64,7 @@ const FlowScreen = () => {
         windowSize={5}
         removeClippedSubviews={true}
       />
-      {showHeader && <FlowHeader onMenuPress={() => navigation.openDrawer()} />}
+      {showHeader && <AppHeader onMenuPress={() => navigation.openDrawer()} transparent={true} />}
     </View>
   );
 };

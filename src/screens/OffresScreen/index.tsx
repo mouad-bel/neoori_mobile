@@ -1,10 +1,18 @@
 import React from 'react';
 import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { COLORS, FONTS, SPACING } from '../../constants/theme';
+import AppHeader from '../../components/navigation/AppHeader';
+import { MainDrawerParamList } from '../../types';
 
 const OffresScreen = () => {
+  const navigation = useNavigation<DrawerNavigationProp<MainDrawerParamList>>();
+  
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
+      <AppHeader onMenuPress={() => navigation.openDrawer()} title="Offres d'emploi" />
+      <ScrollView style={styles.scrollContent}>
       <View style={styles.content}>
         <Text style={styles.title}>Offres d'emploi</Text>
         <Text style={styles.description}>
@@ -13,6 +21,7 @@ const OffresScreen = () => {
         <Text style={styles.comingSoon}>💼 Fonctionnalité à venir</Text>
       </View>
     </ScrollView>
+    </View>
   );
 };
 
@@ -20,6 +29,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.background,
+  },
+  scrollContent: {
+    flex: 1,
+    marginTop: 100, // Pour laisser de l'espace pour le header
   },
   content: {
     padding: SPACING.xxxl,
