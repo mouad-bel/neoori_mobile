@@ -1,7 +1,16 @@
-import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import React, { useState } from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity,
+  TextInput,
+  Image,
+} from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
+import { Ionicons } from '@expo/vector-icons';
 import { FONTS, SPACING, BORDER_RADIUS } from '../../constants/theme';
 import { useTheme } from '../../store/ThemeContext';
 import AppHeader from '../../components/navigation/AppHeader';
@@ -10,45 +19,453 @@ import { MainDrawerParamList } from '../../types';
 const AboutScreen = () => {
   const navigation = useNavigation<DrawerNavigationProp<MainDrawerParamList>>();
   const { colors } = useTheme();
-  
+  const [activeSection, setActiveSection] = useState('mission');
+  const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: '',
+  });
+
+  const faqs = [
+    {
+      question: "Qu'est-ce que Neoori ?",
+      answer:
+        "Neoori est une plateforme d'accompagnement professionnel qui aide chaque personne à découvrir son potentiel, développer ses compétences et trouver sa voie. Grâce à des jeux, tests, et un coach IA personnalisé, nous vous guidons vers les formations et opportunités qui vous correspondent vraiment.",
+    },
+    {
+      question: 'Comment fonctionne le système de crédits ?',
+      answer:
+        "Les crédits sont gagnés en complétant des actions sur la plateforme : terminer des tests, compléter votre profil, interagir avec le coach IA, etc. Ces crédits peuvent ensuite être échangés contre des services premium comme des sessions de mentorat ou des ateliers spécialisés.",
+    },
+    {
+      question: 'La plateforme est-elle accessible aux personnes en situation de handicap ?',
+      answer:
+        "Oui, l'accessibilité est au cœur de notre mission. Nous suivons les normes RGAA et ARIA pour garantir que la plateforme soit utilisable par tous, quel que soit le handicap. Nous proposons des alternatives textuelles, une navigation au clavier complète, et des contrastes optimisés.",
+    },
+  ];
+
+  const accessibilityFeatures = [
+    {
+      icon: 'text',
+      title: 'Tailles de police ajustables',
+      description: 'Modifiez la taille du texte selon vos besoins pour une lecture confortable',
+    },
+    {
+      icon: 'sunny',
+      title: 'Contrastes élevés',
+      description: 'Des contrastes optimisés pour une meilleure lisibilité',
+    },
+    {
+      icon: 'hand-left',
+      title: 'Navigation clavier',
+      description: 'Utilisez la plateforme entièrement au clavier sans souris',
+    },
+    {
+      icon: 'moon',
+      title: 'Mode sombre',
+      description: 'Réduisez la fatigue visuelle avec notre mode sombre',
+    },
+  ];
+
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <AppHeader onMenuPress={() => navigation.openDrawer()} title="À propos" />
-      <ScrollView style={styles.scrollContent}>
-      <View style={styles.content}>
-        <Text style={[styles.title, { color: colors.textPrimary }]}>À propos de Neoori</Text>
-        
-        <View style={[styles.card, { backgroundColor: colors.cardBackground }]}>
-          <Text style={[styles.cardTitle, { color: colors.primary }]}>Notre Mission</Text>
-          <Text style={[styles.cardText, { color: colors.textSecondary }]}>
-            Neoori est une plateforme d'apprentissage professionnel qui révolutionne 
-            la façon dont vous développez votre carrière. Nous utilisons le format 
-            vidéo court pour rendre l'apprentissage engageant et accessible.
+      <ScrollView style={styles.scrollContent} showsVerticalScrollIndicator={false}>
+        {/* Hero Section */}
+        <View style={styles.heroSection}>
+          <View style={styles.heroBadges}>
+            <View style={[styles.heroBadge, { backgroundColor: '#10B98130' }]}>
+              <Text style={[styles.heroBadgeText, { color: '#10B981' }]}>Notre histoire</Text>
+            </View>
+            <View style={[styles.heroBadge, { backgroundColor: colors.surfaceBackground }]}>
+              <Text style={[styles.heroBadgeText, { color: colors.textPrimary }]}>
+                Accessibilité & Inclusion
+              </Text>
+            </View>
+          </View>
+          <Text style={[styles.heroTitle, { color: '#10B981' }]}>
+            À propos de Neoori et notre mission
+          </Text>
+          <Text style={[styles.heroDescription, { color: colors.textSecondary }]}>
+            Découvrez notre engagement pour une plateforme inclusive et accessible à tous, conçue
+            pour accompagner chaque personne dans son parcours professionnel.
+          </Text>
+
+          {/* Navigation Buttons */}
+          <View style={styles.navButtons}>
+            <TouchableOpacity
+              style={[
+                styles.navButton,
+                { backgroundColor: colors.surfaceBackground },
+                activeSection === 'mission' && { backgroundColor: '#10B981' },
+              ]}
+              onPress={() => setActiveSection('mission')}
+            >
+              <Text
+                style={[
+                  styles.navButtonText,
+                  { color: colors.textPrimary },
+                  activeSection === 'mission' && { color: 'white' },
+                ]}
+              >
+                Notre mission
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.navButton,
+                { backgroundColor: colors.surfaceBackground },
+                activeSection === 'accessibility' && { backgroundColor: '#10B981' },
+              ]}
+              onPress={() => setActiveSection('accessibility')}
+            >
+              <Text
+                style={[
+                  styles.navButtonText,
+                  { color: colors.textPrimary },
+                  activeSection === 'accessibility' && { color: 'white' },
+                ]}
+              >
+                Accessibilité
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[
+                styles.navButton,
+                { backgroundColor: colors.surfaceBackground },
+                activeSection === 'contact' && { backgroundColor: '#10B981' },
+              ]}
+              onPress={() => setActiveSection('contact')}
+            >
+              <Text
+                style={[
+                  styles.navButtonText,
+                  { color: colors.textPrimary },
+                  activeSection === 'contact' && { color: 'white' },
+                ]}
+              >
+                Contact
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Notre Mission Section */}
+        <View style={styles.missionSection}>
+          <View style={styles.missionContent}>
+            <View style={styles.missionIcon}>
+              <Ionicons name="heart-outline" size={64} color="#10B981" />
+            </View>
+            <View style={styles.missionText}>
+              <View style={styles.missionTitleRow}>
+                <Text style={[styles.missionTitle, { color: '#10B981' }]}>Notre mission</Text>
+                <View style={styles.greenDot} />
+              </View>
+              <Text style={[styles.missionParagraph, { color: colors.textPrimary }]}>
+                Accompagner chaque potentiel. Chez Neoori, nous croyons que chaque personne a des
+                talents uniques qui méritent d'être découverts et valorisés.
+              </Text>
+              <Text style={[styles.missionParagraph, { color: colors.textPrimary }]}>
+                Notre mission est de créer un environnement bienveillant où chacun peut explorer ses
+                intérêts, développer ses compétences et trouver sa voie professionnelle, sans
+                barrières ni préjugés. Nous utilisons la technologie pour personnaliser
+                l'accompagnement et rendre le développement professionnel accessible à tous.
+              </Text>
+              <View style={styles.principlesTags}>
+                <View style={styles.principleTag}>
+                  <View style={styles.greenDot} />
+                  <Text style={[styles.principleText, { color: '#10B981' }]}>
+                    Accompagnement personnalisé
+                  </Text>
+                </View>
+                <View style={styles.principleTag}>
+                  <View style={styles.greenDot} />
+                  <Text style={[styles.principleText, { color: '#10B981' }]}>Inclusion</Text>
+                </View>
+                <View style={styles.principleTag}>
+                  <View style={styles.greenDot} />
+                  <Text style={[styles.principleText, { color: '#10B981' }]}>Innovation</Text>
+                </View>
+              </View>
+            </View>
+          </View>
+        </View>
+
+        {/* Engagement pour l'inclusion Section */}
+        <View style={[styles.inclusionSection, { backgroundColor: '#1E3A5F' }]}>
+          <View style={styles.inclusionHeader}>
+            <View style={styles.inclusionIconCircle}>
+              <Ionicons name="eye" size={24} color="#10B981" />
+            </View>
+            <Text style={[styles.inclusionTitle, { color: colors.textPrimary }]}>
+              Engagement pour l'inclusion
+            </Text>
+          </View>
+          <Text style={[styles.inclusionDescription, { color: colors.textSecondary }]}>
+            L'accessibilité n'est pas une option, c'est notre priorité. Nous concevons Neoori pour
+            qu'il soit utilisable par tous, quelles que soient les capacités ou les situations de
+            handicap.
+          </Text>
+
+          {/* Standards Section */}
+          <View style={styles.standardsBox}>
+            <View style={styles.standardsHeader}>
+              <Ionicons name="shield-checkmark" size={20} color="#10B981" />
+              <Text style={[styles.standardsTitle, { color: colors.textPrimary }]}>
+                Normes respectées
+              </Text>
+            </View>
+            <Text style={[styles.standardsText, { color: colors.textSecondary }]}>
+              Notre plateforme respecte les normes RGAA (Référentiel Général d'Amélioration de
+              l'Accessibilité) et suit les bonnes pratiques ARIA pour garantir une expérience
+              inclusive.
+            </Text>
+          </View>
+
+          <Text style={[styles.improvementText, { color: colors.textSecondary }]}>
+            Nous travaillons continuellement à améliorer notre accessibilité et sommes ouverts à vos
+            retours pour rendre Neoori toujours plus inclusif.
+          </Text>
+
+          {/* Accessibility Features Grid */}
+          <View style={styles.featuresGrid}>
+            {accessibilityFeatures.map((feature, index) => (
+              <View
+                key={index}
+                style={[styles.featureCard, { backgroundColor: colors.cardBackground }]}
+              >
+                <Ionicons name={feature.icon as any} size={28} color="#10B981" />
+                <Text style={[styles.featureTitle, { color: colors.textPrimary }]}>
+                  {feature.title}
+                </Text>
+                <Text style={[styles.featureDescription, { color: colors.textSecondary }]}>
+                  {feature.description}
+                </Text>
+              </View>
+            ))}
+          </View>
+
+          {/* Assistance Section */}
+          <View style={[styles.assistanceBox, { backgroundColor: colors.cardBackground }]}>
+            <View style={styles.assistanceHeader}>
+              <Ionicons name="help-circle" size={20} color="#10B981" />
+              <Text style={[styles.assistanceTitle, { color: colors.textPrimary }]}>
+                Besoin d'assistance ?
+              </Text>
+            </View>
+            <Text style={[styles.assistanceText, { color: colors.textSecondary }]}>
+              Notre équipe est disponible pour vous aider à naviguer sur la plateforme et répondre à
+              vos questions d'accessibilité.
+            </Text>
+            <TouchableOpacity style={[styles.assistanceButton, { backgroundColor: '#3B82F6' }]}>
+              <Text style={styles.assistanceButtonText}>Nous contacter →</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* FAQ Section */}
+        <View style={styles.faqSection}>
+          <View style={styles.faqHeader}>
+            <Ionicons name="chatbubbles" size={28} color="#8B5CF6" />
+            <Text style={[styles.faqTitle, { color: colors.textPrimary }]}>
+              Questions fréquentes
+            </Text>
+          </View>
+          {faqs.map((faq, index) => (
+            <TouchableOpacity
+              key={index}
+              style={[styles.faqCard, { backgroundColor: colors.cardBackground }]}
+              onPress={() => setExpandedFaq(expandedFaq === index ? null : index)}
+              activeOpacity={0.9}
+            >
+              <View style={styles.faqQuestionRow}>
+                <Text style={[styles.faqNumber, { color: '#8B5CF6' }]}>{index + 1}.</Text>
+                <Text style={[styles.faqQuestion, { color: colors.textPrimary }]}>
+                  {faq.question}
+                </Text>
+                <Ionicons
+                  name={expandedFaq === index ? 'remove' : 'add'}
+                  size={24}
+                  color="#8B5CF6"
+                />
+              </View>
+              {expandedFaq === index && (
+                <Text style={[styles.faqAnswer, { color: colors.textSecondary }]}>
+                  {faq.answer}
+                </Text>
+              )}
+            </TouchableOpacity>
+          ))}
+          <View style={styles.faqCta}>
+            <Text style={[styles.faqCtaText, { color: colors.textSecondary }]}>
+              Vous ne trouvez pas la réponse à votre question ?
+            </Text>
+            <TouchableOpacity style={[styles.faqCtaButton, { backgroundColor: '#8B5CF6' }]}>
+              <Text style={styles.faqCtaButtonText}>Contactez-nous →</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Contact Section */}
+        <View style={styles.contactSection}>
+          {/* Left Side - Contact Info */}
+          <View style={styles.contactInfo}>
+            <View style={styles.contactHeader}>
+              <Ionicons name="mail" size={24} color="#10B981" />
+              <Text style={[styles.contactTitle, { color: colors.textPrimary }]}>
+                Contactez-nous
+              </Text>
+            </View>
+            <Text style={[styles.contactIntro, { color: colors.textSecondary }]}>
+              Vous avez des questions, des suggestions ou besoin d'assistance ? Notre équipe est là
+              pour vous aider et vous accompagner dans votre parcours.
+            </Text>
+
+            <View style={styles.contactItem}>
+              <View style={styles.contactItemHeader}>
+                <Ionicons name="mail" size={20} color="#10B981" />
+                <Text style={[styles.contactItemTitle, { color: colors.textPrimary }]}>Email</Text>
+              </View>
+              <Text style={[styles.contactItemText, { color: colors.primary }]}>
+                contact@neoori.com
+              </Text>
+            </View>
+
+            <View style={styles.contactItem}>
+              <View style={styles.contactItemHeader}>
+                <Ionicons name="chatbubbles" size={20} color="#10B981" />
+                <Text style={[styles.contactItemTitle, { color: colors.textPrimary }]}>
+                  Chat en direct
+                </Text>
+              </View>
+              <Text style={[styles.contactItemText, { color: colors.textSecondary }]}>
+                Disponible du lundi au vendredi, 9h-18h
+              </Text>
+            </View>
+
+            <View style={[styles.commitmentBox, { backgroundColor: '#10B98110' }]}>
+              <View style={styles.contactItemHeader}>
+                <Ionicons name="heart" size={20} color="#10B981" />
+                <Text style={[styles.contactItemTitle, { color: colors.textPrimary }]}>
+                  Notre engagement
+                </Text>
+              </View>
+              <Text style={[styles.commitmentText, { color: colors.textSecondary }]}>
+                Nous nous engageons à répondre à toutes vos demandes dans un délai de 24 heures
+                ouvrées. Votre satisfaction est notre priorité.
+              </Text>
+            </View>
+          </View>
+
+          {/* Right Side - Contact Form */}
+          <View style={[styles.contactForm, { backgroundColor: colors.cardBackground }]}>
+            <View style={styles.formHeader}>
+              <Ionicons name="chatbubble-ellipses" size={20} color="#10B981" />
+              <Text style={[styles.formTitle, { color: colors.textPrimary }]}>
+                Envoyez-nous un message
+              </Text>
+            </View>
+
+            <View style={styles.formGroup}>
+              <Text style={[styles.formLabel, { color: colors.textSecondary }]}>Nom complet</Text>
+              <TextInput
+                style={[styles.formInput, { backgroundColor: colors.surfaceBackground, color: colors.textPrimary }]}
+                placeholder="Votre nom"
+                placeholderTextColor={colors.textTertiary}
+                value={formData.name}
+                onChangeText={(text) => setFormData({ ...formData, name: text })}
+              />
+            </View>
+
+            <View style={styles.formGroup}>
+              <Text style={[styles.formLabel, { color: colors.textSecondary }]}>Email</Text>
+              <TextInput
+                style={[styles.formInput, { backgroundColor: colors.surfaceBackground, color: colors.textPrimary }]}
+                placeholder="votre.email@exemple.com"
+                placeholderTextColor={colors.textTertiary}
+                value={formData.email}
+                onChangeText={(text) => setFormData({ ...formData, email: text })}
+                keyboardType="email-address"
+              />
+            </View>
+
+            <View style={styles.formGroup}>
+              <Text style={[styles.formLabel, { color: colors.textSecondary }]}>Sujet</Text>
+              <TouchableOpacity
+                style={[styles.formInput, { backgroundColor: colors.surfaceBackground }]}
+              >
+                <Text style={[styles.formPlaceholder, { color: colors.textTertiary }]}>
+                  {formData.subject || 'Sélectionnez un sujet'}
+                </Text>
+                <Ionicons name="chevron-down" size={20} color={colors.textTertiary} />
+              </TouchableOpacity>
+            </View>
+
+            <View style={styles.formGroup}>
+              <Text style={[styles.formLabel, { color: colors.textSecondary }]}>Message</Text>
+              <TextInput
+                style={[
+                  styles.formInput,
+                  styles.formTextarea,
+                  { backgroundColor: colors.surfaceBackground, color: colors.textPrimary },
+                ]}
+                placeholder="Comment pouvons-nous vous aider ?"
+                placeholderTextColor={colors.textTertiary}
+                value={formData.message}
+                onChangeText={(text) => setFormData({ ...formData, message: text })}
+                multiline
+                numberOfLines={4}
+                textAlignVertical="top"
+              />
+            </View>
+
+            <TouchableOpacity style={[styles.submitButton, { backgroundColor: '#10B981' }]}>
+              <Text style={styles.submitButtonText}>Envoyer le message →</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+
+        {/* Legal Section */}
+        <View style={styles.legalSection}>
+          <Text style={[styles.legalTitle, { color: colors.textPrimary }]}>
+            Documents légaux et informations complémentaires
+          </Text>
+          <Text style={[styles.legalDescription, { color: colors.textSecondary }]}>
+            Consultez nos documents légaux pour en savoir plus sur nos conditions d'utilisation,
+            notre politique de confidentialité et nos mentions légales.
+          </Text>
+          <View style={styles.legalButtons}>
+            <TouchableOpacity
+              style={[styles.legalButton, { backgroundColor: colors.surfaceBackground }]}
+            >
+              <Text style={[styles.legalButtonText, { color: colors.textPrimary }]}>
+                Mentions légales
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.legalButton, { backgroundColor: colors.surfaceBackground }]}
+            >
+              <Text style={[styles.legalButtonText, { color: colors.textPrimary }]}>
+                Politique de confidentialité
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.legalButton, { backgroundColor: colors.surfaceBackground }]}
+            >
+              <Text style={[styles.legalButtonText, { color: colors.textPrimary }]}>
+                Conditions d'utilisation
+              </Text>
+            </TouchableOpacity>
+          </View>
+          <Text style={[styles.copyright, { color: colors.textTertiary }]}>
+            © 2025 Neoori. Tous droits réservés.
           </Text>
         </View>
 
-        <View style={[styles.card, { backgroundColor: colors.cardBackground }]}>
-          <Text style={[styles.cardTitle, { color: colors.primary }]}>Format Innovant</Text>
-          <Text style={[styles.cardText, { color: colors.textSecondary }]}>
-            Inspiré par les formats de contenu court, Neoori offre des vidéos 
-            professionnelles personnalisées selon vos objectifs de carrière.
-          </Text>
-        </View>
-
-        <View style={[styles.card, { backgroundColor: colors.cardBackground }]}>
-          <Text style={[styles.cardTitle, { color: colors.primary }]}>Matching Intelligent</Text>
-          <Text style={[styles.cardText, { color: colors.textSecondary }]}>
-            Notre algorithme analyse vos intérêts et votre parcours pour vous 
-            recommander le contenu le plus pertinent pour votre développement.
-          </Text>
-        </View>
-
-        <View style={styles.footer}>
-          <Text style={[styles.version, { color: colors.textSecondary }]}>Version 1.0.0</Text>
-          <Text style={[styles.copyright, { color: colors.textSecondary }]}>© 2025 Neoori. Tous droits réservés.</Text>
-        </View>
-      </View>
-    </ScrollView>
+        <View style={{ height: 40 }} />
+      </ScrollView>
     </View>
   );
 };
@@ -59,40 +476,384 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flex: 1,
-    marginTop: 100, // Pour laisser de l'espace pour le header
+    marginTop: 100,
   },
-  content: {
-    padding: SPACING.xxxl,
-  },
-  title: {
-    fontSize: FONTS.sizes.xxxl,
-    fontWeight: FONTS.weights.bold,
-    marginBottom: SPACING.xxxl,
-  },
-  card: {
+  heroSection: {
     padding: SPACING.xl,
-    borderRadius: BORDER_RADIUS.md,
+    paddingTop: SPACING.xxl,
+  },
+  heroBadges: {
+    flexDirection: 'row',
+    gap: SPACING.sm,
     marginBottom: SPACING.lg,
   },
-  cardTitle: {
-    fontSize: FONTS.sizes.xl,
-    fontWeight: FONTS.weights.semiBold,
-    marginBottom: SPACING.md,
+  heroBadge: {
+    paddingHorizontal: SPACING.md,
+    paddingVertical: SPACING.xs,
+    borderRadius: BORDER_RADIUS.full,
   },
-  cardText: {
+  heroBadgeText: {
+    fontSize: FONTS.sizes.xs,
+    fontWeight: FONTS.weights.medium,
+  },
+  heroTitle: {
+    fontSize: FONTS.sizes.xxxl,
+    fontWeight: FONTS.weights.bold,
+    marginBottom: SPACING.md,
+    lineHeight: 40,
+  },
+  heroDescription: {
     fontSize: FONTS.sizes.md,
     lineHeight: 24,
+    marginBottom: SPACING.xl,
   },
-  footer: {
-    marginTop: SPACING.xxxl,
+  navButtons: {
+    flexDirection: 'row',
+    gap: SPACING.sm,
+    flexWrap: 'wrap',
+  },
+  navButton: {
+    paddingHorizontal: SPACING.lg,
+    paddingVertical: SPACING.md,
+    borderRadius: BORDER_RADIUS.md,
+  },
+  navButtonText: {
+    fontSize: FONTS.sizes.sm,
+    fontWeight: FONTS.weights.medium,
+  },
+  missionSection: {
+    padding: SPACING.xl,
+    paddingTop: SPACING.xxxl,
+  },
+  missionContent: {
+    flexDirection: 'row',
+    gap: SPACING.xl,
+  },
+  missionIcon: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    borderWidth: 2,
+    borderColor: '#10B981',
+    justifyContent: 'center',
     alignItems: 'center',
   },
-  version: {
+  missionText: {
+    flex: 1,
+  },
+  missionTitleRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.sm,
+    marginBottom: SPACING.lg,
+  },
+  missionTitle: {
+    fontSize: FONTS.sizes.xxl,
+    fontWeight: FONTS.weights.bold,
+  },
+  greenDot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
+    backgroundColor: '#10B981',
+  },
+  missionParagraph: {
+    fontSize: FONTS.sizes.md,
+    lineHeight: 24,
+    marginBottom: SPACING.lg,
+  },
+  principlesTags: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: SPACING.md,
+  },
+  principleTag: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.xs,
+  },
+  principleText: {
+    fontSize: FONTS.sizes.sm,
+    fontWeight: FONTS.weights.medium,
+  },
+  inclusionSection: {
+    padding: SPACING.xl,
+    paddingTop: SPACING.xxxl,
+    paddingBottom: SPACING.xxxl,
+  },
+  inclusionHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.md,
+    marginBottom: SPACING.lg,
+  },
+  inclusionIconCircle: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,
+    backgroundColor: '#10B98120',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  inclusionTitle: {
+    fontSize: FONTS.sizes.xxl,
+    fontWeight: FONTS.weights.bold,
+  },
+  inclusionDescription: {
+    fontSize: FONTS.sizes.md,
+    lineHeight: 24,
+    marginBottom: SPACING.xl,
+  },
+  standardsBox: {
+    marginBottom: SPACING.lg,
+  },
+  standardsHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.sm,
+    marginBottom: SPACING.sm,
+  },
+  standardsTitle: {
+    fontSize: FONTS.sizes.md,
+    fontWeight: FONTS.weights.semiBold,
+  },
+  standardsText: {
+    fontSize: FONTS.sizes.sm,
+    lineHeight: 20,
+  },
+  improvementText: {
+    fontSize: FONTS.sizes.sm,
+    lineHeight: 20,
+    marginBottom: SPACING.xl,
+  },
+  featuresGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: SPACING.md,
+    marginBottom: SPACING.xl,
+  },
+  featureCard: {
+    width: '48%',
+    padding: SPACING.lg,
+    borderRadius: BORDER_RADIUS.md,
+    gap: SPACING.sm,
+  },
+  featureTitle: {
+    fontSize: FONTS.sizes.sm,
+    fontWeight: FONTS.weights.semiBold,
+  },
+  featureDescription: {
+    fontSize: FONTS.sizes.xs,
+    lineHeight: 16,
+  },
+  assistanceBox: {
+    padding: SPACING.lg,
+    borderRadius: BORDER_RADIUS.md,
+  },
+  assistanceHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.sm,
+    marginBottom: SPACING.sm,
+  },
+  assistanceTitle: {
+    fontSize: FONTS.sizes.md,
+    fontWeight: FONTS.weights.semiBold,
+  },
+  assistanceText: {
+    fontSize: FONTS.sizes.sm,
+    lineHeight: 20,
+    marginBottom: SPACING.lg,
+  },
+  assistanceButton: {
+    paddingVertical: SPACING.md,
+    borderRadius: BORDER_RADIUS.md,
+    alignItems: 'center',
+  },
+  assistanceButtonText: {
+    color: 'white',
+    fontSize: FONTS.sizes.sm,
+    fontWeight: FONTS.weights.semiBold,
+  },
+  faqSection: {
+    padding: SPACING.xl,
+  },
+  faqHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.md,
+    marginBottom: SPACING.xl,
+  },
+  faqTitle: {
+    fontSize: FONTS.sizes.xxl,
+    fontWeight: FONTS.weights.bold,
+  },
+  faqCard: {
+    padding: SPACING.lg,
+    borderRadius: BORDER_RADIUS.md,
+    marginBottom: SPACING.md,
+  },
+  faqQuestionRow: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    gap: SPACING.sm,
+  },
+  faqNumber: {
+    fontSize: FONTS.sizes.lg,
+    fontWeight: FONTS.weights.bold,
+  },
+  faqQuestion: {
+    flex: 1,
+    fontSize: FONTS.sizes.md,
+    fontWeight: FONTS.weights.semiBold,
+  },
+  faqAnswer: {
+    fontSize: FONTS.sizes.sm,
+    lineHeight: 22,
+    marginTop: SPACING.md,
+    marginLeft: SPACING.xl,
+  },
+  faqCta: {
+    alignItems: 'center',
+    marginTop: SPACING.xl,
+    gap: SPACING.md,
+  },
+  faqCtaText: {
+    fontSize: FONTS.sizes.md,
+    textAlign: 'center',
+  },
+  faqCtaButton: {
+    paddingHorizontal: SPACING.xl,
+    paddingVertical: SPACING.md,
+    borderRadius: BORDER_RADIUS.md,
+  },
+  faqCtaButtonText: {
+    color: 'white',
+    fontSize: FONTS.sizes.md,
+    fontWeight: FONTS.weights.semiBold,
+  },
+  contactSection: {
+    padding: SPACING.xl,
+    gap: SPACING.xl,
+  },
+  contactInfo: {
+    gap: SPACING.lg,
+  },
+  contactHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.sm,
+  },
+  contactTitle: {
+    fontSize: FONTS.sizes.xxl,
+    fontWeight: FONTS.weights.bold,
+  },
+  contactIntro: {
+    fontSize: FONTS.sizes.sm,
+    lineHeight: 20,
+  },
+  contactItem: {
+    gap: SPACING.xs,
+  },
+  contactItemHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.sm,
+  },
+  contactItemTitle: {
+    fontSize: FONTS.sizes.md,
+    fontWeight: FONTS.weights.semiBold,
+  },
+  contactItemText: {
+    fontSize: FONTS.sizes.sm,
+  },
+  commitmentBox: {
+    padding: SPACING.lg,
+    borderRadius: BORDER_RADIUS.md,
+  },
+  commitmentText: {
+    fontSize: FONTS.sizes.sm,
+    lineHeight: 20,
+  },
+  contactForm: {
+    padding: SPACING.xl,
+    borderRadius: BORDER_RADIUS.lg,
+  },
+  formHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.sm,
+    marginBottom: SPACING.xl,
+  },
+  formTitle: {
+    fontSize: FONTS.sizes.lg,
+    fontWeight: FONTS.weights.semiBold,
+  },
+  formGroup: {
+    marginBottom: SPACING.lg,
+  },
+  formLabel: {
     fontSize: FONTS.sizes.sm,
     marginBottom: SPACING.xs,
   },
+  formInput: {
+    paddingHorizontal: SPACING.lg,
+    paddingVertical: SPACING.md,
+    borderRadius: BORDER_RADIUS.md,
+    fontSize: FONTS.sizes.sm,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  formPlaceholder: {
+    flex: 1,
+  },
+  formTextarea: {
+    height: 120,
+    paddingTop: SPACING.md,
+  },
+  submitButton: {
+    paddingVertical: SPACING.md,
+    borderRadius: BORDER_RADIUS.md,
+    alignItems: 'center',
+    marginTop: SPACING.lg,
+  },
+  submitButtonText: {
+    color: 'white',
+    fontSize: FONTS.sizes.md,
+    fontWeight: FONTS.weights.semiBold,
+  },
+  legalSection: {
+    padding: SPACING.xl,
+    paddingTop: SPACING.xxxl,
+  },
+  legalTitle: {
+    fontSize: FONTS.sizes.xl,
+    fontWeight: FONTS.weights.bold,
+    marginBottom: SPACING.md,
+  },
+  legalDescription: {
+    fontSize: FONTS.sizes.sm,
+    lineHeight: 20,
+    marginBottom: SPACING.xl,
+  },
+  legalButtons: {
+    gap: SPACING.md,
+    marginBottom: SPACING.xl,
+  },
+  legalButton: {
+    paddingVertical: SPACING.md,
+    paddingHorizontal: SPACING.lg,
+    borderRadius: BORDER_RADIUS.md,
+  },
+  legalButtonText: {
+    fontSize: FONTS.sizes.sm,
+    fontWeight: FONTS.weights.medium,
+    textAlign: 'center',
+  },
   copyright: {
     fontSize: FONTS.sizes.sm,
+    textAlign: 'center',
   },
 });
 

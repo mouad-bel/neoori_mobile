@@ -63,6 +63,98 @@ export interface Comment {
   likes: number;
 }
 
+export interface ArticleContent {
+  id: string;
+  title: string;
+  description: string;
+  thumbnail: string;
+  author: Creator;
+  category: string;
+  contentType: 'Lecture courte' | 'Témoignage' | 'Étude approfondie';
+  readingTime: string; // Format: "5 min"
+  publishedAt: string;
+  tags: string[];
+}
+
+export interface CapsuleVideo {
+  id: string;
+  title: string;
+  description: string;
+  thumbnail: string;
+  author: Creator;
+  duration: string; // Format: "MM:SS"
+  category: string;
+  engagement: {
+    likes: number;
+    bookmarks: number;
+  };
+}
+
+export interface Game {
+  id: string;
+  title: string;
+  duration: string;
+  questions: number;
+  description: string;
+  credits: number;
+  difficulty: 'Facile' | 'Moyen' | 'Difficile';
+  icon: string;
+  image: string;
+  progress?: number;
+  status: 'not-started' | 'in-progress' | 'completed';
+}
+
+export interface Room {
+  id: string;
+  title: string;
+  type: 'École' | 'Entreprise' | 'Association' | 'Communauté';
+  access: 'Publique' | 'Privée' | 'Sur invitation';
+  description: string;
+  tags: string[];
+  members: number;
+  lastActivity: string;
+  image: string;
+  isActive?: boolean;
+}
+
+export interface Formation {
+  id: string;
+  title: string;
+  description: string;
+  thumbnail: string;
+  provider: {
+    id: string;
+    name: string;
+    logo: string;
+  };
+  category: string;
+  level: 'Débutant' | 'Intermédiaire' | 'Avancé';
+  duration: string; // e.g., "8 semaines"
+  rating: number;
+  reviewCount?: number;
+  matchPercentage?: number;
+  isFree: boolean;
+  isFeatured?: boolean;
+}
+
+export interface JobOffer {
+  id: string;
+  title: string;
+  company: string;
+  companyLogo?: string;
+  category: string;
+  location: string;
+  workType: 'Hybride' | 'Télétravail' | 'Sur site';
+  contractType: 'CDI' | 'CDD' | 'Freelance' | 'Stage';
+  experienceLevel: 'Débutant' | 'Intermédiaire' | 'Expérimenté' | 'Expert';
+  salary: string; // e.g., "45,000 - 55,000 €/an"
+  skills: string[];
+  postedDate: string;
+  matchPercentage?: number;
+  isRecommended?: boolean;
+  isFavorite?: boolean;
+}
+
 export interface AuthState {
   isAuthenticated: boolean;
   user: User | null;
