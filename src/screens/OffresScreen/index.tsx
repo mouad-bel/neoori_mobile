@@ -16,6 +16,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { FONTS, SPACING, BORDER_RADIUS } from '../../constants/theme';
 import { useTheme } from '../../store/ThemeContext';
 import AppHeader from '../../components/navigation/AppHeader';
+import ProfileModal from '../../components/ui/ProfileModal';
 import { MainDrawerParamList, JobOffer } from '../../types';
 import { MOCK_JOB_OFFERS } from '../../constants/mockData';
 
@@ -26,6 +27,7 @@ const OffresScreen = () => {
   const navigation = useNavigation<DrawerNavigationProp<MainDrawerParamList>>();
   const { colors } = useTheme();
   const [searchQuery, setSearchQuery] = useState('');
+  const [showProfileModal, setShowProfileModal] = useState(false);
   const [favorites, setFavorites] = useState<Set<string>>(
     new Set(MOCK_JOB_OFFERS.filter(job => job.isFavorite).map(job => job.id))
   );
@@ -274,10 +276,14 @@ const OffresScreen = () => {
       </View>
     </TouchableOpacity>
   );
-
+  
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <AppHeader onMenuPress={() => navigation.openDrawer()} title="Offres d'emploi" />
+      <AppHeader 
+        onMenuPress={() => navigation.openDrawer()} 
+        onProfilePress={() => setShowProfileModal(true)}
+        title="Offres d'emploi" 
+      />
       <ScrollView style={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Hero Section */}
         <View style={styles.heroSection}>
@@ -406,14 +412,18 @@ const OffresScreen = () => {
           <Text style={[styles.partnerDescription, { color: colors.textSecondary }]}>
             Découvre les entreprises qui recrutent activement et créent les opportunités de demain
             pour ta carrière.
-          </Text>
+        </Text>
           <TouchableOpacity style={[styles.partnerButton, { backgroundColor: '#8B5CF6' }]}>
             <Text style={styles.partnerButtonText}>Voir toutes les entreprises →</Text>
           </TouchableOpacity>
-        </View>
+      </View>
 
         <View style={{ height: 40 }} />
       </ScrollView>
+      <ProfileModal 
+        visible={showProfileModal} 
+        onClose={() => setShowProfileModal(false)} 
+      />
     </View>
   );
 };

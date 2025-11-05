@@ -8,10 +8,13 @@ import {
   TextInput,
   ImageBackground,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS, FONTS, SPACING, BORDER_RADIUS } from '../../constants/theme';
 import AppHeader from '../../components/navigation/AppHeader';
-import { Room } from '../../types';
+import ProfileModal from '../../components/ui/ProfileModal';
+import { Room, MainDrawerParamList } from '../../types';
 import { MOCK_ROOMS } from '../../constants/mockData';
 
 const getTypeIcon = (type: Room['type']) => {
@@ -84,13 +87,19 @@ const RoomCard: React.FC<{ room: Room; compact?: boolean }> = ({ room, compact }
 );
 
 const RoomsScreen = () => {
+  const navigation = useNavigation<DrawerNavigationProp<MainDrawerParamList>>();
   const [searchQuery, setSearchQuery] = useState('');
+  const [showProfileModal, setShowProfileModal] = useState(false);
   
   const activeRooms = MOCK_ROOMS.filter(room => room.isActive);
 
   return (
     <View style={styles.container}>
-      <AppHeader title="Rooms" />
+      <AppHeader 
+        onMenuPress={() => navigation.openDrawer()}
+        title="Rooms" 
+        onProfilePress={() => setShowProfileModal(true)}
+      />
       
       <ScrollView 
         style={styles.scrollView}
@@ -181,6 +190,10 @@ const RoomsScreen = () => {
 
         <View style={{ height: 40 }} />
       </ScrollView>
+      <ProfileModal 
+        visible={showProfileModal} 
+        onClose={() => setShowProfileModal(false)} 
+      />
     </View>
   );
 };

@@ -16,6 +16,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { FONTS, SPACING, BORDER_RADIUS } from '../../constants/theme';
 import { useTheme } from '../../store/ThemeContext';
 import AppHeader from '../../components/navigation/AppHeader';
+import ProfileModal from '../../components/ui/ProfileModal';
 import { MainDrawerParamList, CapsuleVideo, ArticleContent } from '../../types';
 import { MOCK_CAPSULE_VIDEOS, MOCK_ARTICLES } from '../../constants/mockData';
 
@@ -28,6 +29,7 @@ const CapsulesScreen = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Tous');
   const [selectedFormat, setSelectedFormat] = useState('Tous les formats');
+  const [showProfileModal, setShowProfileModal] = useState(false);
 
   const getContentTypeColor = (type: string) => {
     switch (type) {
@@ -160,7 +162,11 @@ const CapsulesScreen = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <AppHeader onMenuPress={() => navigation.openDrawer()} title="Capsules & Lectures" />
+      <AppHeader 
+        onMenuPress={() => navigation.openDrawer()} 
+        onProfilePress={() => setShowProfileModal(true)}
+        title="Capsules & Lectures" 
+      />
       <ScrollView style={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Hero Section */}
         <View style={styles.heroSection}>
@@ -258,6 +264,10 @@ const CapsulesScreen = () => {
           </View>
         </View>
       </ScrollView>
+      <ProfileModal 
+        visible={showProfileModal} 
+        onClose={() => setShowProfileModal(false)} 
+      />
     </View>
   );
 };

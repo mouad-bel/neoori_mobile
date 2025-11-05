@@ -71,6 +71,16 @@ const CustomDrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
       <DrawerContentScrollView
         {...props}
       >
+        {/* Logo Header */}
+        <View style={styles.logoContainer}>
+          <View style={styles.logoIconContainer}>
+            <View style={styles.logoIcon}>
+              <Text style={styles.logoIconText}>N</Text>
+            </View>
+          </View>
+          <Text style={[styles.logoText, { color: colors.textPrimary }]}>Neoori</Text>
+        </View>
+
         {/* Menu Items */}
         <View style={styles.menuSection}>
           {DRAWER_ROUTES.map((route, index) => renderMenuItem(route, index))}
@@ -101,6 +111,34 @@ const CustomDrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  logoContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingHorizontal: SPACING.xl,
+    paddingVertical: SPACING.xxl,
+    gap: SPACING.md,
+  },
+  logoIconContainer: {
+    position: 'relative',
+  },
+  logoIcon: {
+    width: 40,
+    height: 40,
+    borderRadius: BORDER_RADIUS.md,
+    backgroundColor: '#14B8A6',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  logoIconText: {
+    fontSize: 24,
+    fontWeight: FONTS.weights.bold,
+    color: 'white',
+  },
+  logoText: {
+    fontSize: FONTS.sizes.xxl,
+    fontWeight: FONTS.weights.bold,
+    letterSpacing: 0.5,
   },
   scrollContent: {
     paddingTop: SPACING.md,

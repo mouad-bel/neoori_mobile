@@ -16,6 +16,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { FONTS, SPACING, BORDER_RADIUS } from '../../constants/theme';
 import { useTheme } from '../../store/ThemeContext';
 import AppHeader from '../../components/navigation/AppHeader';
+import ProfileModal from '../../components/ui/ProfileModal';
 import { MainDrawerParamList, Formation } from '../../types';
 import { MOCK_FORMATIONS } from '../../constants/mockData';
 
@@ -28,6 +29,7 @@ const FormationsScreen = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('Toutes catégories');
   const [selectedLevel, setSelectedLevel] = useState('Tous niveaux');
+  const [showProfileModal, setShowProfileModal] = useState(false);
 
   const featuredFormations = MOCK_FORMATIONS.filter(f => f.isFeatured);
   const recommendedFormations = MOCK_FORMATIONS.filter(f => f.matchPercentage && f.matchPercentage >= 85);
@@ -187,7 +189,11 @@ const FormationsScreen = () => {
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <AppHeader onMenuPress={() => navigation.openDrawer()} title="Formations" />
+      <AppHeader 
+        onMenuPress={() => navigation.openDrawer()} 
+        onProfilePress={() => setShowProfileModal(true)}
+        title="Formations" 
+      />
       <ScrollView style={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Hero Section */}
         <View style={styles.heroSection}>
@@ -319,6 +325,10 @@ const FormationsScreen = () => {
 
         <View style={{ height: 40 }} />
       </ScrollView>
+      <ProfileModal 
+        visible={showProfileModal} 
+        onClose={() => setShowProfileModal(false)} 
+      />
     </View>
   );
 };

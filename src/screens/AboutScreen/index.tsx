@@ -14,6 +14,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { FONTS, SPACING, BORDER_RADIUS } from '../../constants/theme';
 import { useTheme } from '../../store/ThemeContext';
 import AppHeader from '../../components/navigation/AppHeader';
+import ProfileModal from '../../components/ui/ProfileModal';
 import { MainDrawerParamList } from '../../types';
 
 const AboutScreen = () => {
@@ -21,6 +22,7 @@ const AboutScreen = () => {
   const { colors } = useTheme();
   const [activeSection, setActiveSection] = useState('mission');
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
+  const [showProfileModal, setShowProfileModal] = useState(false);
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -68,10 +70,14 @@ const AboutScreen = () => {
       description: 'Réduisez la fatigue visuelle avec notre mode sombre',
     },
   ];
-
+  
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <AppHeader onMenuPress={() => navigation.openDrawer()} title="À propos" />
+      <AppHeader 
+        onMenuPress={() => navigation.openDrawer()} 
+        onProfilePress={() => setShowProfileModal(true)}
+        title="À propos" 
+      />
       <ScrollView style={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* Hero Section */}
         <View style={styles.heroSection}>
@@ -158,36 +164,34 @@ const AboutScreen = () => {
             <View style={styles.missionIcon}>
               <Ionicons name="heart-outline" size={64} color="#10B981" />
             </View>
-            <View style={styles.missionText}>
-              <View style={styles.missionTitleRow}>
-                <Text style={[styles.missionTitle, { color: '#10B981' }]}>Notre mission</Text>
+            <View style={styles.missionTitleRow}>
+              <Text style={[styles.missionTitle, { color: '#10B981' }]}>Notre mission</Text>
+              <View style={styles.greenDot} />
+            </View>
+            <Text style={[styles.missionParagraph, { color: colors.textPrimary }]}>
+              Accompagner chaque potentiel. Chez Neoori, nous croyons que chaque personne a des
+              talents uniques qui méritent d'être découverts et valorisés.
+            </Text>
+            <Text style={[styles.missionParagraph, { color: colors.textPrimary }]}>
+              Notre mission est de créer un environnement bienveillant où chacun peut explorer ses
+              intérêts, développer ses compétences et trouver sa voie professionnelle, sans
+              barrières ni préjugés. Nous utilisons la technologie pour personnaliser
+              l'accompagnement et rendre le développement professionnel accessible à tous.
+            </Text>
+            <View style={styles.principlesTags}>
+              <View style={[styles.principleTag, { borderColor: '#10B981', backgroundColor: colors.surfaceBackground }]}>
                 <View style={styles.greenDot} />
+                <Text style={[styles.principleText, { color: '#10B981' }]}>
+                  Accompagnement personnalisé
+                </Text>
               </View>
-              <Text style={[styles.missionParagraph, { color: colors.textPrimary }]}>
-                Accompagner chaque potentiel. Chez Neoori, nous croyons que chaque personne a des
-                talents uniques qui méritent d'être découverts et valorisés.
-              </Text>
-              <Text style={[styles.missionParagraph, { color: colors.textPrimary }]}>
-                Notre mission est de créer un environnement bienveillant où chacun peut explorer ses
-                intérêts, développer ses compétences et trouver sa voie professionnelle, sans
-                barrières ni préjugés. Nous utilisons la technologie pour personnaliser
-                l'accompagnement et rendre le développement professionnel accessible à tous.
-              </Text>
-              <View style={styles.principlesTags}>
-                <View style={styles.principleTag}>
-                  <View style={styles.greenDot} />
-                  <Text style={[styles.principleText, { color: '#10B981' }]}>
-                    Accompagnement personnalisé
-                  </Text>
-                </View>
-                <View style={styles.principleTag}>
-                  <View style={styles.greenDot} />
-                  <Text style={[styles.principleText, { color: '#10B981' }]}>Inclusion</Text>
-                </View>
-                <View style={styles.principleTag}>
-                  <View style={styles.greenDot} />
-                  <Text style={[styles.principleText, { color: '#10B981' }]}>Innovation</Text>
-                </View>
+              <View style={[styles.principleTag, { borderColor: '#10B981', backgroundColor: colors.surfaceBackground }]}>
+                <View style={styles.greenDot} />
+                <Text style={[styles.principleText, { color: '#10B981' }]}>Inclusion</Text>
+              </View>
+              <View style={[styles.principleTag, { borderColor: '#3B82F6', backgroundColor: colors.surfaceBackground }]}>
+                <View style={[styles.greenDot, { backgroundColor: '#3B82F6' }]} />
+                <Text style={[styles.principleText, { color: '#3B82F6' }]}>Innovation</Text>
               </View>
             </View>
           </View>
@@ -330,8 +334,8 @@ const AboutScreen = () => {
               </View>
               <Text style={[styles.contactItemText, { color: colors.primary }]}>
                 contact@neoori.com
-              </Text>
-            </View>
+          </Text>
+        </View>
 
             <View style={styles.contactItem}>
               <View style={styles.contactItemHeader}>
@@ -342,8 +346,8 @@ const AboutScreen = () => {
               </View>
               <Text style={[styles.contactItemText, { color: colors.textSecondary }]}>
                 Disponible du lundi au vendredi, 9h-18h
-              </Text>
-            </View>
+          </Text>
+        </View>
 
             <View style={[styles.commitmentBox, { backgroundColor: '#10B98110' }]}>
               <View style={styles.contactItemHeader}>
@@ -365,8 +369,8 @@ const AboutScreen = () => {
               <Ionicons name="chatbubble-ellipses" size={20} color="#10B981" />
               <Text style={[styles.formTitle, { color: colors.textPrimary }]}>
                 Envoyez-nous un message
-              </Text>
-            </View>
+          </Text>
+        </View>
 
             <View style={styles.formGroup}>
               <Text style={[styles.formLabel, { color: colors.textSecondary }]}>Nom complet</Text>
@@ -424,8 +428,8 @@ const AboutScreen = () => {
             <TouchableOpacity style={[styles.submitButton, { backgroundColor: '#10B981' }]}>
               <Text style={styles.submitButtonText}>Envoyer le message →</Text>
             </TouchableOpacity>
-          </View>
         </View>
+      </View>
 
         {/* Legal Section */}
         <View style={styles.legalSection}>
@@ -465,7 +469,11 @@ const AboutScreen = () => {
         </View>
 
         <View style={{ height: 40 }} />
-      </ScrollView>
+    </ScrollView>
+      <ProfileModal 
+        visible={showProfileModal} 
+        onClose={() => setShowProfileModal(false)} 
+      />
     </View>
   );
 };
@@ -526,20 +534,17 @@ const styles = StyleSheet.create({
     paddingTop: SPACING.xxxl,
   },
   missionContent: {
-    flexDirection: 'row',
-    gap: SPACING.xl,
+    alignItems: 'center',
   },
   missionIcon: {
-    width: 80,
-    height: 80,
-    borderRadius: 40,
+    width: 120,
+    height: 120,
+    borderRadius: 60,
     borderWidth: 2,
     borderColor: '#10B981',
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  missionText: {
-    flex: 1,
+    marginBottom: SPACING.xl,
   },
   missionTitleRow: {
     flexDirection: 'row',
@@ -561,16 +566,22 @@ const styles = StyleSheet.create({
     fontSize: FONTS.sizes.md,
     lineHeight: 24,
     marginBottom: SPACING.lg,
+    textAlign: 'center',
   },
   principlesTags: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     gap: SPACING.md,
+    justifyContent: 'center',
   },
   principleTag: {
     flexDirection: 'row',
     alignItems: 'center',
     gap: SPACING.xs,
+    paddingHorizontal: SPACING.lg,
+    paddingVertical: SPACING.md,
+    borderRadius: BORDER_RADIUS.md,
+    borderWidth: 1,
   },
   principleText: {
     fontSize: FONTS.sizes.sm,

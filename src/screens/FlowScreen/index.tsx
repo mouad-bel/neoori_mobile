@@ -11,6 +11,7 @@ import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { useVideo } from '../../store/VideoContext';
 import VideoCard from '../../components/video/VideoCard';
 import AppHeader from '../../components/navigation/AppHeader';
+import ProfileModal from '../../components/ui/ProfileModal';
 import { VideoContent, MainDrawerParamList } from '../../types';
 
 const { height } = Dimensions.get('window');
@@ -20,6 +21,7 @@ const FlowScreen = () => {
   const { videos } = useVideo();
   const [currentIndex, setCurrentIndex] = useState(0);
   const [showHeader, setShowHeader] = useState(true);
+  const [showProfileModal, setShowProfileModal] = useState(false);
   const flatListRef = useRef<FlatList>(null);
 
   const onViewableItemsChanged = useRef(
@@ -64,7 +66,16 @@ const FlowScreen = () => {
         windowSize={5}
         removeClippedSubviews={true}
       />
-      {showHeader && <AppHeader onMenuPress={() => navigation.openDrawer()} />}
+      {showHeader && (
+        <AppHeader 
+          onMenuPress={() => navigation.openDrawer()} 
+          onProfilePress={() => setShowProfileModal(true)}
+        />
+      )}
+      <ProfileModal 
+        visible={showProfileModal} 
+        onClose={() => setShowProfileModal(false)} 
+      />
     </View>
   );
 };

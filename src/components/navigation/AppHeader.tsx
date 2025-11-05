@@ -1,29 +1,35 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { FONTS, SPACING, BORDER_RADIUS } from '../../constants/theme';
 import { useTheme } from '../../store/ThemeContext';
+import { useAuth } from '../../store/AuthContext';
 
 interface AppHeaderProps {
   onMenuPress?: () => void;
+  onProfilePress?: () => void;
   title?: string;
   showLogo?: boolean;
   showNotifications?: boolean;
   showChat?: boolean;
+  showProfile?: boolean;
   transparent?: boolean;
   style?: object;
 }
 
 const AppHeader: React.FC<AppHeaderProps> = ({
   onMenuPress,
+  onProfilePress,
   title = 'Neoori',
   showLogo = true,
   showNotifications = true,
   showChat = true,
+  showProfile = true,
   transparent = false,
   style = {},
 }) => {
   const { colors } = useTheme();
+  const { user } = useAuth();
   return (
     <View style={[
       styles.container, 
@@ -71,6 +77,23 @@ const AppHeader: React.FC<AppHeaderProps> = ({
             accessibilityLabel="Messages"
           >
             <Ionicons name="chatbubble-outline" size={24} color={colors.textPrimary} />
+          </TouchableOpacity>
+        )}
+        {showProfile && onProfilePress && (
+          <TouchableOpacity 
+            style={styles.iconButton}
+            onPress={onProfilePress}
+            accessibilityRole="button"
+            accessibilityLabel="Profil"
+          >
+            {user?.avatar ? (
+              <Image 
+                source={{ uri: user.avatar }} 
+                style={styles.profileAvatar} 
+              />
+            ) : (
+              <Ionicons name="person-circle-outline" size={28} color={colors.textPrimary} />
+            )}
           </TouchableOpacity>
         )}
       </View>
@@ -126,6 +149,11 @@ const styles = StyleSheet.create({
   },
   iconButton: {
     marginLeft: SPACING.lg,
+  },
+  profileAvatar: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
   },
 });
 

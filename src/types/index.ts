@@ -175,12 +175,16 @@ export type RootStackParamList = {
 
 export type MainDrawerParamList = {
   Flow: undefined;
+  Dashboard: undefined;
   Jeux: undefined;
   Rooms: undefined;
   Capsules: undefined;
   Formations: undefined;
   Offres: undefined;
   About: undefined;
+  Profile: undefined;
+  Recompenses: undefined;
+  Parametres: undefined;
   AccessibilityDemo: undefined;
 };
 

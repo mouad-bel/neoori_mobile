@@ -7,13 +7,19 @@ import {
   TouchableOpacity,
   ImageBackground,
 } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { Ionicons } from '@expo/vector-icons';
 import { COLORS, FONTS, SPACING, BORDER_RADIUS } from '../../constants/theme';
 import AppHeader from '../../components/navigation/AppHeader';
+import ProfileModal from '../../components/ui/ProfileModal';
+import { MainDrawerParamList } from '../../types';
 import { MOCK_GAMES } from '../../constants/mockData';
 
 const JeuxScreen = () => {
+  const navigation = useNavigation<DrawerNavigationProp<MainDrawerParamList>>();
   const [activeTab, setActiveTab] = useState<'all' | 'in-progress' | 'completed'>('all');
+  const [showProfileModal, setShowProfileModal] = useState(false);
 
   const filteredGames = MOCK_GAMES.filter(game => {
     if (activeTab === 'all') return true;
@@ -27,7 +33,11 @@ const JeuxScreen = () => {
 
   return (
     <View style={styles.container}>
-      <AppHeader title="Jeux & Tests" />
+      <AppHeader 
+        onMenuPress={() => navigation.openDrawer()}
+        title="Jeux & Tests" 
+        onProfilePress={() => setShowProfileModal(true)}
+      />
       <ScrollView 
         style={styles.scrollView} 
         contentContainerStyle={styles.scrollContent}
@@ -203,6 +213,10 @@ const JeuxScreen = () => {
 
         <View style={{ height: 40 }} />
       </ScrollView>
+      <ProfileModal 
+        visible={showProfileModal} 
+        onClose={() => setShowProfileModal(false)} 
+      />
     </View>
   );
 };

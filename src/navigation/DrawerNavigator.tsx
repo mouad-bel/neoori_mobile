@@ -5,12 +5,16 @@ import { useTheme } from '../store/ThemeContext';
 
 // Screens
 import FlowScreen from '../screens/FlowScreen';
+import DashboardScreen from '../screens/DashboardScreen';
 import JeuxScreen from '../screens/JeuxScreen';
 import RoomsScreen from '../screens/RoomsScreen';
 import CapsulesScreen from '../screens/CapsulesScreen';
 import FormationsScreen from '../screens/FormationsScreen';
 import OffresScreen from '../screens/OffresScreen';
 import AboutScreen from '../screens/AboutScreen';
+import ProfileScreen from '../screens/ProfileScreen';
+import RecompensesScreen from '../screens/RecompensesScreen';
+import ParametresScreen from '../screens/ParametresScreen';
 import AccessibilityDemoScreen from '../screens/AccessibilityDemoScreen';
 
 // Components
@@ -41,6 +45,11 @@ const DrawerNavigator = () => {
         }}
       />
       <Drawer.Screen
+        name="Dashboard"
+        component={DashboardScreen}
+        options={{ headerShown: false }}
+      />
+      <Drawer.Screen
         name="Jeux"
         component={JeuxScreen}
         options={{ headerShown: false }}
@@ -68,6 +77,21 @@ const DrawerNavigator = () => {
       <Drawer.Screen
         name="About"
         component={AboutScreen}
+        options={{ headerShown: false }}
+      />
+      <Drawer.Screen
+        name="Profile"
+        component={ProfileScreen}
+        options={{ headerShown: false }}
+      />
+      <Drawer.Screen
+        name="Recompenses"
+        component={RecompensesScreen}
+        options={{ headerShown: false }}
+      />
+      <Drawer.Screen
+        name="Parametres"
+        component={ParametresScreen}
         options={{ headerShown: false }}
       />
       <Drawer.Screen
