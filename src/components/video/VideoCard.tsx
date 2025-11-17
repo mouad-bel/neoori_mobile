@@ -31,9 +31,9 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onPress }) => {
         {/* Background Image/Thumbnail */}
         <Image source={{ uri: video.thumbnail }} style={styles.thumbnail} />
 
-        {/* Gradient Overlay */}
+        {/* Gradient Overlay - Brand Navy Blue */}
         <LinearGradient
-          colors={['transparent', 'rgba(10, 15, 30, 0.7)', 'rgba(10, 15, 30, 0.95)']}
+          colors={['transparent', 'rgba(15, 23, 42, 0.7)', 'rgba(15, 23, 42, 0.95)']}
           style={styles.gradient}
         />
 
@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
   container: {
     width,
     height,
-    backgroundColor: '#0A0F1E', // Fond sombre fixe pour les vidéos
+    backgroundColor: '#0F172A', // Brand navy dark background
   },
   thumbnail: {
     width: '100%',
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderRadius: 20,
     borderWidth: 2,
-    borderColor: '#22D3EE', // Couleur primaire fixe
+    borderColor: '#FF6B35', // Brand orange
   },
   creatorName: {
     fontSize: FONTS.sizes.md,
@@ -143,7 +143,7 @@ const styles = StyleSheet.create({
   verified: {
     fontSize: FONTS.sizes.md,
     marginLeft: SPACING.xs,
-    color: '#38BDF8', // Couleur primaire fixe
+    color: '#FF6B35', // Brand orange
   },
   title: {
     fontSize: FONTS.sizes.xxxl,

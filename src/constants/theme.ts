@@ -8,7 +8,26 @@ export const CURRENT_THEME: ThemeType = 'dark';
 
 // Palette de couleurs de base
 const PALETTE = {
-  // Bleus
+  // Brand Colors - Neoori
+  // Primary Base: Dark Navy Blue
+  navyBase: '#1E293B', // Primary Base from brand
+  navyDark: '#0F172A', // Darker variant
+  navyDarker: '#020617', // Darkest variant
+  
+  // Accent Gradient: Orange
+  orange500: '#FF6B35', // Main orange
+  orange600: '#FF7A00', // Darker orange
+  orange400: '#FF8C42', // Lighter orange
+  orange300: '#FFA366', // Light orange
+  orange200: '#FFB380', // Peach
+  orange100: '#FFD4B3', // Light peach
+  
+  // Clarity Neutral: Light Gray
+  neutral50: '#F8FAFC', // Almost white
+  neutral100: '#F1F5F9', // Very light gray
+  neutral200: '#E2E8F0', // Light gray
+  
+  // Bleus (kept for compatibility)
   blue50: '#F0F9FF',
   blue100: '#E0F2FE',
   blue200: '#BAE6FD',
@@ -50,15 +69,23 @@ const PALETTE = {
 // Thèmes
 const THEMES = {
   dark: {
-    // Background
-    background: PALETTE.gray900,
-    cardBackground: PALETTE.gray800,
-    surfaceBackground: PALETTE.gray800,
+    // Background - Using brand navy colors
+    background: PALETTE.navyDark, // #0F172A
+    cardBackground: PALETTE.navyBase, // #1E293B
+    surfaceBackground: PALETTE.navyBase, // #1E293B
     
-    // Primary
-    primary: PALETTE.blue400,
-    primaryDark: PALETTE.blue600,
-    primaryLight: PALETTE.blue300,
+    // Primary - Using brand orange accent
+    primary: PALETTE.orange500, // #FF6B35 - Main orange
+    primaryDark: PALETTE.orange600, // #FF7A00 - Darker orange
+    primaryLight: PALETTE.orange400, // #FF8C42 - Lighter orange
+    
+    // Brand Gradient Colors
+    accentOrange: PALETTE.orange500, // Main orange
+    accentOrangeLight: PALETTE.orange400, // Lighter orange
+    accentOrangeDark: PALETTE.orange600, // Darker orange
+    accentPeach: PALETTE.orange200, // Peach gradient
+    navyPrimary: PALETTE.navyBase, // #1E293B
+    navyDark: PALETTE.navyDark, // #0F172A
     
     // Text
     textPrimary: PALETTE.white,
@@ -84,9 +111,9 @@ const THEMES = {
     transparent: PALETTE.transparent,
     semiTransparent: 'rgba(30, 41, 59, 0.8)',
     
-    // Focus
-    focus: PALETTE.blue400,
-    focusRing: `0 0 0 2px ${PALETTE.blue700}`,
+    // Focus - Using brand orange
+    focus: PALETTE.orange500,
+    focusRing: `0 0 0 2px ${PALETTE.orange600}`,
     
     // Borders
     border: PALETTE.gray700,
@@ -94,15 +121,23 @@ const THEMES = {
   },
   
   light: {
-    // Background
-    background: PALETTE.gray50,
+    // Background - Using brand clarity neutral
+    background: PALETTE.neutral50, // #F8FAFC - Clarity Neutral
     cardBackground: PALETTE.white,
-    surfaceBackground: PALETTE.gray100,
+    surfaceBackground: PALETTE.neutral100, // #F1F5F9
     
-    // Primary
-    primary: PALETTE.blue600,
-    primaryDark: PALETTE.blue700,
-    primaryLight: PALETTE.blue400,
+    // Primary - Using brand orange accent
+    primary: PALETTE.orange600, // #FF7A00 - Darker orange for light mode
+    primaryDark: PALETTE.orange600, // #FF7A00
+    primaryLight: PALETTE.orange500, // #FF6B35
+    
+    // Brand Gradient Colors
+    accentOrange: PALETTE.orange600, // Main orange for light mode
+    accentOrangeLight: PALETTE.orange500, // Lighter orange
+    accentOrangeDark: '#E65A00', // Darker for light mode
+    accentPeach: PALETTE.orange300, // Peach gradient
+    navyPrimary: PALETTE.navyBase, // #1E293B
+    navyDark: PALETTE.navyDark, // #0F172A
     
     // Text
     textPrimary: PALETTE.gray900,
@@ -128,9 +163,9 @@ const THEMES = {
     transparent: PALETTE.transparent,
     semiTransparent: 'rgba(241, 245, 249, 0.8)',
     
-    // Focus
-    focus: PALETTE.blue500,
-    focusRing: `0 0 0 2px ${PALETTE.blue300}`,
+    // Focus - Using brand orange
+    focus: PALETTE.orange600,
+    focusRing: `0 0 0 2px ${PALETTE.orange400}`,
     
     // Borders
     border: PALETTE.gray300,

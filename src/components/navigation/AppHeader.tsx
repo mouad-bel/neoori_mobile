@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { LinearGradient } from 'expo-linear-gradient';
 import { FONTS, SPACING, BORDER_RADIUS } from '../../constants/theme';
 import { useTheme } from '../../store/ThemeContext';
 import { useAuth } from '../../store/AuthContext';
@@ -28,17 +29,19 @@ const AppHeader: React.FC<AppHeaderProps> = ({
   transparent = false,
   style = {},
 }) => {
-  const { colors } = useTheme();
+  const { colors, theme } = useTheme();
   const { user } = useAuth();
+  const isDarkMode = theme === 'dark';
+  
   return (
     <View style={[
       styles.container, 
       transparent ? 
-        { backgroundColor: 'rgba(10, 15, 30, 0.9)' } : 
+        { backgroundColor: 'rgba(15, 23, 42, 0.95)' } : // Navy blue with transparency
         { 
           backgroundColor: colors.background,
           borderBottomWidth: 1,
-          borderBottomColor: colors.cardBackground 
+          borderBottomColor: isDarkMode ? 'rgba(255, 107, 53, 0.1)' : 'rgba(30, 41, 59, 0.1)' // Brand color borders
         },
       style
     ]}>
@@ -55,7 +58,44 @@ const AppHeader: React.FC<AppHeaderProps> = ({
         )}
         {showLogo && (
           <View style={styles.logoContainer}>
-            <Text style={[styles.logoTitle, { color: colors.textPrimary }]}>{title}</Text>
+            {/* Brand Logo Icon */}
+            <View style={[
+              styles.logoIconWrapper,
+              isDarkMode && styles.logoIconWrapperDark,
+              !isDarkMode && styles.logoIconWrapperLight
+            ]}>
+              <View style={styles.logoIcon}>
+                <View style={[
+                  styles.logoBaseShape,
+                  isDarkMode && styles.logoBaseShapeDark,
+                  !isDarkMode && styles.logoBaseShapeLight
+                ]} />
+                <LinearGradient
+                  colors={['#FF6B35', '#FF8C42', '#FFB380']}
+                  start={{ x: 0.5, y: 0.8 }}
+                  end={{ x: 0.5, y: 0 }}
+                  style={styles.logoGradient}
+                >
+                  <View style={styles.logoGradientShape} />
+                </LinearGradient>
+                <View style={styles.logoDot} />
+              </View>
+            </View>
+            {/* Brand Wordmark */}
+            <View style={styles.logoTextContainer}>
+              <Text style={[
+                styles.logoTextNavy,
+                !isDarkMode && { color: '#1E293B' },
+                isDarkMode && { color: '#F8FAFC' }
+              ]}>neo</Text>
+              <View style={styles.logoOriContainer}>
+                <Text style={styles.logoTextOrange}>or</Text>
+                <View style={styles.logoI}>
+                  <Text style={styles.logoTextOrange}>i</Text>
+                  <View style={styles.logoIDot} />
+                </View>
+              </View>
+            </View>
           </View>
         )}
       </View>
@@ -67,7 +107,9 @@ const AppHeader: React.FC<AppHeaderProps> = ({
             accessibilityRole="button"
             accessibilityLabel="Notifications"
           >
-            <Ionicons name="notifications-outline" size={24} color={colors.textPrimary} />
+            <View style={styles.iconButtonContainer}>
+              <Ionicons name="notifications-outline" size={24} color={colors.textPrimary} />
+            </View>
           </TouchableOpacity>
         )}
         {showChat && (
@@ -76,23 +118,29 @@ const AppHeader: React.FC<AppHeaderProps> = ({
             accessibilityRole="button"
             accessibilityLabel="Messages"
           >
-            <Ionicons name="chatbubble-outline" size={24} color={colors.textPrimary} />
+            <View style={styles.iconButtonContainer}>
+              <Ionicons name="chatbubble-outline" size={24} color={colors.textPrimary} />
+            </View>
           </TouchableOpacity>
         )}
         {showProfile && onProfilePress && (
           <TouchableOpacity 
-            style={styles.iconButton}
+            style={[styles.iconButton, styles.profileButton]}
             onPress={onProfilePress}
             accessibilityRole="button"
             accessibilityLabel="Profil"
           >
             {user?.avatar ? (
-              <Image 
-                source={{ uri: user.avatar }} 
-                style={styles.profileAvatar} 
-              />
+              <View style={[styles.profileAvatarContainer, { borderColor: colors.primary }]}>
+                <Image 
+                  source={{ uri: user.avatar }} 
+                  style={styles.profileAvatar} 
+                />
+              </View>
             ) : (
-              <Ionicons name="person-circle-outline" size={28} color={colors.textPrimary} />
+              <View style={[styles.profileIconContainer, { borderColor: colors.primary }]}>
+                <Ionicons name="person-circle-outline" size={28} color={colors.primary} />
+              </View>
             )}
           </TouchableOpacity>
         )}
@@ -126,34 +174,147 @@ const styles = StyleSheet.create({
   logoContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    gap: SPACING.sm,
   },
-  logo: {
+  logoIconWrapper: {
     width: 36,
     height: 36,
     borderRadius: BORDER_RADIUS.sm,
-    alignItems: 'center',
     justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'transparent',
+    padding: 3,
   },
-  logoText: {
-    fontSize: 20,
-    fontWeight: '700',
+  logoIconWrapperDark: {
+    backgroundColor: '#1E293B',
+    borderWidth: 1,
+    borderColor: 'rgba(255, 107, 53, 0.2)',
   },
-  logoTitle: {
-    fontSize: FONTS.sizes.xl,
-    fontWeight: '700',
-    marginLeft: SPACING.md,
+  logoIconWrapperLight: {
+    backgroundColor: '#F8FAFC',
+    borderWidth: 1,
+    borderColor: 'rgba(30, 41, 59, 0.15)',
+  },
+  logoIcon: {
+    width: 30,
+    height: 30,
+    borderRadius: BORDER_RADIUS.sm,
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'visible',
+    position: 'relative',
+    backgroundColor: 'transparent',
+  },
+  logoBaseShape: {
+    position: 'absolute',
+    width: 24,
+    height: 24,
+    borderRadius: 15,
+    backgroundColor: '#1E293B',
+    bottom: 1,
+    left: 1,
+    transform: [{ rotate: '-15deg' }],
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.05)',
+  },
+  logoBaseShapeDark: {
+    borderColor: 'rgba(255, 255, 255, 0.1)',
+  },
+  logoBaseShapeLight: {
+    borderColor: 'rgba(30, 41, 59, 0.2)',
+  },
+  logoGradient: {
+    position: 'absolute',
+    width: 21,
+    height: 21,
+    borderRadius: 12,
+    bottom: 1,
+    right: 1,
+    overflow: 'hidden',
+  },
+  logoGradientShape: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderTopRightRadius: 12,
+    borderBottomLeftRadius: 9,
+  },
+  logoDot: {
+    position: 'absolute',
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: '#FF6B35',
+    top: 1,
+    right: 4,
+  },
+  logoTextContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  logoTextNavy: {
+    fontSize: FONTS.sizes.lg,
+    fontWeight: FONTS.weights.bold,
+    letterSpacing: 0.5,
+  },
+  logoOriContainer: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+  },
+  logoTextOrange: {
+    fontSize: FONTS.sizes.lg,
+    fontWeight: FONTS.weights.bold,
+    letterSpacing: 0.5,
+    color: '#FF6B35',
+  },
+  logoI: {
+    position: 'relative',
+  },
+  logoIDot: {
+    position: 'absolute',
+    width: 3,
+    height: 3,
+    borderRadius: 1.5,
+    backgroundColor: '#FF6B35',
+    top: -1,
+    right: -1,
   },
   rightSection: {
     flexDirection: 'row',
     alignItems: 'center',
   },
   iconButton: {
-    marginLeft: SPACING.lg,
+    marginLeft: SPACING.md,
+  },
+  iconButtonContainer: {
+    padding: SPACING.xs,
+    borderRadius: BORDER_RADIUS.sm,
+  },
+  profileButton: {
+    marginLeft: SPACING.sm,
+  },
+  profileAvatarContainer: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    borderWidth: 2,
+    overflow: 'hidden',
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   profileAvatar: {
     width: 28,
     height: 28,
     borderRadius: 14,
+  },
+  profileIconContainer: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    borderWidth: 2,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
 });
 

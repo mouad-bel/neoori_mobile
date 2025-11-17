@@ -43,7 +43,7 @@ const DashboardScreen = () => {
       title: 'Tests complétés',
       value: '3',
       change: '+1',
-      iconBg: '#3B82F6',
+      iconBg: '#FF6B35',
     },
     {
       id: '2',
@@ -51,7 +51,7 @@ const DashboardScreen = () => {
       title: 'Crédits disponibles',
       value: '75',
       change: '+15',
-      iconBg: '#3B82F6',
+      iconBg: '#FF6B35',
     },
     {
       id: '3',
@@ -59,7 +59,7 @@ const DashboardScreen = () => {
       title: 'Recommandations',
       value: '8',
       change: null,
-      iconBg: '#8B5CF6',
+      iconBg: '#FF8C42',
     },
     {
       id: '4',
@@ -67,7 +67,7 @@ const DashboardScreen = () => {
       title: 'Profil complété',
       value: '65%',
       change: null,
-      iconBg: '#F97316',
+      iconBg: '#FFB380',
     },
   ];
 
@@ -123,9 +123,9 @@ const DashboardScreen = () => {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'completed':
-        return '#10B981';
+        return colors.primary; // Brand orange
       case 'in-progress':
-        return '#F59E0B';
+        return '#FFB380'; // Light orange/peach
       case 'to-complete':
         return colors.textTertiary;
       default:
@@ -154,9 +154,9 @@ const DashboardScreen = () => {
         title="Tableau de bord"
       />
       <ScrollView style={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        {/* Hero Section with Gradient */}
+        {/* Hero Section with Gradient - Brand Orange */}
         <LinearGradient
-          colors={['#10B981', '#14B8A6']}
+          colors={['#FF6B35', '#FF8C42', '#FFB380']}
           start={{ x: 0, y: 0 }}
           end={{ x: 0, y: 1 }}
           style={styles.heroGradient}
@@ -198,8 +198,8 @@ const DashboardScreen = () => {
                 <Text style={[styles.statValue, { color: colors.textPrimary }]}>{stat.value}</Text>
                 {stat.change && (
                   <View style={styles.statChange}>
-                    <Ionicons name="trending-up" size={14} color="#10B981" />
-                    <Text style={[styles.statChangeText, { color: '#10B981' }]}>{stat.change}</Text>
+                    <Ionicons name="trending-up" size={14} color={colors.primary} />
+                    <Text style={[styles.statChangeText, { color: colors.primary }]}>{stat.change}</Text>
                   </View>
                 )}
               </View>
@@ -217,7 +217,7 @@ const DashboardScreen = () => {
                 <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
                   Progression de votre profil
                 </Text>
-                <TouchableOpacity style={[styles.completeButton, { backgroundColor: '#10B981' }]}>
+                <TouchableOpacity style={[styles.completeButton, { backgroundColor: colors.primary }]}>
                   <Text style={styles.completeButtonText}>Compléter →</Text>
                 </TouchableOpacity>
               </View>
@@ -268,7 +268,7 @@ const DashboardScreen = () => {
                   Jeux & Tests
                 </Text>
                 <TouchableOpacity onPress={() => navigation.navigate('Jeux')}>
-                  <Text style={[styles.seeAllText, { color: '#10B981' }]}>Voir tous →</Text>
+                  <Text style={[styles.seeAllText, { color: colors.primary }]}>Voir tous →</Text>
                 </TouchableOpacity>
               </View>
               {gamesTests.map((game) => (
@@ -293,12 +293,12 @@ const DashboardScreen = () => {
                         style={[styles.gameProgressFill, { width: `${game.progress}%` }]}
                       />
                     </View>
-                    <Text style={[styles.gameProgressPercent, { color: '#10B981' }]}>
+                    <Text style={[styles.gameProgressPercent, { color: colors.primary }]}>
                       {game.progress}%
                     </Text>
                   </View>
                   <TouchableOpacity
-                    style={[styles.gameActionButton, { backgroundColor: '#10B981' }]}
+                    style={[styles.gameActionButton, { backgroundColor: colors.primary }]}
                   >
                     <Text style={styles.gameActionText}>{game.action}</Text>
                   </TouchableOpacity>
@@ -313,14 +313,14 @@ const DashboardScreen = () => {
                   Recommandations pour vous
                 </Text>
                 <TouchableOpacity>
-                  <Text style={[styles.seeAllText, { color: '#10B981' }]}>Voir toutes →</Text>
+                  <Text style={[styles.seeAllText, { color: colors.primary }]}>Voir toutes →</Text>
                 </TouchableOpacity>
               </View>
               {recommendations.map((rec) => (
                 <View key={rec.id} style={styles.recommendationCard}>
                   <View style={styles.recommendationImageContainer}>
                     <Image source={{ uri: rec.image }} style={styles.recommendationImage} />
-                    <View style={[styles.matchBadge, { backgroundColor: '#10B981' }]}>
+                    <View style={[styles.matchBadge, { backgroundColor: colors.primary }]}>
                       <Text style={styles.matchBadgeText}>{rec.match}% match</Text>
                     </View>
                   </View>
@@ -332,7 +332,7 @@ const DashboardScreen = () => {
                       {rec.type}
                     </Text>
                     <TouchableOpacity>
-                      <Text style={[styles.learnMoreText, { color: '#10B981' }]}>
+                      <Text style={[styles.learnMoreText, { color: colors.primary }]}>
                         En savoir plus
                       </Text>
                     </TouchableOpacity>
@@ -347,12 +347,12 @@ const DashboardScreen = () => {
             {/* Coach IA Section */}
             <View style={[styles.section, { backgroundColor: colors.cardBackground }]}>
               <View style={styles.coachHeader}>
-                <View style={[styles.coachIcon, { backgroundColor: '#3B82F620' }]}>
-                  <Ionicons name="chatbubble-outline" size={24} color="#3B82F6" />
+                <View style={[styles.coachIcon, { backgroundColor: '#FF6B3520' }]}>
+                  <Ionicons name="chatbubble-outline" size={24} color="#FF6B35" />
                 </View>
                 <View style={styles.coachTitleContainer}>
                   <Text style={[styles.coachTitle, { color: colors.textPrimary }]}>Coach IA</Text>
-                  <Text style={[styles.coachAvailability, { color: '#10B981' }]}>
+                  <Text style={[styles.coachAvailability, { color: colors.primary }]}>
                     Disponible 24/7
                   </Text>
                 </View>
@@ -361,7 +361,7 @@ const DashboardScreen = () => {
                 Bonjour Sophie ! Votre profil progresse bien. Que diriez-vous de compléter la section
                 compétences aujourd'hui ?
               </Text>
-              <TouchableOpacity style={[styles.coachButton, { backgroundColor: '#10B981' }]}>
+              <TouchableOpacity style={[styles.coachButton, { backgroundColor: colors.primary }]}>
                 <Text style={styles.coachButtonText}>Discuter avec mon coach →</Text>
               </TouchableOpacity>
             </View>
@@ -394,7 +394,7 @@ const DashboardScreen = () => {
                 <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
                   Vos crédits
                 </Text>
-                <Text style={[styles.creditsValue, { color: '#10B981' }]}>75</Text>
+                <Text style={[styles.creditsValue, { color: colors.primary }]}>75</Text>
               </View>
               <Text style={[styles.creditsDescription, { color: colors.textSecondary }]}>
                 Utilisez vos crédits pour débloquer des services premium comme des sessions de
@@ -415,7 +415,7 @@ const DashboardScreen = () => {
         {/* Floating Chat Button */}
         <TouchableOpacity style={styles.floatingChatButton}>
           <LinearGradient
-            colors={['#8B5CF6', '#7C3AED']}
+            colors={['#FF6B35', '#FF8C42']}
             style={styles.floatingButtonGradient}
           >
             <Ionicons name="chatbubble-outline" size={24} color="white" />
@@ -597,13 +597,13 @@ const styles = StyleSheet.create({
   },
   profileProgressBar: {
     height: 8,
-    backgroundColor: 'rgba(16, 185, 129, 0.2)',
+    backgroundColor: 'rgba(255, 107, 53, 0.2)',
     borderRadius: 4,
     overflow: 'hidden',
   },
   profileProgressFill: {
     height: '100%',
-    backgroundColor: '#10B981',
+    backgroundColor: '#FF6B35',
     borderRadius: 4,
   },
   profileSectionsGrid: {
@@ -656,14 +656,14 @@ const styles = StyleSheet.create({
   },
   gameProgressBar: {
     height: 6,
-    backgroundColor: 'rgba(16, 185, 129, 0.2)',
+    backgroundColor: 'rgba(255, 107, 53, 0.2)',
     borderRadius: 3,
     overflow: 'hidden',
     marginBottom: SPACING.xs,
   },
   gameProgressFill: {
     height: '100%',
-    backgroundColor: '#10B981',
+    backgroundColor: '#FF6B35',
     borderRadius: 3,
   },
   gameProgressPercent: {
@@ -777,7 +777,7 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#10B981',
+    backgroundColor: '#FF6B35',
     marginTop: 6,
   },
   activityContent: {
@@ -832,7 +832,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: '#10B981',
+    borderColor: '#FF6B35',
   },
 });
 

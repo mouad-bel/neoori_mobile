@@ -37,7 +37,7 @@ const FormationsScreen = () => {
   const getLevelColor = (level: string) => {
     switch (level) {
       case 'Débutant':
-        return '#10B981';
+        return '#FF6B35';
       case 'Intermédiaire':
         return '#F59E0B';
       case 'Avancé':
@@ -60,11 +60,11 @@ const FormationsScreen = () => {
           </View>
         </View>
         <View style={styles.featuredBadges}>
-          <View style={[styles.categoryBadge, { backgroundColor: '#8B5CF6' }]}>
+          <View style={[styles.categoryBadge, { backgroundColor: '#FF6B35' }]}>
             <Text style={styles.categoryBadgeText}>{item.category}</Text>
           </View>
           {item.matchPercentage && (
-            <View style={[styles.matchBadge, { backgroundColor: '#3B82F6' }]}>
+            <View style={[styles.matchBadge, { backgroundColor: '#FF8C42' }]}>
               <Text style={styles.matchBadgeText}>{item.matchPercentage}% match</Text>
             </View>
           )}
@@ -104,11 +104,11 @@ const FormationsScreen = () => {
         <Image source={{ uri: item.thumbnail }} style={styles.recommendedImage} />
         <View style={styles.recommendedOverlay} />
         <View style={styles.recommendedBadges}>
-          <View style={[styles.categoryBadge, { backgroundColor: '#8B5CF6' }]}>
+          <View style={[styles.categoryBadge, { backgroundColor: '#FF6B35' }]}>
             <Text style={styles.categoryBadgeText}>{item.category}</Text>
           </View>
           {item.matchPercentage && (
-            <View style={[styles.matchBadge, { backgroundColor: '#10B981' }]}>
+            <View style={[styles.matchBadge, { backgroundColor: '#FF8C42' }]}>
               <Text style={styles.matchBadgeText}>{item.matchPercentage}% match</Text>
             </View>
           )}
@@ -141,7 +141,7 @@ const FormationsScreen = () => {
         </View>
         <View style={styles.recommendedFooter}>
           <Text style={[styles.freeText, { color: colors.textSecondary }]}>Gratuit</Text>
-          <TouchableOpacity style={[styles.explorerButton, { backgroundColor: '#8B5CF6' }]}>
+          <TouchableOpacity style={[styles.explorerButton, { backgroundColor: '#FF6B35' }]}>
             <Ionicons name="play" size={16} color="white" />
             <Text style={styles.explorerButtonText}>Explorer</Text>
           </TouchableOpacity>
@@ -158,7 +158,7 @@ const FormationsScreen = () => {
       <View style={styles.allFormationsImageContainer}>
         <Image source={{ uri: item.thumbnail }} style={styles.allFormationsImage} />
         <View style={styles.allFormationsOverlay} />
-        <View style={[styles.categoryBadge, { backgroundColor: '#8B5CF6', position: 'absolute', top: SPACING.md, left: SPACING.md }]}>
+        <View style={[styles.categoryBadge, { backgroundColor: '#FF6B35', position: 'absolute', top: SPACING.md, left: SPACING.md }]}>
           <Text style={styles.categoryBadgeText}>{item.category}</Text>
         </View>
       </View>
@@ -186,7 +186,7 @@ const FormationsScreen = () => {
       </View>
     </TouchableOpacity>
   );
-
+  
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <AppHeader 
@@ -198,11 +198,11 @@ const FormationsScreen = () => {
         {/* Hero Section */}
         <View style={styles.heroSection}>
           <View style={styles.heroBadges}>
-            <View style={[styles.heroBadge, { backgroundColor: '#8B5CF6' }]}>
+            <View style={[styles.heroBadge, { backgroundColor: '#FF6B35' }]}>
               <Ionicons name="school" size={14} color="white" />
               <Text style={styles.heroBadgeText}>Formations</Text>
             </View>
-            <View style={[styles.heroBadge, { backgroundColor: '#8B5CF6' }]}>
+            <View style={[styles.heroBadge, { backgroundColor: '#FF6B35' }]}>
               <Text style={styles.heroBadgeText}>{MOCK_FORMATIONS.length} formations disponibles</Text>
             </View>
           </View>
@@ -305,7 +305,7 @@ const FormationsScreen = () => {
               <Ionicons name="list" size={24} color={colors.primary} />
               <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
                 Toutes les formations
-              </Text>
+        </Text>
             </View>
             <TouchableOpacity>
               <Text style={[styles.seeAllText, { color: colors.primary }]}>Voir tout →</Text>
@@ -321,10 +321,10 @@ const FormationsScreen = () => {
             snapToInterval={CARD_WIDTH + SPACING.lg}
             decelerationRate="fast"
           />
-        </View>
+      </View>
 
         <View style={{ height: 40 }} />
-      </ScrollView>
+    </ScrollView>
       <ProfileModal 
         visible={showProfileModal} 
         onClose={() => setShowProfileModal(false)} 
@@ -458,7 +458,7 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: '#8B5CF6',
+    backgroundColor: '#FF6B35',
     justifyContent: 'center',
     alignItems: 'center',
   },

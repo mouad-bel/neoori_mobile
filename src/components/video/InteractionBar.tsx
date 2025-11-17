@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
     height: SPACING.lg,
   },
   aiButton: {
-    backgroundColor: 'rgba(56, 189, 248, 0.2)', // Couleur primaire semi-transparente fixe
+    backgroundColor: 'rgba(255, 107, 53, 0.2)', // Brand orange semi-transparent
     borderRadius: 24,
   },
 });

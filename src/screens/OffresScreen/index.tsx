@@ -91,8 +91,8 @@ const OffresScreen = () => {
         <Text style={[styles.companyName, { color: colors.textPrimary }]}>
           {item.company}
         </Text>
-        <View style={[styles.categoryBadge, { backgroundColor: '#8B5CF620' }]}>
-          <Text style={[styles.categoryText, { color: '#8B5CF6' }]}>{item.category}</Text>
+        <View style={[styles.categoryBadge, { backgroundColor: '#FF6B3520' }]}>
+          <Text style={[styles.categoryText, { color: '#FF6B35' }]}>{item.category}</Text>
         </View>
       </View>
 
@@ -130,15 +130,15 @@ const OffresScreen = () => {
       {/* Match Percentage */}
       {item.matchPercentage && (
         <View style={styles.matchContainer}>
-          <Ionicons name="checkmark-circle" size={16} color="#10B981" />
-          <Text style={[styles.matchText, { color: '#10B981' }]}>
+          <Ionicons name="checkmark-circle" size={16} color="#FF6B35" />
+          <Text style={[styles.matchText, { color: '#FF6B35' }]}>
             Recommandée selon ton profil {item.matchPercentage}%
           </Text>
         </View>
       )}
 
       {/* Salary */}
-      <Text style={[styles.salary, { color: '#10B981' }]}>{item.salary}</Text>
+      <Text style={[styles.salary, { color: '#FF6B35' }]}>{item.salary}</Text>
 
       {/* Skills */}
       <View style={styles.skillsContainer}>
@@ -170,7 +170,7 @@ const OffresScreen = () => {
             Voir les détails
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.applyButton, { backgroundColor: '#10B981' }]}>
+        <TouchableOpacity style={[styles.applyButton, { backgroundColor: '#FF6B35' }]}>
           <Text style={styles.applyButtonText}>Candidater →</Text>
         </TouchableOpacity>
       </View>
@@ -208,7 +208,7 @@ const OffresScreen = () => {
           {item.company}
         </Text>
         <Text style={[styles.separator, { color: colors.textTertiary }]}> - </Text>
-        <Text style={[styles.categoryTextSmall, { color: '#8B5CF6' }]}>{item.category}</Text>
+        <Text style={[styles.categoryTextSmall, { color: '#FF6B35' }]}>{item.category}</Text>
       </View>
 
       <View style={styles.detailsContainerSmall}>
@@ -236,8 +236,8 @@ const OffresScreen = () => {
 
       {item.matchPercentage && item.matchPercentage >= 80 && (
         <View style={styles.matchContainerSmall}>
-          <Ionicons name="checkmark-circle" size={14} color="#10B981" />
-          <Text style={[styles.matchTextSmall, { color: '#10B981' }]}>
+          <Ionicons name="checkmark-circle" size={14} color="#FF6B35" />
+          <Text style={[styles.matchTextSmall, { color: '#FF6B35' }]}>
             Recommandée ton profil {item.matchPercentage}%
           </Text>
         </View>
@@ -270,7 +270,7 @@ const OffresScreen = () => {
             Voir les détails
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.applyButtonSmall, { backgroundColor: '#8B5CF6' }]}>
+        <TouchableOpacity style={[styles.applyButtonSmall, { backgroundColor: '#FF6B35' }]}>
           <Text style={styles.applyButtonTextSmall}>Candidater</Text>
         </TouchableOpacity>
       </View>
@@ -288,7 +288,7 @@ const OffresScreen = () => {
         {/* Hero Section */}
         <View style={styles.heroSection}>
           <View style={styles.heroBadges}>
-            <View style={[styles.heroBadge, { backgroundColor: '#10B981' }]}>
+            <View style={[styles.heroBadge, { backgroundColor: '#FF6B35' }]}>
               <Ionicons name="briefcase" size={14} color="white" />
               <Text style={styles.heroBadgeText}>Offres d'emploi</Text>
             </View>
@@ -300,7 +300,7 @@ const OffresScreen = () => {
           </View>
           <Text style={[styles.heroTitle, { color: colors.textPrimary }]}>
             Trouve ton opportunité idéale pour{' '}
-            <Text style={{ color: '#10B981' }}>ta carrière</Text>
+            <Text style={{ color: '#FF6B35' }}>ta carrière</Text>
           </Text>
           <Text style={[styles.heroDescription, { color: colors.textSecondary }]}>
             Neoori sélectionne pour toi les offres et projets les plus alignés avec ton profil et
@@ -319,7 +319,7 @@ const OffresScreen = () => {
                 onChangeText={setSearchQuery}
               />
             </View>
-            <TouchableOpacity style={[styles.filterButton, { backgroundColor: '#10B981' }]}>
+            <TouchableOpacity style={[styles.filterButton, { backgroundColor: '#FF6B35' }]}>
               <Ionicons name="options" size={20} color="white" />
               <Text style={styles.filterButtonText}>Filtrer</Text>
             </TouchableOpacity>
@@ -338,14 +338,14 @@ const OffresScreen = () => {
           </View>
 
           {/* Info Banner */}
-          <View style={[styles.infoBanner, { backgroundColor: '#3B82F620' }]}>
+          <View style={[styles.infoBanner, { backgroundColor: '#FF8C4220' }]}>
             <View style={styles.infoBannerContent}>
-              <Ionicons name="information-circle" size={16} color="#3B82F6" />
+              <Ionicons name="information-circle" size={16} color="#FF8C42" />
               <Text style={[styles.infoBannerText, { color: colors.textSecondary }]}>
                 Ces offres ont été sélectionnées pour toi en fonction de ton profil.
               </Text>
             </View>
-            <View style={[styles.personalizedBadge, { backgroundColor: '#F97316' }]}>
+            <View style={[styles.personalizedBadge, { backgroundColor: '#FF6B35' }]}>
               <Text style={styles.personalizedBadgeText}>{recommendedOffers.length}</Text>
             </View>
           </View>
@@ -413,13 +413,13 @@ const OffresScreen = () => {
             Découvre les entreprises qui recrutent activement et créent les opportunités de demain
             pour ta carrière.
         </Text>
-          <TouchableOpacity style={[styles.partnerButton, { backgroundColor: '#8B5CF6' }]}>
+          <TouchableOpacity style={[styles.partnerButton, { backgroundColor: '#FF6B35' }]}>
             <Text style={styles.partnerButtonText}>Voir toutes les entreprises →</Text>
           </TouchableOpacity>
       </View>
 
         <View style={{ height: 40 }} />
-      </ScrollView>
+    </ScrollView>
       <ProfileModal 
         visible={showProfileModal} 
         onClose={() => setShowProfileModal(false)} 

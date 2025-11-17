@@ -164,7 +164,7 @@ const ProfileScreen = () => {
                       </View>
                     </View>
                   </View>
-                  <TouchableOpacity style={[styles.editProfileButton, { backgroundColor: '#10B981' }]}>
+                  <TouchableOpacity style={[styles.editProfileButton, { backgroundColor: '#FF6B35' }]}>
                     <Text style={styles.editProfileButtonText}>Modifier le profil</Text>
                   </TouchableOpacity>
                 </View>
@@ -174,7 +174,7 @@ const ProfileScreen = () => {
             {/* Synthèse IA Section */}
             <View style={[styles.section, { backgroundColor: colors.cardBackground }]}>
               <View style={styles.sectionHeader}>
-                <Ionicons name="sparkles" size={20} color="#8B5CF6" />
+                <Ionicons name="sparkles" size={20} color="#FF8C42" />
                 <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
                   Synthèse IA
                 </Text>
@@ -301,7 +301,7 @@ const ProfileScreen = () => {
                     <View style={[styles.skillProgressBar, { backgroundColor: colors.surfaceBackground }]}>
                       <View style={[styles.skillProgressFill, { width: `${skill.level}%` }]} />
                     </View>
-                    <Text style={[styles.skillPercentage, { color: '#10B981' }]}>
+                    <Text style={[styles.skillPercentage, { color: '#FF6B35' }]}>
                       {skill.level}%
                     </Text>
                   </View>
@@ -439,7 +439,7 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: '#10B981',
+    backgroundColor: '#FF6B35',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -502,7 +502,7 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#10B981',
+    backgroundColor: '#FF6B35',
   },
   synthesisItem: {
     marginBottom: SPACING.lg,
@@ -587,7 +587,7 @@ const styles = StyleSheet.create({
   },
   skillProgressFill: {
     height: '100%',
-    backgroundColor: '#10B981',
+    backgroundColor: '#FF6B35',
     borderRadius: 4,
   },
   skillPercentage: {

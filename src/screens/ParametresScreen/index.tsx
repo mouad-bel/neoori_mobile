@@ -230,7 +230,7 @@ const ParametresScreen = () => {
         {/* Notifications Section */}
         <View style={[styles.section, { backgroundColor: colors.cardBackground }]}>
           <View style={styles.sectionHeader}>
-            <Ionicons name="notifications-outline" size={20} color="#8B5CF6" />
+            <Ionicons name="notifications-outline" size={20} color="#FF6B35" />
             <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
               Notifications
             </Text>
@@ -253,7 +253,7 @@ const ParametresScreen = () => {
               onValueChange={(value) =>
                 setNotificationSettings({ ...notificationSettings, emailNotifications: value })
               }
-              trackColor={{ false: colors.border, true: '#3B82F6' }}
+              trackColor={{ false: colors.border, true: '#FF6B35' }}
               thumbColor="white"
             />
           </View>
@@ -275,7 +275,7 @@ const ParametresScreen = () => {
               onValueChange={(value) =>
                 setNotificationSettings({ ...notificationSettings, pushNotifications: value })
               }
-              trackColor={{ false: colors.border, true: '#3B82F6' }}
+              trackColor={{ false: colors.border, true: '#FF6B35' }}
               thumbColor="white"
             />
           </View>
@@ -284,7 +284,7 @@ const ParametresScreen = () => {
         {/* Privacy Section */}
         <View style={[styles.section, { backgroundColor: colors.cardBackground }]}>
           <View style={styles.sectionHeader}>
-            <Ionicons name="shield-checkmark-outline" size={20} color="#F97316" />
+            <Ionicons name="shield-checkmark-outline" size={20} color="#FF8C42" />
             <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
               Confidentialité
             </Text>
@@ -306,7 +306,7 @@ const ParametresScreen = () => {
               onValueChange={(value) =>
                 setPrivacySettings({ ...privacySettings, publicProfile: value })
               }
-              trackColor={{ false: colors.border, true: '#3B82F6' }}
+              trackColor={{ false: colors.border, true: '#FF6B35' }}
               thumbColor="white"
             />
           </View>
@@ -327,7 +327,7 @@ const ParametresScreen = () => {
               onValueChange={(value) =>
                 setPrivacySettings({ ...privacySettings, showEmail: value })
               }
-              trackColor={{ false: colors.border, true: '#3B82F6' }}
+              trackColor={{ false: colors.border, true: '#FF6B35' }}
               thumbColor="white"
             />
           </View>
@@ -344,7 +344,7 @@ const ParametresScreen = () => {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.saveButton, { backgroundColor: '#3B82F6' }]}
+            style={[styles.saveButton, { backgroundColor: '#FF6B35' }]}
             onPress={handleSave}
           >
             <Ionicons name="checkmark-circle-outline" size={20} color="white" />

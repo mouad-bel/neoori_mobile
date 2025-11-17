@@ -34,11 +34,11 @@ const CapsulesScreen = () => {
   const getContentTypeColor = (type: string) => {
     switch (type) {
       case 'Lecture courte':
-        return '#3B82F6'; // Blue
+        return '#FF6B35'; // Brand Orange
       case 'Témoignage':
-        return '#F97316'; // Orange
+        return '#FF8C42'; // Brand Orange Light
       case 'Étude approfondie':
-        return '#A855F7'; // Purple
+        return '#FFB380'; // Brand Orange Peach
       default:
         return colors.primary;
     }
@@ -159,7 +159,7 @@ const CapsulesScreen = () => {
       </View>
     </TouchableOpacity>
   );
-
+  
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <AppHeader 
@@ -171,7 +171,7 @@ const CapsulesScreen = () => {
         {/* Hero Section */}
         <View style={styles.heroSection}>
           <View style={styles.heroBadges}>
-            <View style={[styles.heroBadge, { backgroundColor: '#3B82F6' }]}>
+            <View style={[styles.heroBadge, { backgroundColor: '#FF6B35' }]}>
               <Ionicons name="videocam" size={14} color="white" />
               <Text style={styles.heroBadgeText}>Capsules & lectures</Text>
             </View>
@@ -253,7 +253,7 @@ const CapsulesScreen = () => {
               <Ionicons name="document-text" size={24} color={colors.primary} />
               <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
                 Articles & lectures
-              </Text>
+        </Text>
             </View>
             <TouchableOpacity>
               <Text style={[styles.seeAllText, { color: colors.primary }]}>Voir tout →</Text>
@@ -262,8 +262,8 @@ const CapsulesScreen = () => {
           <View style={styles.articlesGrid}>
             {MOCK_ARTICLES.map((article, index) => renderArticleCard(article, index))}
           </View>
-        </View>
-      </ScrollView>
+      </View>
+    </ScrollView>
       <ProfileModal 
         visible={showProfileModal} 
         onClose={() => setShowProfileModal(false)} 
@@ -397,7 +397,7 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 32,
-    backgroundColor: '#3B82F6',
+    backgroundColor: '#FF6B35',
     justifyContent: 'center',
     alignItems: 'center',
   },

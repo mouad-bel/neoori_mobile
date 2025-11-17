@@ -45,7 +45,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ visible, onClose }) => {
       icon: 'home-outline',
       title: 'Tableau de bord',
       subtitle: 'Dash',
-      iconBg: '#3B82F6',
+      iconBg: '#FF6B35', // Brand orange
       onPress: () => {
         onClose();
         navigation.navigate('Dashboard');
@@ -56,7 +56,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ visible, onClose }) => {
       icon: 'ribbon-outline',
       title: 'Récompenses',
       subtitle: 'Rec',
-      iconBg: '#8B5CF6',
+      iconBg: '#FF8C42', // Brand orange light
       onPress: () => {
         onClose();
         navigation.navigate('Recompenses');
@@ -67,7 +67,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ visible, onClose }) => {
       icon: 'person-outline',
       title: 'Mon Profil',
       subtitle: 'Gérer vos informations',
-      iconBg: '#3B82F6',
+      iconBg: '#FF6B35', // Brand orange
       onPress: () => {
         onClose();
         navigation.navigate('Profile');
@@ -78,7 +78,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ visible, onClose }) => {
       icon: 'settings-outline',
       title: 'Paramètres',
       subtitle: 'Préférences et confidentialité',
-      iconBg: '#8B5CF6',
+      iconBg: '#FFB380', // Brand orange peach
       onPress: () => {
         onClose();
         navigation.navigate('Parametres');
@@ -89,7 +89,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ visible, onClose }) => {
       icon: 'help-circle-outline',
       title: 'Aide & Support',
       subtitle: "Centre d'aide",
-      iconBg: '#F59E0B',
+      iconBg: '#FF8C42', // Brand orange light
       onPress: () => {
         onClose();
         navigation.navigate('About');
@@ -123,7 +123,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ visible, onClose }) => {
               </TouchableOpacity>
               <TouchableOpacity style={styles.chatIcon} accessibilityLabel="Messages">
                 <Ionicons name="chatbubble-outline" size={24} color={colors.textPrimary} />
-                <View style={[styles.notificationDot, { backgroundColor: '#10B981' }]} />
+                <View style={[styles.notificationDot, { backgroundColor: '#FF6B35' }]} />
               </TouchableOpacity>
               {user?.avatar && (
                 <Image source={{ uri: user.avatar }} style={styles.headerAvatar} />
@@ -144,9 +144,9 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ visible, onClose }) => {
             showsVerticalScrollIndicator={false}
             bounces={false}
           >
-            {/* User Profile Card */}
+            {/* User Profile Card - Brand Orange Gradient */}
             <LinearGradient
-              colors={['#667eea', '#764ba2']}
+              colors={['#FF6B35', '#FF8C42', '#FFB380']}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={styles.profileCard}
@@ -295,7 +295,7 @@ const styles = StyleSheet.create({
     width: 16,
     height: 16,
     borderRadius: 8,
-    backgroundColor: '#10B981',
+    backgroundColor: '#FF6B35', // Brand orange
     borderWidth: 3,
     borderColor: 'white',
   },
@@ -327,8 +327,9 @@ const styles = StyleSheet.create({
   },
   progressFill: {
     height: '100%',
-    backgroundColor: '#10B981',
+    backgroundColor: '#FFFFFF', // White progress fill on orange gradient
     borderRadius: 3,
+    opacity: 0.9,
   },
   progressText: {
     fontSize: FONTS.sizes.sm,

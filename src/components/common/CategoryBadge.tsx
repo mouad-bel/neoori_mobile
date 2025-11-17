@@ -19,7 +19,7 @@ const CategoryBadge: React.FC<CategoryBadgeProps> = ({
 }) => {
   const { colors } = useTheme();
   // Si fixedColors est true, on utilise la couleur fournie ou une couleur fixe
-  const badgeColor = fixedColors ? (color || '#38BDF8') : (color || colors.primary);
+  const badgeColor = fixedColors ? (color || '#FF6B35') : (color || colors.primary); // Brand orange
   return (
     <View style={[styles.container, { backgroundColor: badgeColor + '20' }]}>
       <Ionicons name={icon} size={16} color={badgeColor} />

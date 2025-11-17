@@ -45,7 +45,7 @@ const IconButton: React.FC<IconButtonProps> = ({
           name={icon}
           size={iconSize}
           color={active 
-            ? (fixedColors ? '#38BDF8' : colors.primary) 
+            ? (fixedColors ? '#FF6B35' : colors.primary) // Brand orange
             : (fixedColors ? '#FFFFFF' : colors.textPrimary)}
         />
         {count !== undefined && count > 0 && (

@@ -10,7 +10,8 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { Ionicons } from '@expo/vector-icons';
-import { COLORS, FONTS, SPACING, BORDER_RADIUS } from '../../constants/theme';
+import { FONTS, SPACING, BORDER_RADIUS } from '../../constants/theme';
+import { useTheme } from '../../store/ThemeContext';
 import AppHeader from '../../components/navigation/AppHeader';
 import ProfileModal from '../../components/ui/ProfileModal';
 import { MainDrawerParamList } from '../../types';
@@ -18,6 +19,7 @@ import { MOCK_GAMES } from '../../constants/mockData';
 
 const JeuxScreen = () => {
   const navigation = useNavigation<DrawerNavigationProp<MainDrawerParamList>>();
+  const { colors } = useTheme();
   const [activeTab, setActiveTab] = useState<'all' | 'in-progress' | 'completed'>('all');
   const [showProfileModal, setShowProfileModal] = useState(false);
 
@@ -32,7 +34,7 @@ const JeuxScreen = () => {
   const completedCount = MOCK_GAMES.filter(g => g.status === 'completed').length;
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
       <AppHeader 
         onMenuPress={() => navigation.openDrawer()}
         title="Jeux & Tests" 
@@ -44,31 +46,31 @@ const JeuxScreen = () => {
         showsVerticalScrollIndicator={false}
       >
         {/* Header Section */}
-        <View style={styles.header}>
+        <View style={[styles.header, { backgroundColor: colors.background }]}>
           <View style={styles.newBadge}>
-            <Ionicons name="flash" size={14} color={COLORS.background} />
+            <Ionicons name="flash" size={14} color={colors.background} />
             <Text style={styles.newBadgeText}>Nouveau</Text>
           </View>
         
-        <Text style={styles.title}>Jeux & Tests de Découverte</Text>
+        <Text style={[styles.title, { color: colors.textPrimary }]}>Jeux & Tests de Découverte</Text>
         
-        <Text style={styles.description}>
+        <Text style={[styles.description, { color: colors.textSecondary }]}>
           Découvre tes forces en quelques minutes. Chaque jeu enrichit ton profil IA et 
           débloque des crédits pour accéder à des services premium.
         </Text>
 
         <View style={styles.features}>
           <View style={styles.feature}>
-            <Ionicons name="checkmark-circle" size={20} color="#10B981" />
-            <Text style={styles.featureText}>100% gratuit</Text>
+            <Ionicons name="checkmark-circle" size={20} color="#FF6B35" />
+            <Text style={[styles.featureText, { color: colors.textPrimary }]}>100% gratuit</Text>
           </View>
           <View style={styles.feature}>
-            <Ionicons name="checkmark-circle" size={20} color="#10B981" />
-            <Text style={styles.featureText}>Résultats instantanés</Text>
+            <Ionicons name="checkmark-circle" size={20} color="#FF6B35" />
+            <Text style={[styles.featureText, { color: colors.textPrimary }]}>Résultats instantanés</Text>
           </View>
           <View style={styles.feature}>
-            <Ionicons name="checkmark-circle" size={20} color="#10B981" />
-            <Text style={styles.featureText}>Crédits à gagner</Text>
+            <Ionicons name="checkmark-circle" size={20} color="#FF6B35" />
+            <Text style={[styles.featureText, { color: colors.textPrimary }]}>Crédits à gagner</Text>
           </View>
         </View>
       </View>
@@ -76,39 +78,39 @@ const JeuxScreen = () => {
       {/* Why Participate Section */}
       <View style={styles.section}>
         <View style={styles.sectionTitleRow}>
-          <Ionicons name="star" size={24} color={COLORS.primary} />
-          <Text style={styles.sectionTitle}>Pourquoi participer ?</Text>
+          <Ionicons name="star" size={24} color={colors.primary} />
+          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Pourquoi participer ?</Text>
         </View>
 
         <View style={styles.benefitsGrid}>
-          <View style={styles.benefitCard}>
-            <View style={[styles.benefitIcon, { backgroundColor: '#10B98120' }]}>
-              <Ionicons name="trending-up" size={28} color="#10B981" />
+          <View style={[styles.benefitCard, { backgroundColor: colors.cardBackground }]}>
+            <View style={[styles.benefitIcon, { backgroundColor: '#FF6B3520' }]}>
+              <Ionicons name="trending-up" size={28} color="#FF6B35" />
             </View>
-            <Text style={styles.benefitTitle}>Profil IA Enrichi</Text>
-            <Text style={styles.benefitDescription}>
+            <Text style={[styles.benefitTitle, { color: colors.textPrimary }]}>Profil IA Enrichi</Text>
+            <Text style={[styles.benefitDescription, { color: colors.textSecondary }]}>
               Chaque jeu complété affine ton profil et améliore la précision des 
               recommandations personnalisées
             </Text>
           </View>
 
-          <View style={styles.benefitCard}>
-            <View style={[styles.benefitIcon, { backgroundColor: '#3B82F620' }]}>
-              <Ionicons name="shield-checkmark" size={28} color="#3B82F6" />
+          <View style={[styles.benefitCard, { backgroundColor: colors.cardBackground }]}>
+            <View style={[styles.benefitIcon, { backgroundColor: '#FF8C4220' }]}>
+              <Ionicons name="shield-checkmark" size={28} color="#FF8C42" />
             </View>
-            <Text style={styles.benefitTitle}>Crédits Gagnés</Text>
-            <Text style={styles.benefitDescription}>
+            <Text style={[styles.benefitTitle, { color: colors.textPrimary }]}>Crédits Gagnés</Text>
+            <Text style={[styles.benefitDescription, { color: colors.textSecondary }]}>
               Débloque des crédits à chaque jeu terminé pour accéder à des services 
               et formations premium
             </Text>
           </View>
 
-          <View style={styles.benefitCard}>
-            <View style={[styles.benefitIcon, { backgroundColor: '#8B5CF620' }]}>
-              <Ionicons name="radio-button-on" size={28} color="#8B5CF6" />
+          <View style={[styles.benefitCard, { backgroundColor: colors.cardBackground }]}>
+            <View style={[styles.benefitIcon, { backgroundColor: '#FFB38020' }]}>
+              <Ionicons name="radio-button-on" size={28} color="#FFB380" />
             </View>
-            <Text style={styles.benefitTitle}>Auto-Découverte</Text>
-            <Text style={styles.benefitDescription}>
+            <Text style={[styles.benefitTitle, { color: colors.textPrimary }]}>Auto-Découverte</Text>
+            <Text style={[styles.benefitDescription, { color: colors.textSecondary }]}>
               Prends conscience de tes forces cachées et identifie tes axes de 
               progression prioritaires
             </Text>
@@ -119,32 +121,32 @@ const JeuxScreen = () => {
       {/* Available Games Section */}
       <View style={styles.section}>
         <View style={styles.gamesHeader}>
-          <Text style={styles.sectionTitle}>Jeux Disponibles</Text>
+          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Jeux Disponibles</Text>
           
           <View style={styles.tabs}>
             <TouchableOpacity
-              style={[styles.tab, activeTab === 'all' && styles.tabActive]}
+              style={[styles.tab, { backgroundColor: colors.cardBackground }, activeTab === 'all' && styles.tabActive]}
               onPress={() => setActiveTab('all')}
             >
-              <Text style={[styles.tabText, activeTab === 'all' && styles.tabTextActive]}>
+              <Text style={[styles.tabText, { color: colors.textSecondary }, activeTab === 'all' && styles.tabTextActive]}>
                 Tous ({MOCK_GAMES.length})
               </Text>
             </TouchableOpacity>
             
             <TouchableOpacity
-              style={[styles.tab, activeTab === 'in-progress' && styles.tabActive]}
+              style={[styles.tab, { backgroundColor: colors.cardBackground }, activeTab === 'in-progress' && styles.tabActive]}
               onPress={() => setActiveTab('in-progress')}
             >
-              <Text style={[styles.tabText, activeTab === 'in-progress' && styles.tabTextActive]}>
+              <Text style={[styles.tabText, { color: colors.textSecondary }, activeTab === 'in-progress' && styles.tabTextActive]}>
                 En cours ({inProgressCount})
               </Text>
             </TouchableOpacity>
             
             <TouchableOpacity
-              style={[styles.tab, activeTab === 'completed' && styles.tabActive]}
+              style={[styles.tab, { backgroundColor: colors.cardBackground }, activeTab === 'completed' && styles.tabActive]}
               onPress={() => setActiveTab('completed')}
             >
-              <Text style={[styles.tabText, activeTab === 'completed' && styles.tabTextActive]}>
+              <Text style={[styles.tabText, { color: colors.textSecondary }, activeTab === 'completed' && styles.tabTextActive]}>
                 Complétés ({completedCount})
               </Text>
             </TouchableOpacity>
@@ -157,7 +159,7 @@ const JeuxScreen = () => {
           contentContainerStyle={styles.gamesScroll}
         >
           {filteredGames.map((game) => (
-            <View key={game.id} style={styles.gameCard}>
+            <View key={game.id} style={[styles.gameCard, { backgroundColor: colors.cardBackground }]}>
               <ImageBackground
                 source={{ uri: game.image }}
                 style={styles.gameImage}
@@ -165,22 +167,22 @@ const JeuxScreen = () => {
               >
                 <View style={styles.gameImageOverlay} />
                 <View style={styles.difficultyBadge}>
-                  <Text style={styles.difficultyText}>{game.difficulty}</Text>
+                  <Text style={[styles.difficultyText, { color: colors.background }]}>{game.difficulty}</Text>
                 </View>
               </ImageBackground>
 
               <View style={styles.gameContent}>
-                <View style={styles.gameIconContainer}>
-                  <Ionicons name={game.icon as any} size={24} color={COLORS.primary} />
+                <View style={[styles.gameIconContainer, { backgroundColor: colors.background }]}>
+                  <Ionicons name={game.icon as any} size={24} color={colors.primary} />
                 </View>
 
-                <Text style={styles.gameTitle}>{game.title}</Text>
+                <Text style={[styles.gameTitle, { color: colors.textPrimary }]}>{game.title}</Text>
                 
-                <Text style={styles.gameDetails}>
+                <Text style={[styles.gameDetails, { color: colors.textSecondary }]}>
                   {game.duration} • {game.questions} questions
                 </Text>
                 
-                <Text style={styles.gameDescription}>{game.description}</Text>
+                <Text style={[styles.gameDescription, { color: colors.textSecondary }]}>{game.description}</Text>
 
                 <View style={styles.gameFooter}>
                   <View style={styles.credits}>
@@ -190,17 +192,17 @@ const JeuxScreen = () => {
 
                   {game.progress !== undefined && (
                     <View style={styles.progressContainer}>
-                      <Text style={styles.progressLabel}>Progression</Text>
-                      <View style={styles.progressBar}>
+                      <Text style={[styles.progressLabel, { color: colors.textSecondary }]}>Progression</Text>
+                      <View style={[styles.progressBar, { backgroundColor: colors.background }]}>
                         <View 
-                          style={[styles.progressFill, { width: `${game.progress}%` }]} 
+                          style={[styles.progressFill, { width: `${game.progress}%`, backgroundColor: colors.primary }]} 
                         />
                       </View>
                     </View>
                   )}
 
-                  <TouchableOpacity style={styles.actionButton}>
-                    <Text style={styles.actionButtonText}>
+                  <TouchableOpacity style={[styles.actionButton, { backgroundColor: colors.primary }]}>
+                    <Text style={[styles.actionButtonText, { color: colors.background }]}>
                       {game.status === 'in-progress' ? 'Reprendre' : 'Commencer'} →
                     </Text>
                   </TouchableOpacity>
@@ -224,7 +226,6 @@ const JeuxScreen = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
   },
   scrollView: {
     flex: 1,
@@ -239,7 +240,7 @@ const styles = StyleSheet.create({
   newBadge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#10B981',
+    backgroundColor: '#FF6B35',
     paddingHorizontal: SPACING.md,
     paddingVertical: SPACING.xs,
     borderRadius: 20,
@@ -247,20 +248,18 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.lg,
   },
   newBadgeText: {
-    color: COLORS.background,
     fontSize: FONTS.sizes.sm,
     fontWeight: '600',
     marginLeft: SPACING.xs,
+    color: '#FFFFFF',
   },
   title: {
     fontSize: 32,
     fontWeight: '700',
-    color: COLORS.textPrimary,
     marginBottom: SPACING.md,
   },
   description: {
     fontSize: FONTS.sizes.md,
-    color: COLORS.textSecondary,
     lineHeight: 24,
     marginBottom: SPACING.xl,
   },
@@ -274,7 +273,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   featureText: {
-    color: COLORS.textPrimary,
     fontSize: FONTS.sizes.sm,
     marginLeft: SPACING.sm,
     fontWeight: '500',
@@ -290,14 +288,12 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: FONTS.sizes.xxl,
     fontWeight: '700',
-    color: COLORS.textPrimary,
     marginLeft: SPACING.md,
   },
   benefitsGrid: {
     gap: SPACING.lg,
   },
   benefitCard: {
-    backgroundColor: COLORS.cardBackground,
     padding: SPACING.xl,
     borderRadius: BORDER_RADIUS.md,
     marginBottom: SPACING.md,
@@ -313,12 +309,10 @@ const styles = StyleSheet.create({
   benefitTitle: {
     fontSize: FONTS.sizes.lg,
     fontWeight: '600',
-    color: COLORS.textPrimary,
     marginBottom: SPACING.sm,
   },
   benefitDescription: {
     fontSize: FONTS.sizes.sm,
-    color: COLORS.textSecondary,
     lineHeight: 20,
   },
   gamesHeader: {
@@ -336,18 +330,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: SPACING.lg,
     paddingVertical: SPACING.sm,
     borderRadius: 20,
-    backgroundColor: COLORS.cardBackground,
   },
   tabActive: {
-    backgroundColor: '#10B981',
+    backgroundColor: '#FF6B35',
   },
   tabText: {
-    color: COLORS.textSecondary,
     fontSize: FONTS.sizes.sm,
     fontWeight: '500',
   },
   tabTextActive: {
-    color: COLORS.background,
+    color: '#FFFFFF',
     fontWeight: '600',
   },
   gamesScroll: {
@@ -355,7 +347,6 @@ const styles = StyleSheet.create({
   },
   gameCard: {
     width: 320,
-    backgroundColor: COLORS.cardBackground,
     borderRadius: BORDER_RADIUS.md,
     overflow: 'hidden',
   },
@@ -381,7 +372,6 @@ const styles = StyleSheet.create({
     borderRadius: 16,
   },
   difficultyText: {
-    color: COLORS.background,
     fontSize: FONTS.sizes.xs,
     fontWeight: '600',
   },
@@ -392,7 +382,6 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: COLORS.background,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: SPACING.md,
@@ -400,17 +389,14 @@ const styles = StyleSheet.create({
   gameTitle: {
     fontSize: FONTS.sizes.lg,
     fontWeight: '700',
-    color: COLORS.textPrimary,
     marginBottom: SPACING.xs,
   },
   gameDetails: {
     fontSize: FONTS.sizes.sm,
-    color: COLORS.textSecondary,
     marginBottom: SPACING.md,
   },
   gameDescription: {
     fontSize: FONTS.sizes.sm,
-    color: COLORS.textSecondary,
     lineHeight: 20,
     marginBottom: SPACING.lg,
   },
@@ -432,26 +418,24 @@ const styles = StyleSheet.create({
   },
   progressLabel: {
     fontSize: FONTS.sizes.xs,
-    color: COLORS.textSecondary,
     fontWeight: '500',
   },
   progressBar: {
     height: 4,
-    backgroundColor: COLORS.background,
     borderRadius: 2,
     overflow: 'hidden',
   },
   progressFill: {
     height: '100%',
-    backgroundColor: COLORS.primary,
     borderRadius: 2,
   },
   actionButton: {
     paddingVertical: SPACING.md,
+    paddingHorizontal: SPACING.lg,
+    borderRadius: BORDER_RADIUS.md,
     alignItems: 'center',
   },
   actionButtonText: {
-    color: COLORS.textPrimary,
     fontSize: FONTS.sizes.md,
     fontWeight: '600',
   },
