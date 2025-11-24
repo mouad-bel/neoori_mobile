@@ -135,10 +135,6 @@ const RoomsScreen = () => {
           </View>
 
           <Text style={[styles.title, { color: colors.textPrimary }]}>Rooms partenaires pour collaborer et échanger</Text>
-          
-          <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-            Rejoins les espaces de collaboration de nos partenaires — écoles, entreprises, associations.
-          </Text>
 
           {/* Search Bar */}
           <View style={styles.searchContainer}>

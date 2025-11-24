@@ -302,10 +302,6 @@ const OffresScreen = () => {
             Trouve ton opportunité idéale pour{' '}
             <Text style={{ color: '#FF6B35' }}>ta carrière</Text>
           </Text>
-          <Text style={[styles.heroDescription, { color: colors.textSecondary }]}>
-            Neoori sélectionne pour toi les offres et projets les plus alignés avec ton profil et
-            tes compétences.
-          </Text>
 
           {/* Search and Filter */}
           <View style={styles.searchContainer}>

@@ -5,6 +5,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  TextInput,
   ImageBackground,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
@@ -20,18 +21,10 @@ import { MOCK_GAMES } from '../../constants/mockData';
 const JeuxScreen = () => {
   const navigation = useNavigation<DrawerNavigationProp<MainDrawerParamList>>();
   const { colors } = useTheme();
-  const [activeTab, setActiveTab] = useState<'all' | 'in-progress' | 'completed'>('all');
+  const [searchQuery, setSearchQuery] = useState('');
   const [showProfileModal, setShowProfileModal] = useState(false);
 
-  const filteredGames = MOCK_GAMES.filter(game => {
-    if (activeTab === 'all') return true;
-    if (activeTab === 'in-progress') return game.status === 'in-progress';
-    if (activeTab === 'completed') return game.status === 'completed';
-    return true;
-  });
-
-  const inProgressCount = MOCK_GAMES.filter(g => g.status === 'in-progress').length;
-  const completedCount = MOCK_GAMES.filter(g => g.status === 'completed').length;
+  const filteredGames = MOCK_GAMES;
 
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
@@ -47,111 +40,31 @@ const JeuxScreen = () => {
       >
         {/* Header Section */}
         <View style={[styles.header, { backgroundColor: colors.background }]}>
-          <View style={styles.newBadge}>
-            <Ionicons name="flash" size={14} color={colors.background} />
-            <Text style={styles.newBadgeText}>Nouveau</Text>
-          </View>
-        
-        <Text style={[styles.title, { color: colors.textPrimary }]}>Jeux & Tests de Découverte</Text>
-        
-        <Text style={[styles.description, { color: colors.textSecondary }]}>
-          Découvre tes forces en quelques minutes. Chaque jeu enrichit ton profil IA et 
-          débloque des crédits pour accéder à des services premium.
-        </Text>
-
-        <View style={styles.features}>
-          <View style={styles.feature}>
-            <Ionicons name="checkmark-circle" size={20} color="#FF6B35" />
-            <Text style={[styles.featureText, { color: colors.textPrimary }]}>100% gratuit</Text>
-          </View>
-          <View style={styles.feature}>
-            <Ionicons name="checkmark-circle" size={20} color="#FF6B35" />
-            <Text style={[styles.featureText, { color: colors.textPrimary }]}>Résultats instantanés</Text>
-          </View>
-          <View style={styles.feature}>
-            <Ionicons name="checkmark-circle" size={20} color="#FF6B35" />
-            <Text style={[styles.featureText, { color: colors.textPrimary }]}>Crédits à gagner</Text>
+          <Text style={[styles.title, { color: colors.textPrimary }]}>Jeux & Tests de Découverte</Text>
+          
+          {/* Search Bar */}
+          <View style={styles.searchContainer}>
+            <View style={[styles.searchBar, { backgroundColor: colors.cardBackground }]}>
+              <Ionicons name="search" size={20} color={colors.textSecondary} />
+              <TextInput
+                style={[styles.searchInput, { color: colors.textPrimary }]}
+                placeholder="Rechercher..."
+                placeholderTextColor={colors.textSecondary}
+                value={searchQuery}
+                onChangeText={setSearchQuery}
+              />
+            </View>
+            
+            <TouchableOpacity style={[styles.filterButton, { backgroundColor: colors.primary }]}>
+              <Ionicons name="filter" size={20} color={colors.background} />
+              <Text style={[styles.filterButtonText, { color: colors.background }]}>Filtrer</Text>
+            </TouchableOpacity>
           </View>
         </View>
-      </View>
-
-      {/* Why Participate Section */}
-      <View style={styles.section}>
-        <View style={styles.sectionTitleRow}>
-          <Ionicons name="star" size={24} color={colors.primary} />
-          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Pourquoi participer ?</Text>
-        </View>
-
-        <View style={styles.benefitsGrid}>
-          <View style={[styles.benefitCard, { backgroundColor: colors.cardBackground }]}>
-            <View style={[styles.benefitIcon, { backgroundColor: '#FF6B3520' }]}>
-              <Ionicons name="trending-up" size={28} color="#FF6B35" />
-            </View>
-            <Text style={[styles.benefitTitle, { color: colors.textPrimary }]}>Profil IA Enrichi</Text>
-            <Text style={[styles.benefitDescription, { color: colors.textSecondary }]}>
-              Chaque jeu complété affine ton profil et améliore la précision des 
-              recommandations personnalisées
-            </Text>
-          </View>
-
-          <View style={[styles.benefitCard, { backgroundColor: colors.cardBackground }]}>
-            <View style={[styles.benefitIcon, { backgroundColor: '#FF8C4220' }]}>
-              <Ionicons name="shield-checkmark" size={28} color="#FF8C42" />
-            </View>
-            <Text style={[styles.benefitTitle, { color: colors.textPrimary }]}>Crédits Gagnés</Text>
-            <Text style={[styles.benefitDescription, { color: colors.textSecondary }]}>
-              Débloque des crédits à chaque jeu terminé pour accéder à des services 
-              et formations premium
-            </Text>
-          </View>
-
-          <View style={[styles.benefitCard, { backgroundColor: colors.cardBackground }]}>
-            <View style={[styles.benefitIcon, { backgroundColor: '#FFB38020' }]}>
-              <Ionicons name="radio-button-on" size={28} color="#FFB380" />
-            </View>
-            <Text style={[styles.benefitTitle, { color: colors.textPrimary }]}>Auto-Découverte</Text>
-            <Text style={[styles.benefitDescription, { color: colors.textSecondary }]}>
-              Prends conscience de tes forces cachées et identifie tes axes de 
-              progression prioritaires
-            </Text>
-          </View>
-        </View>
-      </View>
 
       {/* Available Games Section */}
       <View style={styles.section}>
-        <View style={styles.gamesHeader}>
-          <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Jeux Disponibles</Text>
-          
-          <View style={styles.tabs}>
-            <TouchableOpacity
-              style={[styles.tab, { backgroundColor: colors.cardBackground }, activeTab === 'all' && styles.tabActive]}
-              onPress={() => setActiveTab('all')}
-            >
-              <Text style={[styles.tabText, { color: colors.textSecondary }, activeTab === 'all' && styles.tabTextActive]}>
-                Tous ({MOCK_GAMES.length})
-              </Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity
-              style={[styles.tab, { backgroundColor: colors.cardBackground }, activeTab === 'in-progress' && styles.tabActive]}
-              onPress={() => setActiveTab('in-progress')}
-            >
-              <Text style={[styles.tabText, { color: colors.textSecondary }, activeTab === 'in-progress' && styles.tabTextActive]}>
-                En cours ({inProgressCount})
-              </Text>
-            </TouchableOpacity>
-            
-            <TouchableOpacity
-              style={[styles.tab, { backgroundColor: colors.cardBackground }, activeTab === 'completed' && styles.tabActive]}
-              onPress={() => setActiveTab('completed')}
-            >
-              <Text style={[styles.tabText, { color: colors.textSecondary }, activeTab === 'completed' && styles.tabTextActive]}>
-                Complétés ({completedCount})
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
+        <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>Jeux Disponibles</Text>
 
         <ScrollView 
           horizontal 
@@ -237,110 +150,48 @@ const styles = StyleSheet.create({
     padding: SPACING.xl,
     paddingTop: SPACING.lg,
   },
-  newBadge: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#FF6B35',
-    paddingHorizontal: SPACING.md,
-    paddingVertical: SPACING.xs,
-    borderRadius: 20,
-    alignSelf: 'flex-start',
-    marginBottom: SPACING.lg,
-  },
-  newBadgeText: {
-    fontSize: FONTS.sizes.sm,
-    fontWeight: '600',
-    marginLeft: SPACING.xs,
-    color: '#FFFFFF',
-  },
   title: {
     fontSize: 32,
     fontWeight: '700',
-    marginBottom: SPACING.md,
-  },
-  description: {
-    fontSize: FONTS.sizes.md,
-    lineHeight: 24,
     marginBottom: SPACING.xl,
   },
-  features: {
+  searchContainer: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    gap: SPACING.lg,
+    gap: SPACING.md,
   },
-  feature: {
+  searchBar: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
+    paddingHorizontal: SPACING.lg,
+    paddingVertical: SPACING.md,
+    borderRadius: BORDER_RADIUS.md,
   },
-  featureText: {
-    fontSize: FONTS.sizes.sm,
-    marginLeft: SPACING.sm,
-    fontWeight: '500',
+  searchInput: {
+    flex: 1,
+    marginLeft: SPACING.md,
+    fontSize: FONTS.sizes.md,
+  },
+  filterButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FF6B35',
+    paddingHorizontal: SPACING.lg,
+    paddingVertical: SPACING.md,
+    borderRadius: BORDER_RADIUS.md,
+    gap: SPACING.sm,
+  },
+  filterButtonText: {
+    fontSize: FONTS.sizes.md,
+    fontWeight: '600',
   },
   section: {
     padding: SPACING.xl,
   },
-  sectionTitleRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: SPACING.xl,
-  },
   sectionTitle: {
     fontSize: FONTS.sizes.xxl,
     fontWeight: '700',
-    marginLeft: SPACING.md,
-  },
-  benefitsGrid: {
-    gap: SPACING.lg,
-  },
-  benefitCard: {
-    padding: SPACING.xl,
-    borderRadius: BORDER_RADIUS.md,
-    marginBottom: SPACING.md,
-  },
-  benefitIcon: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: SPACING.lg,
-  },
-  benefitTitle: {
-    fontSize: FONTS.sizes.lg,
-    fontWeight: '600',
-    marginBottom: SPACING.sm,
-  },
-  benefitDescription: {
-    fontSize: FONTS.sizes.sm,
-    lineHeight: 20,
-  },
-  gamesHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
     marginBottom: SPACING.xl,
-    flexWrap: 'wrap',
-  },
-  tabs: {
-    flexDirection: 'row',
-    gap: SPACING.sm,
-  },
-  tab: {
-    paddingHorizontal: SPACING.lg,
-    paddingVertical: SPACING.sm,
-    borderRadius: 20,
-  },
-  tabActive: {
-    backgroundColor: '#FF6B35',
-  },
-  tabText: {
-    fontSize: FONTS.sizes.sm,
-    fontWeight: '500',
-  },
-  tabTextActive: {
-    color: '#FFFFFF',
-    fontWeight: '600',
   },
   gamesScroll: {
     gap: SPACING.lg,

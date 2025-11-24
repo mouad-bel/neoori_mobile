@@ -27,8 +27,6 @@ const CapsulesScreen = () => {
   const navigation = useNavigation<DrawerNavigationProp<MainDrawerParamList>>();
   const { colors } = useTheme();
   const [searchQuery, setSearchQuery] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('Tous');
-  const [selectedFormat, setSelectedFormat] = useState('Tous les formats');
   const [showProfileModal, setShowProfileModal] = useState(false);
 
   const getContentTypeColor = (type: string) => {
@@ -183,41 +181,24 @@ const CapsulesScreen = () => {
             Capsules vidéo & lectures pour{' '}
             <Text style={{ color: '#60A5FA' }}>booster ton inspiration</Text>
           </Text>
-          <Text style={[styles.heroDescription, { color: colors.textSecondary }]}>
-            Découvre des vidéos courtes, conseils d'experts et retours d'expérience sélectionnés
-            pour toi par notre IA.
-          </Text>
 
           {/* Search and Filters */}
           <View style={styles.searchContainer}>
-            <View style={[styles.searchBar, { backgroundColor: colors.surfaceBackground }]}>
-              <Ionicons name="search" size={20} color={colors.textTertiary} />
+            <View style={[styles.searchBar, { backgroundColor: colors.cardBackground }]}>
+              <Ionicons name="search" size={20} color={colors.textSecondary} />
               <TextInput
                 style={[styles.searchInput, { color: colors.textPrimary }]}
-                placeholder="Rechercher un contenu..."
-                placeholderTextColor={colors.textTertiary}
+                placeholder="Rechercher..."
+                placeholderTextColor={colors.textSecondary}
                 value={searchQuery}
                 onChangeText={setSearchQuery}
               />
             </View>
-            <View style={styles.filtersRow}>
-              <TouchableOpacity
-                style={[styles.filterButton, { backgroundColor: colors.surfaceBackground }]}
-              >
-                <Text style={[styles.filterText, { color: colors.textPrimary }]}>
-                  {selectedCategory}
-                </Text>
-                <Ionicons name="chevron-down" size={16} color={colors.textSecondary} />
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.filterButton, { backgroundColor: colors.surfaceBackground }]}
-              >
-                <Text style={[styles.filterText, { color: colors.textPrimary }]}>
-                  {selectedFormat}
-                </Text>
-                <Ionicons name="chevron-down" size={16} color={colors.textSecondary} />
-              </TouchableOpacity>
-            </View>
+            
+            <TouchableOpacity style={[styles.filterButton, { backgroundColor: colors.primary }]}>
+              <Ionicons name="filter" size={20} color={colors.background} />
+              <Text style={[styles.filterButtonText, { color: colors.background }]}>Filtrer</Text>
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -314,35 +295,34 @@ const styles = StyleSheet.create({
     marginBottom: SPACING.xl,
   },
   searchContainer: {
+    flexDirection: 'row',
     gap: SPACING.md,
   },
   searchBar: {
+    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: SPACING.lg,
     paddingVertical: SPACING.md,
     borderRadius: BORDER_RADIUS.md,
-    gap: SPACING.sm,
   },
   searchInput: {
     flex: 1,
+    marginLeft: SPACING.md,
     fontSize: FONTS.sizes.md,
   },
-  filtersRow: {
-    flexDirection: 'row',
-    gap: SPACING.sm,
-  },
   filterButton: {
-    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
-    justifyContent: 'space-between',
+    backgroundColor: '#FF6B35',
     paddingHorizontal: SPACING.lg,
     paddingVertical: SPACING.md,
     borderRadius: BORDER_RADIUS.md,
+    gap: SPACING.sm,
   },
-  filterText: {
+  filterButtonText: {
     fontSize: FONTS.sizes.md,
+    fontWeight: '600',
   },
   section: {
     marginTop: SPACING.xxxl,

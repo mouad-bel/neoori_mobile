@@ -5,6 +5,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { FONTS, SPACING, BORDER_RADIUS } from '../../constants/theme';
 import { useTheme } from '../../store/ThemeContext';
 import { useAuth } from '../../store/AuthContext';
+import NeooriLogo from '../common/NeooriLogo';
 
 interface AppHeaderProps {
   onMenuPress?: () => void;
@@ -57,46 +58,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
           </TouchableOpacity>
         )}
         {showLogo && (
-          <View style={styles.logoContainer}>
-            {/* Brand Logo Icon */}
-            <View style={[
-              styles.logoIconWrapper,
-              isDarkMode && styles.logoIconWrapperDark,
-              !isDarkMode && styles.logoIconWrapperLight
-            ]}>
-              <View style={styles.logoIcon}>
-                <View style={[
-                  styles.logoBaseShape,
-                  isDarkMode && styles.logoBaseShapeDark,
-                  !isDarkMode && styles.logoBaseShapeLight
-                ]} />
-                <LinearGradient
-                  colors={['#FF6B35', '#FF8C42', '#FFB380']}
-                  start={{ x: 0.5, y: 0.8 }}
-                  end={{ x: 0.5, y: 0 }}
-                  style={styles.logoGradient}
-                >
-                  <View style={styles.logoGradientShape} />
-                </LinearGradient>
-                <View style={styles.logoDot} />
-              </View>
-            </View>
-            {/* Brand Wordmark */}
-            <View style={styles.logoTextContainer}>
-              <Text style={[
-                styles.logoTextNavy,
-                !isDarkMode && { color: '#1E293B' },
-                isDarkMode && { color: '#F8FAFC' }
-              ]}>neo</Text>
-              <View style={styles.logoOriContainer}>
-                <Text style={styles.logoTextOrange}>or</Text>
-                <View style={styles.logoI}>
-                  <Text style={styles.logoTextOrange}>i</Text>
-                  <View style={styles.logoIDot} />
-                </View>
-              </View>
-            </View>
-          </View>
+          <NeooriLogo size="medium" />
         )}
       </View>
 
@@ -170,115 +132,6 @@ const styles = StyleSheet.create({
   },
   menuButton: {
     marginRight: SPACING.md,
-  },
-  logoContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: SPACING.sm,
-  },
-  logoIconWrapper: {
-    width: 36,
-    height: 36,
-    borderRadius: BORDER_RADIUS.sm,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'transparent',
-    padding: 3,
-  },
-  logoIconWrapperDark: {
-    backgroundColor: '#1E293B',
-    borderWidth: 1,
-    borderColor: 'rgba(255, 107, 53, 0.2)',
-  },
-  logoIconWrapperLight: {
-    backgroundColor: '#F8FAFC',
-    borderWidth: 1,
-    borderColor: 'rgba(30, 41, 59, 0.15)',
-  },
-  logoIcon: {
-    width: 30,
-    height: 30,
-    borderRadius: BORDER_RADIUS.sm,
-    justifyContent: 'center',
-    alignItems: 'center',
-    overflow: 'visible',
-    position: 'relative',
-    backgroundColor: 'transparent',
-  },
-  logoBaseShape: {
-    position: 'absolute',
-    width: 24,
-    height: 24,
-    borderRadius: 15,
-    backgroundColor: '#1E293B',
-    bottom: 1,
-    left: 1,
-    transform: [{ rotate: '-15deg' }],
-    borderWidth: 1,
-    borderColor: 'rgba(255, 255, 255, 0.05)',
-  },
-  logoBaseShapeDark: {
-    borderColor: 'rgba(255, 255, 255, 0.1)',
-  },
-  logoBaseShapeLight: {
-    borderColor: 'rgba(30, 41, 59, 0.2)',
-  },
-  logoGradient: {
-    position: 'absolute',
-    width: 21,
-    height: 21,
-    borderRadius: 12,
-    bottom: 1,
-    right: 1,
-    overflow: 'hidden',
-  },
-  logoGradientShape: {
-    position: 'absolute',
-    width: '100%',
-    height: '100%',
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    borderTopRightRadius: 12,
-    borderBottomLeftRadius: 9,
-  },
-  logoDot: {
-    position: 'absolute',
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: '#FF6B35',
-    top: 1,
-    right: 4,
-  },
-  logoTextContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  logoTextNavy: {
-    fontSize: FONTS.sizes.lg,
-    fontWeight: FONTS.weights.bold,
-    letterSpacing: 0.5,
-  },
-  logoOriContainer: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-  },
-  logoTextOrange: {
-    fontSize: FONTS.sizes.lg,
-    fontWeight: FONTS.weights.bold,
-    letterSpacing: 0.5,
-    color: '#FF6B35',
-  },
-  logoI: {
-    position: 'relative',
-  },
-  logoIDot: {
-    position: 'absolute',
-    width: 3,
-    height: 3,
-    borderRadius: 1.5,
-    backgroundColor: '#FF6B35',
-    top: -1,
-    right: -1,
   },
   rightSection: {
     flexDirection: 'row',

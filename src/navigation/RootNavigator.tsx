@@ -3,7 +3,7 @@ import { createStackNavigator } from '@react-navigation/stack';
 import { useAuth } from '../store/AuthContext';
 import { RootStackParamList } from '../types';
 import AuthScreen from '../screens/AuthScreen';
-import DrawerNavigator from './DrawerNavigator';
+import MainNavigator from './MainNavigator';
 import { ActivityIndicator, View, StyleSheet } from 'react-native';
 import { COLORS } from '../constants/theme';
 
@@ -25,7 +25,7 @@ const RootNavigator = () => {
       {!isAuthenticated ? (
         <Stack.Screen name="Auth" component={AuthScreen} />
       ) : (
-        <Stack.Screen name="Main" component={DrawerNavigator} />
+        <Stack.Screen name="Main" component={MainNavigator} />
       )}
     </Stack.Navigator>
   );

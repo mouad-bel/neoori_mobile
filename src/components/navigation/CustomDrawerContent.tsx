@@ -16,6 +16,7 @@ import { useTheme } from '../../store/ThemeContext';
 import { FONTS, SPACING, BORDER_RADIUS } from '../../constants/theme';
 import ThemeToggle from '../ui/ThemeToggle';
 import { DRAWER_ROUTES } from '../../constants/routes';
+import NeooriLogo from '../common/NeooriLogo';
 
 const CustomDrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
   const { logout } = useAuth();
@@ -33,10 +34,41 @@ const CustomDrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
   const renderMenuItem = (route: typeof DRAWER_ROUTES[0], index: number) => {
     // Get the current active route name from the navigation state
     const currentRouteName = props.state.routes[props.state.index]?.name;
-    const isActive = currentRouteName === route.name;
+    const isMainTabs = currentRouteName === 'MainTabs';
+    
+    // Map drawer route names to bottom tab names
+    const getTabName = (routeName: string): 'Flow' | 'Decouvrir' | 'Progresser' | 'Moi' | null => {
+      switch (routeName) {
+        case 'Flow': return 'Flow';
+        case 'Jeux': return 'Decouvrir';
+        case 'Dashboard': return 'Progresser';
+        case 'Profile': return 'Moi';
+        default: return null;
+      }
+    };
+
+    const tabName = getTabName(route.name);
+    let isActive = currentRouteName === route.name;
+    
+    // If we're on MainTabs and this route corresponds to a tab, consider it active
+    if (isMainTabs && tabName) {
+      // We'll check this dynamically - for now just set based on route name
+      isActive = false; // Will be determined by actual tab state
+    }
+    
     const showSectionHeader =
       index === 0 ||
       (route.section && route.section !== DRAWER_ROUTES[index - 1]?.section);
+
+    const handleNavigation = () => {
+      // For routes that are in bottom tabs, navigate to MainTabs with the specific tab
+      if (tabName) {
+        props.navigation.navigate('MainTabs', { screen: tabName });
+      } else {
+        props.navigation.navigate(route.name);
+      }
+      props.navigation.closeDrawer();
+    };
 
     return (
       <View key={route.name}>
@@ -47,7 +79,7 @@ const CustomDrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
         )}
         <TouchableOpacity
           style={[styles.menuItem, isActive && styles.menuItemActive]}
-          onPress={() => props.navigation.navigate(route.name)}
+          onPress={handleNavigation}
           accessibilityRole="button"
           accessibilityLabel={route.label}
         >
@@ -77,50 +109,7 @@ const CustomDrawerContent: React.FC<DrawerContentComponentProps> = (props) => {
       >
         {/* Logo Header */}
         <View style={styles.logoContainer}>
-          <View style={styles.logoIconContainer}>
-            {/* Logo Icon Container with background for visibility in dark mode */}
-            <View style={[
-              styles.logoIconWrapper,
-              isDarkMode && styles.logoIconWrapperDark,
-              !isDarkMode && styles.logoIconWrapperLight
-            ]}>
-              {/* Logo Icon: Navy blue base with orange gradient element (sweeping upward) */}
-              <View style={styles.logoIcon}>
-                {/* Navy blue base shape (curved/teardrop) */}
-                <View style={[
-                  styles.logoBaseShape,
-                  isDarkMode && styles.logoBaseShapeDark,
-                  !isDarkMode && styles.logoBaseShapeLight
-                ]} />
-                {/* Orange gradient element (sweeping upward) */}
-                <LinearGradient
-                  colors={['#FF6B35', '#FF8C42', '#FFB380']}
-                  start={{ x: 0.5, y: 0.8 }}
-                  end={{ x: 0.5, y: 0 }}
-                  style={styles.logoGradient}
-                >
-                  <View style={styles.logoGradientShape} />
-                </LinearGradient>
-                {/* Small orange dot above (spark/head) */}
-                <View style={styles.logoDot} />
-              </View>
-            </View>
-          </View>
-          {/* Wordmark: "neo" in navy blue (light in dark mode), "ori" in orange with orange dot on 'i' */}
-          <View style={styles.logoTextContainer}>
-            <Text style={[
-              styles.logoTextNavy,
-              !isDarkMode && { color: '#1E293B' }, // Navy blue in light mode
-              isDarkMode && { color: '#F8FAFC' } // Light color in dark mode
-            ]}>neo</Text>
-            <View style={styles.logoOriContainer}>
-              <Text style={styles.logoTextOrange}>or</Text>
-              <View style={styles.logoI}>
-                <Text style={styles.logoTextOrange}>i</Text>
-                <View style={styles.logoIDot} />
-              </View>
-            </View>
-          </View>
+          <NeooriLogo size="large" />
         </View>
 
         {/* Menu Items */}

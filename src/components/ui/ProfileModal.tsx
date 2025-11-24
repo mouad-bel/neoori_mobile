@@ -48,7 +48,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ visible, onClose }) => {
       iconBg: '#FF6B35', // Brand orange
       onPress: () => {
         onClose();
-        navigation.navigate('Dashboard');
+        navigation.navigate('MainTabs', { screen: 'Progresser' });
       },
     },
     {
@@ -70,7 +70,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ visible, onClose }) => {
       iconBg: '#FF6B35', // Brand orange
       onPress: () => {
         onClose();
-        navigation.navigate('Profile');
+        navigation.navigate('MainTabs', { screen: 'Moi' });
       },
     },
     {
