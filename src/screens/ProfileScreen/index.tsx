@@ -125,7 +125,6 @@ const ProfileScreen = () => {
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <AppHeader
-        onMenuPress={() => navigation.openDrawer()}
         onProfilePress={() => setShowProfileModal(true)}
         title="Mon Profil"
       />

@@ -19,14 +19,7 @@ const CustomHeader: React.FC<CustomHeaderProps> = ({
   return (
     <View style={styles.container}>
       <View style={styles.leftSection}>
-        {showMenu && (
-          <TouchableOpacity
-            onPress={() => navigation.openDrawer()}
-            style={styles.menuButton}
-          >
-            <Ionicons name="menu" size={28} color={COLORS.textPrimary} />
-          </TouchableOpacity>
-        )}
+        {/* Menu button disabled - drawer is hidden */}
         <View style={styles.logoContainer}>
           <View style={styles.logo}>
             <Text style={styles.logoText}>N</Text>

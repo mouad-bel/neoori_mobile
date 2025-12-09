@@ -117,7 +117,6 @@ const RoomsScreen = () => {
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <AppHeader 
-        onMenuPress={() => navigation.openDrawer()}
         title="Rooms" 
         onProfilePress={() => setShowProfileModal(true)}
       />

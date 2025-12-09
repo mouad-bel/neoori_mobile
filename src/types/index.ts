@@ -12,8 +12,8 @@ export interface VideoContent {
   id: string;
   title: string;
   description: string;
-  thumbnail: string;
-  videoUrl?: string; // For future video integration
+  thumbnail: string | number; // Can be URL string or require() asset (number)
+  videoUrl?: string | number; // Can be URL string or require() asset (number)
   creator: Creator;
   category: Category;
   duration: string; // Format: "MM:SS"
@@ -26,7 +26,7 @@ export interface VideoContent {
 export interface Creator {
   id: string;
   name: string;
-  avatar: string;
+  avatar: string | number; // Can be URL string or require() asset (number)
   verified?: boolean;
 }
 
@@ -90,11 +90,13 @@ export interface CapsuleVideo {
   };
 }
 
+export type GameType = 'quiz' | 'matching' | 'ranking' | 'simulation' | 'creation' | 'puzzle' | 'interactive';
+
 export interface Game {
   id: string;
   title: string;
   duration: string;
-  questions: number;
+  questions?: number; // Optional for non-quiz games
   description: string;
   credits: number;
   difficulty: 'Facile' | 'Moyen' | 'Difficile';
@@ -102,6 +104,29 @@ export interface Game {
   image: string;
   progress?: number;
   status: 'not-started' | 'in-progress' | 'completed';
+  gameType: GameType; // Type of game
+}
+
+export interface GameProgress {
+  gameId: string;
+  gameType: GameType;
+  currentQuestion?: number; // Optional for non-quiz games
+  totalQuestions?: number; // Optional for non-quiz games
+  answers?: Record<number, any>; // For quiz games
+  gameData?: any; // Generic data storage for non-quiz games
+  startedAt: string;
+  lastUpdatedAt: string;
+  completed: boolean;
+}
+
+export interface GameQuestion {
+  id: number;
+  question: string;
+  type: 'multiple-choice' | 'scale' | 'text' | 'yes-no';
+  options?: string[];
+  scaleMin?: number;
+  scaleMax?: number;
+  scaleLabels?: { min: string; max: string };
 }
 
 export interface Room {
@@ -183,6 +208,7 @@ export type MainDrawerParamList = {
   Recompenses: undefined;
   Parametres: undefined;
   AccessibilityDemo: undefined;
+  Game: { gameId: string };
 };
 
 export type RouteConfig = {

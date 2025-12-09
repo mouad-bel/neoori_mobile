@@ -15,6 +15,7 @@ import AboutScreen from '../screens/AboutScreen';
 import RecompensesScreen from '../screens/RecompensesScreen';
 import ParametresScreen from '../screens/ParametresScreen';
 import AccessibilityDemoScreen from '../screens/AccessibilityDemoScreen';
+import GameScreen from '../screens/GameScreen';
 
 const Drawer = createDrawerNavigator<MainDrawerParamList>();
 
@@ -31,6 +32,10 @@ const MainNavigator = () => {
           width: 280,
         },
         headerShown: false,
+        drawerType: 'front',
+        swipeEnabled: false, // Disable swipe to open drawer
+        gestureEnabled: false, // Disable gestures
+        drawerPosition: 'left',
       }}
     >
       <Drawer.Screen
@@ -79,6 +84,11 @@ const MainNavigator = () => {
       <Drawer.Screen
         name="AccessibilityDemo"
         component={AccessibilityDemoScreen}
+        options={{ headerShown: false }}
+      />
+      <Drawer.Screen
+        name="Game"
+        component={GameScreen}
         options={{ headerShown: false }}
       />
     </Drawer.Navigator>

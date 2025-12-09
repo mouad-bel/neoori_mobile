@@ -98,10 +98,8 @@ const InteractionBar: React.FC<InteractionBarProps> = ({ video }) => {
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',
-    right: SPACING.lg,
-    bottom: 100,
     alignItems: 'center',
+    justifyContent: 'flex-end',
   },
   spacer: {
     height: SPACING.lg,

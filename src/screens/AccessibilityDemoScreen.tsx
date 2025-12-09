@@ -87,7 +87,7 @@ const AccessibilityDemoScreen = () => {
   
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
-      <AppHeader onMenuPress={() => navigation.openDrawer()} title="Accessibilité" />
+      <AppHeader title="Accessibilité" />
       
       <ScrollView style={styles.scrollContent}>
         <View style={styles.content}>

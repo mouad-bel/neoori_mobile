@@ -9,6 +9,7 @@ import NeooriLogo from '../common/NeooriLogo';
 
 interface AppHeaderProps {
   onMenuPress?: () => void;
+  onBackPress?: () => void;
   onProfilePress?: () => void;
   title?: string;
   showLogo?: boolean;
@@ -17,10 +18,12 @@ interface AppHeaderProps {
   showProfile?: boolean;
   transparent?: boolean;
   style?: object;
+  showBackButton?: boolean; // If true, shows back button instead of menu
 }
 
 const AppHeader: React.FC<AppHeaderProps> = ({
   onMenuPress,
+  onBackPress,
   onProfilePress,
   title = 'Neoori',
   showLogo = true,
@@ -29,6 +32,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
   showProfile = true,
   transparent = false,
   style = {},
+  showBackButton = false,
 }) => {
   const { colors, theme } = useTheme();
   const { user } = useAuth();
@@ -47,18 +51,36 @@ const AppHeader: React.FC<AppHeaderProps> = ({
       style
     ]}>
       <View style={styles.leftSection}>
-        {onMenuPress && (
-          <TouchableOpacity 
-            onPress={onMenuPress} 
-            style={styles.menuButton}
-            accessibilityRole="button"
-            accessibilityLabel="Menu"
-          >
-            <Ionicons name="menu" size={28} color={colors.textPrimary} />
-          </TouchableOpacity>
-        )}
-        {showLogo && (
-          <NeooriLogo size="medium" />
+        {showBackButton && onBackPress ? (
+          <>
+            <TouchableOpacity 
+              onPress={onBackPress} 
+              style={styles.menuButton}
+              accessibilityRole="button"
+              accessibilityLabel="Retour"
+            >
+              <Ionicons name="arrow-back" size={28} color={colors.textPrimary} />
+            </TouchableOpacity>
+            {showLogo && (
+              <NeooriLogo size="medium" />
+            )}
+          </>
+        ) : (
+          <>
+            {onMenuPress && (
+              <TouchableOpacity 
+                onPress={onMenuPress} 
+                style={styles.menuButton}
+                accessibilityRole="button"
+                accessibilityLabel="Menu"
+              >
+                <Ionicons name="menu" size={28} color={colors.textPrimary} />
+              </TouchableOpacity>
+            )}
+            {showLogo && (
+              <NeooriLogo size="medium" />
+            )}
+          </>
         )}
       </View>
 
@@ -132,6 +154,12 @@ const styles = StyleSheet.create({
   },
   menuButton: {
     marginRight: SPACING.md,
+  },
+  title: {
+    fontSize: FONTS.sizes.lg,
+    fontWeight: '700',
+    marginLeft: SPACING.sm,
+    flex: 1,
   },
   rightSection: {
     flexDirection: 'row',

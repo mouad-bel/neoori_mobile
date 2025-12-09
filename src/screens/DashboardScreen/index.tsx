@@ -149,7 +149,6 @@ const DashboardScreen = () => {
   return (
     <View style={[styles.container, { backgroundColor: colors.background }]}>
       <AppHeader
-        onMenuPress={() => navigation.openDrawer()}
         onProfilePress={() => setShowProfileModal(true)}
         title="Tableau de bord"
       />

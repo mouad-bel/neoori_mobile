@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { User, UserInteraction } from '../../types';
+import { User, UserInteraction, GameProgress } from '../../types';
 
 // Storage Keys
 export const STORAGE_KEYS = {
@@ -7,6 +7,7 @@ export const STORAGE_KEYS = {
   USER_DATA: '@neoori_user_data',
   INTERACTIONS: '@neoori_interactions',
   BOOKMARKS: '@neoori_bookmarks',
+  GAME_PROGRESS: '@neoori_game_progress',
 } as const;
 
 class StorageService {
@@ -164,6 +165,64 @@ class StorageService {
     }
   }
 
+  // Game Progress Methods
+  async saveGameProgress(progress: GameProgress): Promise<void> {
+    try {
+      const allProgress = await this.getAllGameProgress();
+      const existingIndex = allProgress.findIndex(
+        (p) => p.gameId === progress.gameId
+      );
+
+      if (existingIndex >= 0) {
+        allProgress[existingIndex] = progress;
+      } else {
+        allProgress.push(progress);
+      }
+
+      await AsyncStorage.setItem(
+        STORAGE_KEYS.GAME_PROGRESS,
+        JSON.stringify(allProgress)
+      );
+    } catch (error) {
+      console.error('Error saving game progress:', error);
+      throw error;
+    }
+  }
+
+  async getGameProgress(gameId: string): Promise<GameProgress | null> {
+    try {
+      const allProgress = await this.getAllGameProgress();
+      return allProgress.find((p) => p.gameId === gameId) || null;
+    } catch (error) {
+      console.error('Error getting game progress:', error);
+      return null;
+    }
+  }
+
+  async getAllGameProgress(): Promise<GameProgress[]> {
+    try {
+      const data = await AsyncStorage.getItem(STORAGE_KEYS.GAME_PROGRESS);
+      return data ? JSON.parse(data) : [];
+    } catch (error) {
+      console.error('Error getting all game progress:', error);
+      return [];
+    }
+  }
+
+  async deleteGameProgress(gameId: string): Promise<void> {
+    try {
+      const allProgress = await this.getAllGameProgress();
+      const filtered = allProgress.filter((p) => p.gameId !== gameId);
+      await AsyncStorage.setItem(
+        STORAGE_KEYS.GAME_PROGRESS,
+        JSON.stringify(filtered)
+      );
+    } catch (error) {
+      console.error('Error deleting game progress:', error);
+      throw error;
+    }
+  }
+
   // Clear all data
   async clearAll(): Promise<void> {
     try {
@@ -172,6 +231,7 @@ class StorageService {
         STORAGE_KEYS.USER_DATA,
         STORAGE_KEYS.INTERACTIONS,
         STORAGE_KEYS.BOOKMARKS,
+        STORAGE_KEYS.GAME_PROGRESS,
       ]);
     } catch (error) {
       console.error('Error clearing storage:', error);
