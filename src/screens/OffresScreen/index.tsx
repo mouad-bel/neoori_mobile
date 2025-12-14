@@ -13,7 +13,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { Ionicons } from '@expo/vector-icons';
-import { FONTS, SPACING, BORDER_RADIUS } from '../../constants/theme';
+import { FONTS, SPACING, BORDER_RADIUS, COLORS } from '../../constants/theme';
 import { useTheme } from '../../store/ThemeContext';
 import AppHeader from '../../components/navigation/AppHeader';
 import ProfileModal from '../../components/ui/ProfileModal';
@@ -91,8 +91,8 @@ const OffresScreen = () => {
         <Text style={[styles.companyName, { color: colors.textPrimary }]}>
           {item.company}
         </Text>
-        <View style={[styles.categoryBadge, { backgroundColor: '#FF6B3520' }]}>
-          <Text style={[styles.categoryText, { color: '#FF6B35' }]}>{item.category}</Text>
+        <View style={[styles.categoryBadge, { backgroundColor: `${COLORS.primary}20` }]}>
+          <Text style={[styles.categoryText, { color: COLORS.primary }]}>{item.category}</Text>
         </View>
       </View>
 
@@ -130,15 +130,15 @@ const OffresScreen = () => {
       {/* Match Percentage */}
       {item.matchPercentage && (
         <View style={styles.matchContainer}>
-          <Ionicons name="checkmark-circle" size={16} color="#FF6B35" />
-          <Text style={[styles.matchText, { color: '#FF6B35' }]}>
+          <Ionicons name="checkmark-circle" size={16} color={COLORS.primary} />
+          <Text style={[styles.matchText, { color: COLORS.primary }]}>
             Recommandée selon ton profil {item.matchPercentage}%
           </Text>
         </View>
       )}
 
       {/* Salary */}
-      <Text style={[styles.salary, { color: '#FF6B35' }]}>{item.salary}</Text>
+      <Text style={[styles.salary, { color: COLORS.primary }]}>{item.salary}</Text>
 
       {/* Skills */}
       <View style={styles.skillsContainer}>
@@ -170,7 +170,7 @@ const OffresScreen = () => {
             Voir les détails
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.applyButton, { backgroundColor: '#FF6B35' }]}>
+        <TouchableOpacity style={[styles.applyButton, { backgroundColor: COLORS.primary }]}>
           <Text style={styles.applyButtonText}>Candidater →</Text>
         </TouchableOpacity>
       </View>
@@ -208,7 +208,7 @@ const OffresScreen = () => {
           {item.company}
         </Text>
         <Text style={[styles.separator, { color: colors.textTertiary }]}> - </Text>
-        <Text style={[styles.categoryTextSmall, { color: '#FF6B35' }]}>{item.category}</Text>
+        <Text style={[styles.categoryTextSmall, { color: COLORS.primary }]}>{item.category}</Text>
       </View>
 
       <View style={styles.detailsContainerSmall}>
@@ -236,8 +236,8 @@ const OffresScreen = () => {
 
       {item.matchPercentage && item.matchPercentage >= 80 && (
         <View style={styles.matchContainerSmall}>
-          <Ionicons name="checkmark-circle" size={14} color="#FF6B35" />
-          <Text style={[styles.matchTextSmall, { color: '#FF6B35' }]}>
+          <Ionicons name="checkmark-circle" size={14} color={COLORS.primary} />
+          <Text style={[styles.matchTextSmall, { color: COLORS.primary }]}>
             Recommandée ton profil {item.matchPercentage}%
           </Text>
         </View>
@@ -270,7 +270,7 @@ const OffresScreen = () => {
             Voir les détails
           </Text>
         </TouchableOpacity>
-        <TouchableOpacity style={[styles.applyButtonSmall, { backgroundColor: '#FF6B35' }]}>
+        <TouchableOpacity style={[styles.applyButtonSmall, { backgroundColor: COLORS.primary }]}>
           <Text style={styles.applyButtonTextSmall}>Candidater</Text>
         </TouchableOpacity>
       </View>
@@ -287,7 +287,7 @@ const OffresScreen = () => {
         {/* Hero Section */}
         <View style={styles.heroSection}>
           <View style={styles.heroBadges}>
-            <View style={[styles.heroBadge, { backgroundColor: '#FF6B35' }]}>
+            <View style={[styles.heroBadge, { backgroundColor: COLORS.primary }]}>
               <Ionicons name="briefcase" size={14} color="white" />
               <Text style={styles.heroBadgeText}>Offres d'emploi</Text>
             </View>
@@ -299,7 +299,7 @@ const OffresScreen = () => {
           </View>
           <Text style={[styles.heroTitle, { color: colors.textPrimary }]}>
             Trouve ton opportunité idéale pour{' '}
-            <Text style={{ color: '#FF6B35' }}>ta carrière</Text>
+            <Text style={{ color: COLORS.primary }}>ta carrière</Text>
           </Text>
 
           {/* Search and Filter */}
@@ -314,7 +314,7 @@ const OffresScreen = () => {
                 onChangeText={setSearchQuery}
               />
             </View>
-            <TouchableOpacity style={[styles.filterButton, { backgroundColor: '#FF6B35' }]}>
+            <TouchableOpacity style={[styles.filterButton, { backgroundColor: COLORS.primary }]}>
               <Ionicons name="options" size={20} color="white" />
               <Text style={styles.filterButtonText}>Filtrer</Text>
             </TouchableOpacity>
@@ -333,14 +333,14 @@ const OffresScreen = () => {
           </View>
 
           {/* Info Banner */}
-          <View style={[styles.infoBanner, { backgroundColor: '#FF8C4220' }]}>
+          <View style={[styles.infoBanner, { backgroundColor: `${COLORS.primaryLight}20` }]}>
             <View style={styles.infoBannerContent}>
-              <Ionicons name="information-circle" size={16} color="#FF8C42" />
+              <Ionicons name="information-circle" size={16} color={COLORS.primaryLight} />
               <Text style={[styles.infoBannerText, { color: colors.textSecondary }]}>
                 Ces offres ont été sélectionnées pour toi en fonction de ton profil.
               </Text>
             </View>
-            <View style={[styles.personalizedBadge, { backgroundColor: '#FF6B35' }]}>
+            <View style={[styles.personalizedBadge, { backgroundColor: COLORS.primary }]}>
               <Text style={styles.personalizedBadgeText}>{recommendedOffers.length}</Text>
             </View>
           </View>
@@ -408,7 +408,7 @@ const OffresScreen = () => {
             Découvre les entreprises qui recrutent activement et créent les opportunités de demain
             pour ta carrière.
         </Text>
-          <TouchableOpacity style={[styles.partnerButton, { backgroundColor: '#FF6B35' }]}>
+          <TouchableOpacity style={[styles.partnerButton, { backgroundColor: COLORS.primary }]}>
             <Text style={styles.partnerButtonText}>Voir toutes les entreprises →</Text>
           </TouchableOpacity>
       </View>

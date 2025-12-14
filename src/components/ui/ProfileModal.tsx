@@ -13,10 +13,11 @@ import { useNavigation } from '@react-navigation/native';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import { FONTS, SPACING, BORDER_RADIUS } from '../../constants/theme';
+import { FONTS, SPACING, BORDER_RADIUS, COLORS } from '../../constants/theme';
 import { useTheme } from '../../store/ThemeContext';
 import { useAuth } from '../../store/AuthContext';
 import { MainDrawerParamList } from '../../types';
+import ThemeToggle from './ThemeToggle';
 
 const { height } = Dimensions.get('window');
 
@@ -26,7 +27,7 @@ interface ProfileModalProps {
 }
 
 const ProfileModal: React.FC<ProfileModalProps> = ({ visible, onClose }) => {
-  const { colors } = useTheme();
+  const { colors, theme } = useTheme();
   const { user, logout } = useAuth();
   const navigation = useNavigation<DrawerNavigationProp<MainDrawerParamList>>();
 
@@ -45,7 +46,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ visible, onClose }) => {
       icon: 'home-outline',
       title: 'Tableau de bord',
       subtitle: 'Dash',
-      iconBg: '#FF6B35', // Brand orange
+      iconBg: COLORS.primary, // Brand orange
       onPress: () => {
         onClose();
         navigation.navigate('MainTabs', { screen: 'Progresser' });
@@ -56,7 +57,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ visible, onClose }) => {
       icon: 'ribbon-outline',
       title: 'Récompenses',
       subtitle: 'Rec',
-      iconBg: '#FF8C42', // Brand orange light
+      iconBg: COLORS.primaryLight, // Brand orange light
       onPress: () => {
         onClose();
         navigation.navigate('Recompenses');
@@ -67,7 +68,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ visible, onClose }) => {
       icon: 'person-outline',
       title: 'Mon Profil',
       subtitle: 'Gérer vos informations',
-      iconBg: '#FF6B35', // Brand orange
+      iconBg: COLORS.primary, // Brand orange
       onPress: () => {
         onClose();
         navigation.navigate('MainTabs', { screen: 'Moi' });
@@ -78,7 +79,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ visible, onClose }) => {
       icon: 'settings-outline',
       title: 'Paramètres',
       subtitle: 'Préférences et confidentialité',
-      iconBg: '#FFB380', // Brand orange peach
+      iconBg: COLORS.accentPeach, // Brand orange peach
       onPress: () => {
         onClose();
         navigation.navigate('Parametres');
@@ -89,7 +90,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ visible, onClose }) => {
       icon: 'help-circle-outline',
       title: 'Aide & Support',
       subtitle: "Centre d'aide",
-      iconBg: '#FF8C42', // Brand orange light
+      iconBg: COLORS.primaryLight, // Brand orange light
       onPress: () => {
         onClose();
         navigation.navigate('About');
@@ -123,7 +124,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ visible, onClose }) => {
               </TouchableOpacity>
               <TouchableOpacity style={styles.chatIcon} accessibilityLabel="Messages">
                 <Ionicons name="chatbubble-outline" size={24} color={colors.textPrimary} />
-                <View style={[styles.notificationDot, { backgroundColor: '#FF6B35' }]} />
+                <View style={[styles.notificationDot, { backgroundColor: COLORS.primary }]} />
               </TouchableOpacity>
               {user?.avatar && (
                 <Image source={{ uri: user.avatar }} style={styles.headerAvatar} />
@@ -146,7 +147,7 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ visible, onClose }) => {
           >
             {/* User Profile Card - Brand Orange Gradient */}
             <LinearGradient
-              colors={['#FF6B35', '#FF8C42', '#FFB380']}
+              colors={[COLORS.primary, COLORS.primaryLight, COLORS.accentPeach]}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={styles.profileCard}
@@ -192,6 +193,24 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ visible, onClose }) => {
                   <Ionicons name="chevron-forward" size={20} color={colors.textTertiary} />
                 </TouchableOpacity>
               ))}
+              
+              {/* Theme Toggle */}
+              <View style={[styles.themeToggleContainer, { backgroundColor: colors.cardBackground }]}>
+                <View style={styles.themeToggleLeft}>
+                  <View style={[styles.menuIconContainer, { backgroundColor: COLORS.primary }]}>
+                    <Ionicons name="color-palette-outline" size={24} color="white" />
+                  </View>
+                  <View style={styles.menuTextContainer}>
+                    <Text style={[styles.menuTitle, { color: colors.textPrimary }]}>
+                      Thème
+                    </Text>
+                    <Text style={[styles.menuSubtitle, { color: colors.textSecondary }]}>
+                      {theme === 'dark' ? 'Mode sombre' : 'Mode clair'}
+                    </Text>
+                  </View>
+                </View>
+                <ThemeToggle />
+              </View>
             </View>
 
             {/* Logout Button */}
@@ -295,7 +314,7 @@ const styles = StyleSheet.create({
     width: 16,
     height: 16,
     borderRadius: 8,
-    backgroundColor: '#FF6B35', // Brand orange
+    backgroundColor: COLORS.primary, // Brand orange
     borderWidth: 3,
     borderColor: 'white',
   },
@@ -380,6 +399,20 @@ const styles = StyleSheet.create({
     fontSize: FONTS.sizes.md,
     fontWeight: FONTS.weights.semiBold,
     color: '#EF4444',
+  },
+  themeToggleContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    padding: SPACING.lg,
+    borderRadius: BORDER_RADIUS.md,
+    gap: SPACING.md,
+  },
+  themeToggleLeft: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    flex: 1,
+    gap: SPACING.md,
   },
 });
 

@@ -13,7 +13,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useAuth } from '../../store/AuthContext';
 import { useTheme } from '../../store/ThemeContext';
-import { FONTS, SPACING, BORDER_RADIUS } from '../../constants/theme';
+import { FONTS, SPACING, BORDER_RADIUS, COLORS } from '../../constants/theme';
 import ThemeToggle from '../ui/ThemeToggle';
 import { DRAWER_ROUTES } from '../../constants/routes';
 import NeooriLogo from '../common/NeooriLogo';
@@ -170,7 +170,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#1E293B', // Navy blue background for dark mode
     borderWidth: 1.5,
     borderColor: 'rgba(255, 107, 53, 0.2)', // Subtle orange border
-    shadowColor: '#FF6B35',
+    shadowColor: 'COLORS.primary',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.2,
     shadowRadius: 6,
@@ -224,7 +224,7 @@ const styles = StyleSheet.create({
     bottom: 2,
     right: 2,
     overflow: 'hidden',
-    shadowColor: '#FF6B35',
+    shadowColor: 'COLORS.primary',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.3,
     shadowRadius: 4,
@@ -243,10 +243,10 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#FF6B35',
+    backgroundColor: 'COLORS.primary',
     top: 2,
     right: 6,
-    shadowColor: '#FF6B35',
+    shadowColor: 'COLORS.primary',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.5,
     shadowRadius: 2,
@@ -270,7 +270,7 @@ const styles = StyleSheet.create({
     fontSize: FONTS.sizes.xxl,
     fontWeight: FONTS.weights.bold,
     letterSpacing: 1,
-    color: '#FF6B35', // Brand orange - always visible
+    color: 'COLORS.primary', // Brand orange - always visible
     textShadowColor: 'rgba(255, 107, 53, 0.4)',
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 3,
@@ -283,7 +283,7 @@ const styles = StyleSheet.create({
     width: 4,
     height: 4,
     borderRadius: 2,
-    backgroundColor: '#FF6B35', // Brand orange
+    backgroundColor: 'COLORS.primary', // Brand orange
     top: -2,
     right: -1,
   },
@@ -315,7 +315,7 @@ const styles = StyleSheet.create({
   menuItemActive: {
     backgroundColor: 'rgba(255, 107, 53, 0.15)', // Brand orange background
     borderLeftWidth: 3,
-    borderLeftColor: '#FF6B35', // Brand orange accent border
+    borderLeftColor: 'COLORS.primary', // Brand orange accent border
   },
   menuLabel: {
     fontSize: FONTS.sizes.md,

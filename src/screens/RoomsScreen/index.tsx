@@ -11,7 +11,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { Ionicons } from '@expo/vector-icons';
-import { FONTS, SPACING, BORDER_RADIUS } from '../../constants/theme';
+import { FONTS, SPACING, BORDER_RADIUS, COLORS } from '../../constants/theme';
 import { useTheme } from '../../store/ThemeContext';
 import AppHeader from '../../components/navigation/AppHeader';
 import ProfileModal from '../../components/ui/ProfileModal';
@@ -29,10 +29,10 @@ const getTypeIcon = (type: Room['type']) => {
 
 const getTypeColor = (type: Room['type']) => {
   switch (type) {
-    case 'École': return '#FF6B35';
-    case 'Entreprise': return '#FF8C42';
-    case 'Association': return '#FFB380';
-    case 'Communauté': return '#FF6B35';
+    case 'École': return COLORS.primary;
+    case 'Entreprise': return COLORS.primaryLight;
+    case 'Association': return COLORS.accentPeach;
+    case 'Communauté': return COLORS.primary;
   }
 };
 
@@ -267,7 +267,7 @@ const styles = StyleSheet.create({
   filterButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FF6B35',
+    backgroundColor: 'COLORS.primary',
     paddingHorizontal: SPACING.lg,
     paddingVertical: SPACING.md,
     borderRadius: BORDER_RADIUS.md,
@@ -409,7 +409,7 @@ const styles = StyleSheet.create({
     fontSize: FONTS.sizes.xs,
   },
   joinButton: {
-    backgroundColor: '#FF6B35',
+    backgroundColor: 'COLORS.primary',
     paddingVertical: SPACING.md,
     borderRadius: BORDER_RADIUS.sm,
     alignItems: 'center',
@@ -439,7 +439,7 @@ const styles = StyleSheet.create({
   ctaButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FF6B35',
+    backgroundColor: 'COLORS.primary',
     paddingHorizontal: SPACING.xl,
     paddingVertical: SPACING.lg,
     borderRadius: BORDER_RADIUS.md,

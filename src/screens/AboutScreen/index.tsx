@@ -11,7 +11,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { Ionicons } from '@expo/vector-icons';
-import { FONTS, SPACING, BORDER_RADIUS } from '../../constants/theme';
+import { FONTS, SPACING, BORDER_RADIUS, COLORS } from '../../constants/theme';
 import { useTheme } from '../../store/ThemeContext';
 import AppHeader from '../../components/navigation/AppHeader';
 import ProfileModal from '../../components/ui/ProfileModal';
@@ -81,8 +81,8 @@ const AboutScreen = () => {
         {/* Hero Section */}
         <View style={styles.heroSection}>
           <View style={styles.heroBadges}>
-            <View style={[styles.heroBadge, { backgroundColor: '#FF6B3530' }]}>
-              <Text style={[styles.heroBadgeText, { color: '#FF6B35' }]}>Notre histoire</Text>
+            <View style={[styles.heroBadge, { backgroundColor: `${COLORS.primary}30` }]}>
+              <Text style={[styles.heroBadgeText, { color: COLORS.primary }]}>Notre histoire</Text>
             </View>
             <View style={[styles.heroBadge, { backgroundColor: colors.surfaceBackground }]}>
               <Text style={[styles.heroBadgeText, { color: colors.textPrimary }]}>
@@ -90,7 +90,7 @@ const AboutScreen = () => {
               </Text>
             </View>
           </View>
-          <Text style={[styles.heroTitle, { color: '#FF6B35' }]}>
+          <Text style={[styles.heroTitle, { color: COLORS.primary }]}>
             À propos de Neoori et notre mission
           </Text>
           <Text style={[styles.heroDescription, { color: colors.textSecondary }]}>
@@ -104,7 +104,7 @@ const AboutScreen = () => {
               style={[
                 styles.navButton,
                 { backgroundColor: colors.surfaceBackground },
-                activeSection === 'mission' && { backgroundColor: '#FF6B35' },
+                activeSection === 'mission' && { backgroundColor: COLORS.primary },
               ]}
               onPress={() => setActiveSection('mission')}
             >
@@ -122,7 +122,7 @@ const AboutScreen = () => {
               style={[
                 styles.navButton,
                 { backgroundColor: colors.surfaceBackground },
-                activeSection === 'accessibility' && { backgroundColor: '#FF6B35' },
+                activeSection === 'accessibility' && { backgroundColor: COLORS.primary },
               ]}
               onPress={() => setActiveSection('accessibility')}
             >
@@ -140,7 +140,7 @@ const AboutScreen = () => {
               style={[
                 styles.navButton,
                 { backgroundColor: colors.surfaceBackground },
-                activeSection === 'contact' && { backgroundColor: '#FF6B35' },
+                activeSection === 'contact' && { backgroundColor: COLORS.primary },
               ]}
               onPress={() => setActiveSection('contact')}
             >
@@ -161,10 +161,10 @@ const AboutScreen = () => {
         <View style={styles.missionSection}>
           <View style={styles.missionContent}>
             <View style={styles.missionIcon}>
-              <Ionicons name="heart-outline" size={64} color="#FF6B35" />
+              <Ionicons name="heart-outline" size={64} color={COLORS.primary} />
             </View>
             <View style={styles.missionTitleRow}>
-              <Text style={[styles.missionTitle, { color: '#FF6B35' }]}>Notre mission</Text>
+              <Text style={[styles.missionTitle, { color: COLORS.primary }]}>Notre mission</Text>
               <View style={styles.greenDot} />
             </View>
             <Text style={[styles.missionParagraph, { color: colors.textPrimary }]}>
@@ -178,19 +178,19 @@ const AboutScreen = () => {
               l'accompagnement et rendre le développement professionnel accessible à tous.
             </Text>
             <View style={styles.principlesTags}>
-              <View style={[styles.principleTag, { borderColor: '#FF6B35', backgroundColor: colors.surfaceBackground }]}>
+              <View style={[styles.principleTag, { borderColor: COLORS.primary, backgroundColor: colors.surfaceBackground }]}>
                 <View style={styles.greenDot} />
-                <Text style={[styles.principleText, { color: '#FF6B35' }]}>
+                <Text style={[styles.principleText, { color: COLORS.primary }]}>
                   Accompagnement personnalisé
                 </Text>
               </View>
-              <View style={[styles.principleTag, { borderColor: '#FF6B35', backgroundColor: colors.surfaceBackground }]}>
+              <View style={[styles.principleTag, { borderColor: COLORS.primary, backgroundColor: colors.surfaceBackground }]}>
                 <View style={styles.greenDot} />
-                <Text style={[styles.principleText, { color: '#FF6B35' }]}>Inclusion</Text>
+                <Text style={[styles.principleText, { color: COLORS.primary }]}>Inclusion</Text>
               </View>
-              <View style={[styles.principleTag, { borderColor: '#FF8C42', backgroundColor: colors.surfaceBackground }]}>
-                <View style={[styles.greenDot, { backgroundColor: '#FF8C42' }]} />
-                <Text style={[styles.principleText, { color: '#FF8C42' }]}>Innovation</Text>
+              <View style={[styles.principleTag, { borderColor: COLORS.primaryLight, backgroundColor: colors.surfaceBackground }]}>
+                <View style={[styles.greenDot, { backgroundColor: COLORS.primaryLight }]} />
+                <Text style={[styles.principleText, { color: COLORS.primaryLight }]}>Innovation</Text>
               </View>
             </View>
           </View>
@@ -205,7 +205,7 @@ const AboutScreen = () => {
         ]}>
           <View style={styles.inclusionHeader}>
             <View style={styles.inclusionIconCircle}>
-              <Ionicons name="eye" size={24} color="#FF6B35" />
+              <Ionicons name="eye" size={24} color={COLORS.primary} />
             </View>
             <Text style={[styles.inclusionTitle, { color: colors.textPrimary }]}>
               Engagement pour l'inclusion
@@ -220,7 +220,7 @@ const AboutScreen = () => {
           {/* Standards Section */}
           <View style={[styles.standardsBox, { backgroundColor: theme === 'dark' ? 'rgba(255, 255, 255, 0.1)' : 'rgba(255, 255, 255, 0.8)' }]}>
             <View style={styles.standardsHeader}>
-              <Ionicons name="shield-checkmark" size={20} color="#FF6B35" />
+              <Ionicons name="shield-checkmark" size={20} color={COLORS.primary} />
               <Text style={[styles.standardsTitle, { color: colors.textPrimary }]}>
                 Normes respectées
               </Text>
@@ -244,7 +244,7 @@ const AboutScreen = () => {
                 key={index}
                 style={[styles.featureCard, { backgroundColor: colors.cardBackground }]}
               >
-                <Ionicons name={feature.icon as any} size={28} color="#FF6B35" />
+                <Ionicons name={feature.icon as any} size={28} color={COLORS.primary} />
                 <Text style={[styles.featureTitle, { color: colors.textPrimary }]}>
                   {feature.title}
                 </Text>
@@ -258,7 +258,7 @@ const AboutScreen = () => {
           {/* Assistance Section */}
           <View style={[styles.assistanceBox, { backgroundColor: colors.cardBackground }]}>
             <View style={styles.assistanceHeader}>
-              <Ionicons name="help-circle" size={20} color="#FF6B35" />
+              <Ionicons name="help-circle" size={20} color={COLORS.primary} />
               <Text style={[styles.assistanceTitle, { color: colors.textPrimary }]}>
                 Besoin d'assistance ?
               </Text>
@@ -267,7 +267,7 @@ const AboutScreen = () => {
               Notre équipe est disponible pour vous aider à naviguer sur la plateforme et répondre à
               vos questions d'accessibilité.
             </Text>
-            <TouchableOpacity style={[styles.assistanceButton, { backgroundColor: '#FF8C42' }]}>
+            <TouchableOpacity style={[styles.assistanceButton, { backgroundColor: COLORS.primaryLight }]}>
               <Text style={styles.assistanceButtonText}>Nous contacter →</Text>
             </TouchableOpacity>
           </View>
@@ -276,7 +276,7 @@ const AboutScreen = () => {
         {/* FAQ Section */}
         <View style={styles.faqSection}>
           <View style={styles.faqHeader}>
-            <Ionicons name="chatbubbles" size={28} color="#FF6B35" />
+            <Ionicons name="chatbubbles" size={28} color={COLORS.primary} />
             <Text style={[styles.faqTitle, { color: colors.textPrimary }]}>
               Questions fréquentes
             </Text>
@@ -289,14 +289,14 @@ const AboutScreen = () => {
               activeOpacity={0.9}
             >
               <View style={styles.faqQuestionRow}>
-                <Text style={[styles.faqNumber, { color: '#FF6B35' }]}>{index + 1}.</Text>
+                <Text style={[styles.faqNumber, { color: COLORS.primary }]}>{index + 1}.</Text>
                 <Text style={[styles.faqQuestion, { color: colors.textPrimary }]}>
                   {faq.question}
                 </Text>
                 <Ionicons
                   name={expandedFaq === index ? 'remove' : 'add'}
                   size={24}
-                  color="#FF6B35"
+                  color={COLORS.primary}
                 />
               </View>
               {expandedFaq === index && (
@@ -310,7 +310,7 @@ const AboutScreen = () => {
             <Text style={[styles.faqCtaText, { color: colors.textSecondary }]}>
               Vous ne trouvez pas la réponse à votre question ?
             </Text>
-            <TouchableOpacity style={[styles.faqCtaButton, { backgroundColor: '#FF6B35' }]}>
+            <TouchableOpacity style={[styles.faqCtaButton, { backgroundColor: COLORS.primary }]}>
               <Text style={styles.faqCtaButtonText}>Contactez-nous →</Text>
             </TouchableOpacity>
           </View>
@@ -321,7 +321,7 @@ const AboutScreen = () => {
           {/* Left Side - Contact Info */}
           <View style={styles.contactInfo}>
             <View style={styles.contactHeader}>
-              <Ionicons name="mail" size={24} color="#FF6B35" />
+              <Ionicons name="mail" size={24} color={COLORS.primary} />
               <Text style={[styles.contactTitle, { color: colors.textPrimary }]}>
                 Contactez-nous
               </Text>
@@ -333,7 +333,7 @@ const AboutScreen = () => {
 
             <View style={styles.contactItem}>
               <View style={styles.contactItemHeader}>
-                <Ionicons name="mail" size={20} color="#FF6B35" />
+                <Ionicons name="mail" size={20} color={COLORS.primary} />
                 <Text style={[styles.contactItemTitle, { color: colors.textPrimary }]}>Email</Text>
               </View>
               <Text style={[styles.contactItemText, { color: colors.primary }]}>
@@ -343,7 +343,7 @@ const AboutScreen = () => {
 
             <View style={styles.contactItem}>
               <View style={styles.contactItemHeader}>
-                <Ionicons name="chatbubbles" size={20} color="#FF6B35" />
+                <Ionicons name="chatbubbles" size={20} color={COLORS.primary} />
                 <Text style={[styles.contactItemTitle, { color: colors.textPrimary }]}>
                   Chat en direct
                 </Text>
@@ -353,9 +353,9 @@ const AboutScreen = () => {
           </Text>
         </View>
 
-            <View style={[styles.commitmentBox, { backgroundColor: '#FF6B3510' }]}>
+            <View style={[styles.commitmentBox, { backgroundColor: `${COLORS.primary}10` }]}>
               <View style={styles.contactItemHeader}>
-                <Ionicons name="heart" size={20} color="#FF6B35" />
+                <Ionicons name="heart" size={20} color={COLORS.primary} />
                 <Text style={[styles.contactItemTitle, { color: colors.textPrimary }]}>
                   Notre engagement
                 </Text>
@@ -370,7 +370,7 @@ const AboutScreen = () => {
           {/* Right Side - Contact Form */}
           <View style={[styles.contactForm, { backgroundColor: colors.cardBackground }]}>
             <View style={styles.formHeader}>
-              <Ionicons name="chatbubble-ellipses" size={20} color="#FF6B35" />
+              <Ionicons name="chatbubble-ellipses" size={20} color={COLORS.primary} />
               <Text style={[styles.formTitle, { color: colors.textPrimary }]}>
                 Envoyez-nous un message
           </Text>
@@ -429,7 +429,7 @@ const AboutScreen = () => {
               />
             </View>
 
-            <TouchableOpacity style={[styles.submitButton, { backgroundColor: '#FF6B35' }]}>
+            <TouchableOpacity style={[styles.submitButton, { backgroundColor: COLORS.primary }]}>
               <Text style={styles.submitButtonText}>Envoyer le message →</Text>
             </TouchableOpacity>
         </View>
@@ -545,7 +545,7 @@ const styles = StyleSheet.create({
     height: 120,
     borderRadius: 60,
     borderWidth: 2,
-    borderColor: '#FF6B35',
+    borderColor: COLORS.primary,
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: SPACING.xl,
@@ -564,7 +564,7 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#FF6B35',
+    backgroundColor: COLORS.primary,
   },
   missionParagraph: {
     fontSize: FONTS.sizes.md,
@@ -606,7 +606,7 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: '#FF6B3520',
+    backgroundColor: `${COLORS.primary}20`,
     justifyContent: 'center',
     alignItems: 'center',
   },

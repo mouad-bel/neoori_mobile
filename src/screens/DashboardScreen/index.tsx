@@ -12,7 +12,7 @@ import { useNavigation } from '@react-navigation/native';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { LinearGradient } from 'expo-linear-gradient';
 import { Ionicons } from '@expo/vector-icons';
-import { FONTS, SPACING, BORDER_RADIUS } from '../../constants/theme';
+import { FONTS, SPACING, BORDER_RADIUS, COLORS } from '../../constants/theme';
 import { useTheme } from '../../store/ThemeContext';
 import { useAuth } from '../../store/AuthContext';
 import AppHeader from '../../components/navigation/AppHeader';
@@ -43,7 +43,7 @@ const DashboardScreen = () => {
       title: 'Tests complétés',
       value: '3',
       change: '+1',
-      iconBg: '#FF6B35',
+      iconBg: COLORS.primary,
     },
     {
       id: '2',
@@ -51,7 +51,7 @@ const DashboardScreen = () => {
       title: 'Crédits disponibles',
       value: '75',
       change: '+15',
-      iconBg: '#FF6B35',
+      iconBg: COLORS.primary,
     },
     {
       id: '3',
@@ -59,7 +59,7 @@ const DashboardScreen = () => {
       title: 'Recommandations',
       value: '8',
       change: null,
-      iconBg: '#FF8C42',
+      iconBg: COLORS.primaryLight,
     },
     {
       id: '4',
@@ -67,7 +67,7 @@ const DashboardScreen = () => {
       title: 'Profil complété',
       value: '65%',
       change: null,
-      iconBg: '#FFB380',
+      iconBg: COLORS.accentPeach,
     },
   ];
 
@@ -125,7 +125,7 @@ const DashboardScreen = () => {
       case 'completed':
         return colors.primary; // Brand orange
       case 'in-progress':
-        return '#FFB380'; // Light orange/peach
+        return COLORS.accentPeach; // Light orange/peach
       case 'to-complete':
         return colors.textTertiary;
       default:
@@ -153,9 +153,13 @@ const DashboardScreen = () => {
         title="Tableau de bord"
       />
       <ScrollView style={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        {/* Hero Section with Gradient - Brand Orange */}
+        {/* Hero Section with Gradient - Strong Beautiful Orange Composition */}
         <LinearGradient
-          colors={['#FF6B35', '#FF8C42', '#FFB380']}
+          colors={[
+            '#FF7D4A', // Strong vibrant orange - top
+            '#FF9D6B', // Warm orange - middle
+            '#FFB896'  // Soft peach-orange - bottom
+          ]}
           start={{ x: 0, y: 0 }}
           end={{ x: 0, y: 1 }}
           style={styles.heroGradient}
@@ -346,8 +350,8 @@ const DashboardScreen = () => {
             {/* Coach IA Section */}
             <View style={[styles.section, { backgroundColor: colors.cardBackground }]}>
               <View style={styles.coachHeader}>
-                <View style={[styles.coachIcon, { backgroundColor: '#FF6B3520' }]}>
-                  <Ionicons name="chatbubble-outline" size={24} color="#FF6B35" />
+                <View style={[styles.coachIcon, { backgroundColor: `${COLORS.primary}20` }]}>
+                  <Ionicons name="chatbubble-outline" size={24} color={COLORS.primary} />
                 </View>
                 <View style={styles.coachTitleContainer}>
                   <Text style={[styles.coachTitle, { color: colors.textPrimary }]}>Coach IA</Text>
@@ -414,7 +418,7 @@ const DashboardScreen = () => {
         {/* Floating Chat Button */}
         <TouchableOpacity style={styles.floatingChatButton}>
           <LinearGradient
-            colors={['#FF6B35', '#FF8C42']}
+            colors={[COLORS.primary, COLORS.primaryLight]}
             style={styles.floatingButtonGradient}
           >
             <Ionicons name="chatbubble-outline" size={24} color="white" />
@@ -602,7 +606,7 @@ const styles = StyleSheet.create({
   },
   profileProgressFill: {
     height: '100%',
-    backgroundColor: '#FF6B35',
+    backgroundColor: COLORS.primary,
     borderRadius: 4,
   },
   profileSectionsGrid: {
@@ -662,7 +666,7 @@ const styles = StyleSheet.create({
   },
   gameProgressFill: {
     height: '100%',
-    backgroundColor: '#FF6B35',
+    backgroundColor: COLORS.primary,
     borderRadius: 3,
   },
   gameProgressPercent: {
@@ -776,7 +780,7 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#FF6B35',
+    backgroundColor: COLORS.primary,
     marginTop: 6,
   },
   activityContent: {
@@ -831,7 +835,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     borderWidth: 2,
-    borderColor: '#FF6B35',
+    borderColor: COLORS.primary,
   },
 });
 

@@ -11,7 +11,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { Ionicons } from '@expo/vector-icons';
-import { FONTS, SPACING, BORDER_RADIUS } from '../../constants/theme';
+import { FONTS, SPACING, BORDER_RADIUS, COLORS } from '../../constants/theme';
 import { useTheme } from '../../store/ThemeContext';
 import { useAuth } from '../../store/AuthContext';
 import AppHeader from '../../components/navigation/AppHeader';
@@ -163,7 +163,7 @@ const ProfileScreen = () => {
                       </View>
                     </View>
                   </View>
-                  <TouchableOpacity style={[styles.editProfileButton, { backgroundColor: '#FF6B35' }]}>
+                  <TouchableOpacity style={[styles.editProfileButton, { backgroundColor: COLORS.primary }]}>
                     <Text style={styles.editProfileButtonText}>Modifier le profil</Text>
                   </TouchableOpacity>
                 </View>
@@ -173,7 +173,7 @@ const ProfileScreen = () => {
             {/* Synthèse IA Section */}
             <View style={[styles.section, { backgroundColor: colors.cardBackground }]}>
               <View style={styles.sectionHeader}>
-                <Ionicons name="sparkles" size={20} color="#FF8C42" />
+                <Ionicons name="sparkles" size={20} color={COLORS.primaryLight} />
                 <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
                   Synthèse IA
                 </Text>
@@ -300,7 +300,7 @@ const ProfileScreen = () => {
                     <View style={[styles.skillProgressBar, { backgroundColor: colors.surfaceBackground }]}>
                       <View style={[styles.skillProgressFill, { width: `${skill.level}%` }]} />
                     </View>
-                    <Text style={[styles.skillPercentage, { color: '#FF6B35' }]}>
+                    <Text style={[styles.skillPercentage, { color: COLORS.primary }]}>
                       {skill.level}%
                     </Text>
                   </View>
@@ -438,7 +438,7 @@ const styles = StyleSheet.create({
     width: 28,
     height: 28,
     borderRadius: 14,
-    backgroundColor: '#FF6B35',
+    backgroundColor: COLORS.primary,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -501,7 +501,7 @@ const styles = StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
-    backgroundColor: '#FF6B35',
+    backgroundColor: COLORS.primary,
   },
   synthesisItem: {
     marginBottom: SPACING.lg,
@@ -586,7 +586,7 @@ const styles = StyleSheet.create({
   },
   skillProgressFill: {
     height: '100%',
-    backgroundColor: '#FF6B35',
+    backgroundColor: COLORS.primary,
     borderRadius: 4,
   },
   skillPercentage: {

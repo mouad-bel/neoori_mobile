@@ -1,0 +1,1875 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>PROPOSITION D'ARCHITECTURE - NEOORI APP</title>
+    <style>
+        @page {
+            size: A4;
+            margin: 2.5cm;
+        }
+        body {
+            font-family: 'Calibri', 'Arial', sans-serif;
+            font-size: 11pt;
+            line-height: 1.5;
+            color: #000000;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            font-size: 20pt;
+            font-weight: bold;
+            color: #1F4E78;
+            margin-top: 24pt;
+            margin-bottom: 12pt;
+            page-break-after: avoid;
+        }
+        h2 {
+            font-size: 16pt;
+            font-weight: bold;
+            color: #2E75B6;
+            margin-top: 18pt;
+            margin-bottom: 10pt;
+            page-break-after: avoid;
+        }
+        h3 {
+            font-size: 13pt;
+            font-weight: bold;
+            color: #4472C4;
+            margin-top: 12pt;
+            margin-bottom: 8pt;
+            page-break-after: avoid;
+        }
+        h4 {
+            font-size: 12pt;
+            font-weight: bold;
+            margin-top: 10pt;
+            margin-bottom: 6pt;
+        }
+        p {
+            margin: 6pt 0;
+            text-align: justify;
+        }
+        ul, ol {
+            margin: 6pt 0;
+            padding-left: 30pt;
+        }
+        li {
+            margin: 3pt 0;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12pt 0;
+            page-break-inside: avoid;
+        }
+        th {
+            background-color: #D9E1F2;
+            border: 1pt solid #95B3D7;
+            padding: 8pt;
+            text-align: left;
+            font-weight: bold;
+        }
+        td {
+            border: 1pt solid #95B3D7;
+            padding: 8pt;
+        }
+        code {
+            font-family: 'Courier New', monospace;
+            font-size: 10pt;
+            background-color: #F2F2F2;
+            padding: 2pt 4pt;
+            border-radius: 3pt;
+        }
+        pre {
+            font-family: 'Courier New', monospace;
+            font-size: 9pt;
+            background-color: #F2F2F2;
+            padding: 10pt;
+            border-left: 3pt solid #4472C4;
+            overflow-x: auto;
+            page-break-inside: avoid;
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30pt;
+            border-bottom: 2pt solid #1F4E78;
+            padding-bottom: 15pt;
+        }
+        .toc {
+            margin: 20pt 0;
+            padding: 15pt;
+            background-color: #F8F9FA;
+            border-left: 4pt solid #2E75B6;
+        }
+        .toc a {
+            color: #2E75B6;
+            text-decoration: none;
+        }
+        .toc a:hover {
+            text-decoration: underline;
+        }
+        .highlight {
+            background-color: #FFF2CC;
+            padding: 2pt 4pt;
+        }
+        .footer {
+            margin-top: 30pt;
+            padding-top: 15pt;
+            border-top: 1pt solid #CCCCCC;
+            font-size: 9pt;
+            color: #666666;
+            text-align: center;
+        }
+        hr {
+            border: none;
+            border-top: 1pt solid #CCCCCC;
+            margin: 20pt 0;
+        }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>PROPOSITION D'ARCHITECTURE - NEOORI APP</h1>
+    <p><strong>Date:</strong> Décembre 2024</p>
+    <p><strong>Version:</strong> 1.0</p>
+    <p><strong>Application:</strong> Neoori - Plateforme d'apprentissage vidéo style TikTok</p>
+</div>
+
+<div class="toc">
+    <h2>TABLE DES MATIÈRES</h2>
+    <ol>
+        <li><a href="#section1">Besoins Google Play Developer Pro</a></li>
+        <li><a href="#section2">Besoins Google Cloud Platform</a></li>
+        <li><a href="#section3">Proposition Architecture Backend</a>
+            <ul>
+                <li>3.7 Proposition de Serveurs et Hébergement</li>
+            </ul>
+        </li>
+        <li><a href="#section4">Proposition Architecture Frontend</a></li>
+        <li><a href="#section5">Estimation des Coûts</a></li>
+        <li><a href="#section6">Plan de Déploiement</a></li>
+    </ol>
+</div>
+
+<hr>
+
+<h1 id="section1">1. BESOINS GOOGLE PLAY DEVELOPER PRO</h1>
+
+<h2>1.1 Compte Google Play Developer</h2>
+
+<p><strong>Frais d'inscription:</strong></p>
+<ul>
+    <li><strong>Coût unique:</strong> $25 USD (environ 23€)</li>
+    <li><strong>Validité:</strong> À vie (pas de renouvellement annuel)</li>
+    <li><strong>Avantages:</strong>
+        <ul>
+            <li>Publication illimitée d'applications</li>
+            <li>Accès aux outils de développement avancés</li>
+            <li>Statistiques détaillées sur les téléchargements</li>
+            <li>Gestion des versions et mises à jour</li>
+            <li>Support client prioritaire</li>
+        </ul>
+    </li>
+</ul>
+
+<p><strong>Documents requis:</strong></p>
+<ul>
+    <li>Carte bancaire ou compte PayPal</li>
+    <li>Informations de compte Google (Gmail)</li>
+    <li>Informations de l'entreprise (si compte entreprise)</li>
+    <li>Adresse de facturation</li>
+</ul>
+
+<h2>1.2 Configuration Google Play Console</h2>
+
+<p><strong>Étapes nécessaires:</strong></p>
+<ol>
+    <li>Créer un compte développeur sur <a href="https://play.google.com/console">play.google.com/console</a></li>
+    <li>Payer les frais d'inscription ($25)</li>
+    <li>Compléter le profil développeur</li>
+    <li>Configurer les informations de l'application:
+        <ul>
+            <li>Nom de l'application: "Neoori"</li>
+            <li>Description courte (80 caractères)</li>
+            <li>Description complète (4000 caractères)</li>
+            <li>Captures d'écran (minimum 2, recommandé 8)</li>
+            <li>Icône haute résolution (512x512px)</li>
+            <li>Bannière graphique (1024x500px)</li>
+            <li>Vidéo promotionnelle (optionnel)</li>
+            <li>Catégorie: Éducation / Formation</li>
+        </ul>
+    </li>
+    <li><strong>Configuration de la signature de l'application:</strong>
+        <ul>
+            <li>Générer une clé de signature (keystore)</li>
+            <li>Configurer le keystore dans EAS Build</li>
+            <li>Sauvegarder la clé de manière sécurisée</li>
+        </ul>
+    </li>
+    <li><strong>Configuration du contenu:</strong>
+        <ul>
+            <li>Classification du contenu (PEGI/ESRB)</li>
+            <li>Politique de confidentialité (obligatoire)</li>
+            <li>Conditions d'utilisation</li>
+            <li>Contact développeur</li>
+        </ul>
+    </li>
+    <li><strong>Configuration de la tarification:</strong>
+        <ul>
+            <li>Gratuit ou payant</li>
+            <li>In-app purchases (si nécessaire)</li>
+            <li>Abonnements (si nécessaire)</li>
+        </ul>
+    </li>
+</ol>
+
+<h2>1.3 Processus de Publication</h2>
+
+<p><strong>Étapes de soumission:</strong></p>
+<ol>
+    <li><strong>Version de test interne</strong> (optionnel)
+        <ul>
+            <li>Tester avec un groupe restreint</li>
+            <li>Maximum 100 testeurs</li>
+        </ul>
+    </li>
+    <li><strong>Version de test fermée (Closed Testing)</strong>
+        <ul>
+            <li>Tester avec un groupe plus large</li>
+            <li>Maximum 20,000 testeurs</li>
+            <li>Feedback et rapports de bugs</li>
+        </ul>
+    </li>
+    <li><strong>Version de test ouverte (Open Testing)</strong>
+        <ul>
+            <li>Test public avec feedback</li>
+            <li>Pas de limite de testeurs</li>
+        </ul>
+    </li>
+    <li><strong>Publication en production</strong>
+        <ul>
+            <li>Disponible pour tous les utilisateurs</li>
+            <li>Processus de révision: 1-3 jours</li>
+            <li>Publication progressive possible (1%, 5%, 10%, 50%, 100%)</li>
+        </ul>
+    </li>
+</ol>
+
+<h2>1.4 Exigences Techniques</h2>
+
+<p><strong>Configuration minimale:</strong></p>
+<ul>
+    <li>Android 5.0 (API niveau 21) ou supérieur</li>
+    <li>Taille APK optimisée (&lt; 100 MB recommandé)</li>
+    <li>Permissions justifiées dans le manifeste</li>
+    <li>Politique de confidentialité accessible</li>
+    <li>Pas de contenu interdit (violence, harcèlement, etc.)</li>
+</ul>
+
+<p><strong>Optimisations recommandées:</strong></p>
+<ul>
+    <li>App Bundle (.aab) au lieu d'APK</li>
+    <li>Compression des assets</li>
+    <li>Lazy loading des ressources</li>
+    <li>ProGuard/R8 pour la minification</li>
+</ul>
+
+<hr>
+
+<h1 id="section2">2. BESOINS GOOGLE CLOUD PLATFORM</h1>
+
+<h2>2.1 Compte Google Cloud Platform</h2>
+
+<p><strong>Création du compte:</strong></p>
+<ul>
+    <li>Compte Google (Gmail) requis</li>
+    <li>Carte bancaire pour vérification (gratuit pendant 90 jours avec $300 de crédit)</li>
+    <li>Informations de facturation</li>
+</ul>
+
+<p><strong>Niveau gratuit (Free Tier):</strong></p>
+<ul>
+    <li>$300 de crédit gratuit pendant 90 jours</li>
+    <li>Certains services gratuits en permanence (limités)</li>
+</ul>
+
+<h2>2.2 Services Google Cloud Requis</h2>
+
+<h3>2.2.1 Firebase (Recommandé pour Mobile)</h3>
+
+<p><strong>Firebase Authentication:</strong></p>
+<ul>
+    <li>Authentification email/mot de passe</li>
+    <li>Authentification Google, Facebook, Apple</li>
+    <li>Gestion des tokens JWT</li>
+    <li><strong>Coût:</strong> Gratuit jusqu'à 50K utilisateurs/mois</li>
+</ul>
+
+<p><strong>Firebase Realtime Database ou Firestore:</strong></p>
+<ul>
+    <li>Base de données NoSQL en temps réel</li>
+    <li>Synchronisation automatique</li>
+    <li><strong>Coût Firestore:</strong>
+        <ul>
+            <li>Gratuit: 50K lectures, 20K écritures, 20K suppressions/jour</li>
+            <li>Payant: $0.06 pour 100K lectures, $0.18 pour 100K écritures</li>
+        </ul>
+    </li>
+</ul>
+
+<p><strong>Firebase Storage:</strong></p>
+<ul>
+    <li>Stockage de vidéos et images</li>
+    <li>CDN intégré</li>
+    <li><strong>Coût:</strong>
+        <ul>
+            <li>Gratuit: 5 GB de stockage, 1 GB/jour de bande passante</li>
+            <li>Payant: $0.026/GB stockage, $0.12/GB bande passante</li>
+        </ul>
+    </li>
+</ul>
+
+<p><strong>Firebase Cloud Messaging (FCM):</strong></p>
+<ul>
+    <li>Notifications push</li>
+    <li><strong>Coût:</strong> Gratuit</li>
+</ul>
+
+<p><strong>Firebase Analytics:</strong></p>
+<ul>
+    <li>Analytics d'utilisation</li>
+    <li><strong>Coût:</strong> Gratuit</li>
+</ul>
+
+<p><strong>Firebase Crashlytics:</strong></p>
+<ul>
+    <li>Rapports de crash</li>
+    <li><strong>Coût:</strong> Gratuit</li>
+</ul>
+
+<p><strong>Firebase Performance Monitoring:</strong></p>
+<ul>
+    <li>Monitoring des performances</li>
+    <li><strong>Coût:</strong> Gratuit</li>
+</ul>
+
+<h3>2.2.2 Google Cloud Storage (Alternative)</h3>
+
+<p><strong>Pour le stockage de vidéos:</strong></p>
+<ul>
+    <li>Buckets pour stocker les vidéos</li>
+    <li>Classes de stockage (Standard, Nearline, Coldline)</li>
+    <li><strong>Coût:</strong>
+        <ul>
+            <li>Standard: $0.020/GB/mois</li>
+            <li>Nearline: $0.010/GB/mois (pour archives)</li>
+            <li>Bande passante: $0.12/GB</li>
+        </ul>
+    </li>
+</ul>
+
+<h3>2.2.3 Cloud Functions (Serverless)</h3>
+
+<p><strong>Pour le backend serverless:</strong></p>
+<ul>
+    <li>Fonctions Node.js/Python</li>
+    <li>Déclencheurs HTTP, Firestore, Storage</li>
+    <li><strong>Coût:</strong>
+        <ul>
+            <li>Gratuit: 2M invocations/mois</li>
+            <li>Payant: $0.40 par million d'invocations</li>
+        </ul>
+    </li>
+</ul>
+
+<h3>2.2.4 Cloud Run (Conteneurs)</h3>
+
+<p><strong>Alternative pour le backend:</strong></p>
+<ul>
+    <li>Conteneurs Docker</li>
+    <li>Scaling automatique</li>
+    <li><strong>Coût:</strong>
+        <ul>
+            <li>Gratuit: 2M requêtes/mois</li>
+            <li>Payant: $0.40 par million de requêtes + CPU/Mémoire</li>
+        </ul>
+    </li>
+</ul>
+
+<h3>2.2.5 Cloud CDN</h3>
+
+<p><strong>Pour la distribution de contenu:</strong></p>
+<ul>
+    <li>Cache des vidéos et assets</li>
+    <li>Réduction de la latence</li>
+    <li><strong>Coût:</strong>
+        <ul>
+            <li>Gratuit: 1 GB/jour</li>
+            <li>Payant: $0.08/GB après le gratuit</li>
+        </ul>
+    </li>
+</ul>
+
+<h2>2.3 Configuration Recommandée pour Neoori</h2>
+
+<p><strong>Stack Firebase (Recommandé):</strong></p>
+<pre>
+Firebase Authentication
+  ↓
+Firestore (Base de données)
+  ↓
+Firebase Storage (Vidéos)
+  ↓
+Cloud Functions (Logique métier)
+  ↓
+Cloud CDN (Cache)
+</pre>
+
+<p><strong>Avantages:</strong></p>
+<ul>
+    <li>Intégration native avec React Native/Expo</li>
+    <li>Scaling automatique</li>
+    <li>Temps de développement réduit</li>
+    <li>Coûts prévisibles</li>
+</ul>
+
+<hr>
+
+<h1 id="section3">3. PROPOSITION ARCHITECTURE BACKEND</h1>
+
+<h2>3.1 Architecture Générale</h2>
+
+<pre>
+┌─────────────────────────────────────────────────────────┐
+│                    CLIENT (React Native)                 │
+│                    Expo / React Native                   │
+└────────────────────┬────────────────────────────────────┘
+                     │
+                     │ HTTPS/REST API
+                     │
+┌────────────────────▼────────────────────────────────────┐
+│              API GATEWAY / LOAD BALANCER                 │
+│              (Cloud Load Balancing)                      │
+└────────────────────┬────────────────────────────────────┘
+                     │
+        ┌────────────┼────────────┐
+        │            │            │
+┌───────▼──────┐ ┌───▼──────┐ ┌───▼──────────┐
+│   AUTH       │ │  API     │ │  MEDIA       │
+│   SERVICE    │ │  SERVICE │ │  SERVICE     │
+│              │ │          │ │              │
+│ Cloud        │ │ Cloud    │ │ Cloud        │
+│ Functions    │ │ Run      │ │ Functions    │
+└──────┬───────┘ └───┬──────┘ └───┬──────────┘
+       │             │            │
+       └─────────────┼────────────┘
+                     │
+        ┌────────────┼────────────┐
+        │            │            │
+┌───────▼──────┐ ┌───▼──────┐ ┌───▼──────────┐
+│  FIRESTORE   │ │ STORAGE  │ │  CACHE       │
+│  (Database)  │ │ (Videos) │ │  (Redis)     │
+└──────────────┘ └──────────┘ └──────────────┘
+</pre>
+
+<h2>3.2 Stack Technique Backend</h2>
+
+<h3>Option 1: Firebase (Recommandé pour MVP)</h3>
+
+<p><strong>Technologies:</strong></p>
+<ul>
+    <li><strong>Firebase Authentication:</strong> Gestion des utilisateurs</li>
+    <li><strong>Cloud Firestore:</strong> Base de données NoSQL</li>
+    <li><strong>Firebase Storage:</strong> Stockage de vidéos</li>
+    <li><strong>Cloud Functions:</strong> Logique métier serverless</li>
+    <li><strong>Firebase Analytics:</strong> Analytics</li>
+    <li><strong>Firebase Crashlytics:</strong> Monitoring des erreurs</li>
+</ul>
+
+<p><strong>Avantages:</strong></p>
+<ul>
+    <li>Développement rapide</li>
+    <li>Scaling automatique</li>
+    <li>Intégration native avec React Native</li>
+    <li>Coûts prévisibles</li>
+    <li>Pas de gestion d'infrastructure</li>
+</ul>
+
+<p><strong>Inconvénients:</strong></p>
+<ul>
+    <li>Moins de contrôle sur l'infrastructure</li>
+    <li>Coûts peuvent augmenter avec la croissance</li>
+    <li>Vendor lock-in partiel</li>
+</ul>
+
+<h3>Option 2: Node.js + Express + MongoDB (Traditionnel)</h3>
+
+<p><strong>Technologies:</strong></p>
+<ul>
+    <li><strong>Node.js + Express:</strong> API REST</li>
+    <li><strong>MongoDB Atlas:</strong> Base de données NoSQL</li>
+    <li><strong>AWS S3 / Google Cloud Storage:</strong> Stockage de vidéos</li>
+    <li><strong>Redis:</strong> Cache et sessions</li>
+    <li><strong>JWT:</strong> Authentification</li>
+    <li><strong>Docker + Kubernetes:</strong> Conteneurisation</li>
+</ul>
+
+<p><strong>Avantages:</strong></p>
+<ul>
+    <li>Contrôle total sur l'infrastructure</li>
+    <li>Flexibilité maximale</li>
+    <li>Pas de vendor lock-in</li>
+    <li>Meilleur pour des besoins spécifiques</li>
+</ul>
+
+<p><strong>Inconvénients:</strong></p>
+<ul>
+    <li>Plus de temps de développement</li>
+    <li>Gestion de l'infrastructure nécessaire</li>
+    <li>Scaling manuel requis</li>
+</ul>
+
+<h3>Option 3: Hybride (Recommandé pour Production)</h3>
+
+<p><strong>Technologies:</strong></p>
+<ul>
+    <li><strong>Firebase Auth:</strong> Authentification</li>
+    <li><strong>Cloud Run (Node.js):</strong> API principale</li>
+    <li><strong>Cloud SQL (PostgreSQL):</strong> Base de données relationnelle</li>
+    <li><strong>Cloud Storage:</strong> Stockage de vidéos</li>
+    <li><strong>Cloud CDN:</strong> Distribution de contenu</li>
+    <li><strong>Redis (Memorystore):</strong> Cache</li>
+</ul>
+
+<p><strong>Avantages:</strong></p>
+<ul>
+    <li>Meilleur des deux mondes</li>
+    <li>Performance optimale</li>
+    <li>Scaling flexible</li>
+    <li>Coûts optimisés</li>
+</ul>
+
+<h2>3.3 Structure de la Base de Données</h2>
+
+<h3>3.3.1 Firestore Structure</h3>
+
+<pre>
+users/
+  {userId}/
+    - email: string
+    - name: string
+    - avatar: string
+    - verified: boolean
+    - createdAt: timestamp
+    - preferences: object
+
+videos/
+  {videoId}/
+    - title: string
+    - description: string
+    - videoUrl: string
+    - thumbnailUrl: string
+    - creatorId: string
+    - category: string
+    - duration: number
+    - createdAt: timestamp
+    - engagement: {
+        likes: number
+        comments: number
+        shares: number
+        views: number
+      }
+
+interactions/
+  {userId}_{videoId}/
+    - liked: boolean
+    - bookmarked: boolean
+    - viewed: boolean
+    - viewedAt: timestamp
+
+comments/
+  {commentId}/
+    - videoId: string
+    - userId: string
+    - text: string
+    - createdAt: timestamp
+    - likes: number
+
+categories/
+  {categoryId}/
+    - name: string
+    - icon: string
+    - color: string
+</pre>
+
+<h2>3.4 API Endpoints</h2>
+
+<h3>3.4.1 Authentication</h3>
+<pre>
+POST   /api/auth/register
+POST   /api/auth/login
+POST   /api/auth/logout
+POST   /api/auth/refresh
+GET    /api/auth/me
+PUT    /api/auth/profile
+</pre>
+
+<h3>3.4.2 Videos</h3>
+<pre>
+GET    /api/videos              # Liste des vidéos (pagination)
+GET    /api/videos/:id          # Détails d'une vidéo
+POST   /api/videos              # Créer une vidéo (admin)
+PUT    /api/videos/:id          # Modifier une vidéo
+DELETE /api/videos/:id          # Supprimer une vidéo
+
+GET    /api/videos/feed         # Feed personnalisé
+GET    /api/videos/search       # Recherche de vidéos
+GET    /api/videos/category/:id # Vidéos par catégorie
+</pre>
+
+<h3>3.4.3 Interactions</h3>
+<pre>
+POST   /api/videos/:id/like     # Like/Unlike
+POST   /api/videos/:id/bookmark # Bookmark/Unbookmark
+POST   /api/videos/:id/share    # Partager
+GET    /api/videos/:id/interactions # État des interactions
+</pre>
+
+<h3>3.4.4 Comments</h3>
+<pre>
+GET    /api/videos/:id/comments # Liste des commentaires
+POST   /api/videos/:id/comments # Ajouter un commentaire
+DELETE /api/comments/:id       # Supprimer un commentaire
+POST   /api/comments/:id/like  # Like un commentaire
+</pre>
+
+<h3>3.4.5 Users</h3>
+<pre>
+GET    /api/users/:id           # Profil utilisateur
+PUT    /api/users/:id           # Modifier le profil
+GET    /api/users/:id/videos    # Vidéos d'un utilisateur
+</pre>
+
+<h2>3.5 Services Backend Détaillés</h2>
+
+<h3>3.5.1 Service d'Authentification</h3>
+
+<p><strong>Responsabilités:</strong></p>
+<ul>
+    <li>Inscription et connexion des utilisateurs</li>
+    <li>Gestion des tokens JWT</li>
+    <li>Refresh tokens</li>
+    <li>Validation des sessions</li>
+    <li>OAuth (Google, Facebook, Apple)</li>
+</ul>
+
+<p><strong>Technologies:</strong></p>
+<ul>
+    <li>Firebase Auth ou JWT + bcrypt</li>
+    <li>Redis pour les sessions (optionnel)</li>
+</ul>
+
+<h3>3.5.2 Service de Vidéos</h3>
+
+<p><strong>Responsabilités:</strong></p>
+<ul>
+    <li>Gestion du catalogue de vidéos</li>
+    <li>Upload et traitement de vidéos</li>
+    <li>Génération de thumbnails</li>
+    <li>Encodage vidéo (transcoding)</li>
+    <li>Recommandations personnalisées</li>
+    <li>Analytics de visionnage</li>
+</ul>
+
+<p><strong>Technologies:</strong></p>
+<ul>
+    <li>Cloud Storage pour le stockage</li>
+    <li>Cloud Functions pour le transcoding</li>
+    <li>FFmpeg pour le traitement vidéo</li>
+    <li>Machine Learning pour les recommandations</li>
+</ul>
+
+<h3>3.5.3 Service d'Interactions</h3>
+
+<p><strong>Responsabilités:</strong></p>
+<ul>
+    <li>Gestion des likes, bookmarks, shares</li>
+    <li>Compteurs en temps réel</li>
+    <li>Notifications d'interactions</li>
+    <li>Analytics d'engagement</li>
+</ul>
+
+<p><strong>Technologies:</strong></p>
+<ul>
+    <li>Firestore ou PostgreSQL</li>
+    <li>WebSockets pour le temps réel (optionnel)</li>
+    <li>Cloud Functions pour les triggers</li>
+</ul>
+
+<h3>3.5.4 Service de Commentaires</h3>
+
+<p><strong>Responsabilités:</strong></p>
+<ul>
+    <li>Gestion des commentaires</li>
+    <li>Modération automatique</li>
+    <li>Threads de commentaires</li>
+    <li>Notifications de réponses</li>
+</ul>
+
+<p><strong>Technologies:</strong></p>
+<ul>
+    <li>Firestore ou PostgreSQL</li>
+    <li>Cloud Functions pour la modération</li>
+    <li>NLP pour la détection de spam</li>
+</ul>
+
+<h2>3.6 Sécurité Backend</h2>
+
+<p><strong>Mesures de sécurité:</strong></p>
+<ul>
+    <li>HTTPS obligatoire (TLS 1.2+)</li>
+    <li>Authentification JWT avec expiration</li>
+    <li>Rate limiting (100 req/min par IP)</li>
+    <li>Validation des inputs (sanitization)</li>
+    <li>CORS configuré correctement</li>
+    <li>Secrets dans Google Secret Manager</li>
+    <li>Logs d'audit pour les actions sensibles</li>
+    <li>Backup automatique quotidien</li>
+</ul>
+
+<h2>3.7 Proposition de Serveurs et Hébergement</h2>
+
+<h3>3.7.1 Options de Serveurs Cloud</h3>
+
+<p><strong>Option A: Google Cloud Platform (GCP) - Recommandé</strong></p>
+
+<p><strong>Services proposés:</strong></p>
+
+<p><strong>1. Cloud Run (Serverless Containers)</strong></p>
+<ul>
+    <li><strong>Description:</strong> Exécution de conteneurs Docker sans gestion de serveurs</li>
+    <li><strong>Avantages:</strong>
+        <ul>
+            <li>Scaling automatique (0 à N instances)</li>
+            <li>Pay-as-you-go (payez seulement ce que vous utilisez)</li>
+            <li>Pas de gestion d'infrastructure</li>
+            <li>Support Node.js, Python, Go, Java</li>
+        </ul>
+    </li>
+    <li><strong>Spécifications recommandées:</strong>
+        <ul>
+            <li>CPU: 1-2 vCPU</li>
+            <li>RAM: 512 MB - 2 GB</li>
+            <li>Concurrence: 80 requêtes par instance</li>
+        </ul>
+    </li>
+    <li><strong>Coût:</strong>
+        <ul>
+            <li>Gratuit: 2M requêtes/mois</li>
+            <li>Payant: $0.40 par million de requêtes + $0.00002400/vCPU-seconde + $0.00000250/GiB-seconde</li>
+            <li><strong>Estimation:</strong> $20-100/mois pour 1-10K utilisateurs</li>
+        </ul>
+    </li>
+</ul>
+
+<p><strong>2. Compute Engine (VMs)</strong></p>
+<ul>
+    <li><strong>Description:</strong> Machines virtuelles avec contrôle total</li>
+    <li><strong>Avantages:</strong>
+        <ul>
+            <li>Contrôle complet sur l'environnement</li>
+            <li>Prix prévisibles</li>
+            <li>Choix de la configuration</li>
+        </ul>
+    </li>
+    <li><strong>Spécifications recommandées:</strong>
+        <ul>
+            <li><strong>Démarrage (1K-5K users):</strong>
+                <ul>
+                    <li>Type: e2-small ou e2-medium</li>
+                    <li>vCPU: 2</li>
+                    <li>RAM: 4 GB</li>
+                    <li>Disque: 20 GB SSD</li>
+                    <li><strong>Coût:</strong> ~$30-50/mois</li>
+                </ul>
+            </li>
+            <li><strong>Croissance (10K-50K users):</strong>
+                <ul>
+                    <li>Type: e2-standard-2 ou e2-standard-4</li>
+                    <li>vCPU: 4-8</li>
+                    <li>RAM: 8-16 GB</li>
+                    <li>Disque: 50-100 GB SSD</li>
+                    <li><strong>Coût:</strong> ~$100-200/mois</li>
+                </ul>
+            </li>
+            <li><strong>Échelle (100K+ users):</strong>
+                <ul>
+                    <li>Type: e2-highmem-4 ou e2-highmem-8</li>
+                    <li>vCPU: 8-16</li>
+                    <li>RAM: 32-64 GB</li>
+                    <li>Disque: 200+ GB SSD</li>
+                    <li>Load Balancer: $20-50/mois</li>
+                    <li><strong>Coût:</strong> ~$300-600/mois</li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+</ul>
+
+<p><strong>3. App Engine (PaaS)</strong></p>
+<ul>
+    <li><strong>Description:</strong> Plateforme gérée pour applications web</li>
+    <li><strong>Avantages:</strong>
+        <ul>
+            <li>Déploiement simple</li>
+            <li>Scaling automatique</li>
+            <li>Gestion des versions</li>
+        </ul>
+    </li>
+    <li><strong>Coût:</strong>
+        <ul>
+            <li>Gratuit: 28 heures/jour d'instance F1</li>
+            <li>Payant: $0.05/heure pour instance F1</li>
+            <li><strong>Estimation:</strong> $30-150/mois</li>
+        </ul>
+    </li>
+</ul>
+
+<p><strong>Option B: AWS (Amazon Web Services)</strong></p>
+
+<p><strong>Services proposés:</strong></p>
+
+<p><strong>1. AWS Lambda (Serverless)</strong></p>
+<ul>
+    <li><strong>Description:</strong> Fonctions serverless</li>
+    <li><strong>Avantages:</strong>
+        <ul>
+            <li>Scaling automatique</li>
+            <li>Pay-as-you-go</li>
+            <li>Intégration avec autres services AWS</li>
+        </ul>
+    </li>
+    <li><strong>Coût:</strong>
+        <ul>
+            <li>Gratuit: 1M requêtes/mois</li>
+            <li>Payant: $0.20 par million de requêtes</li>
+            <li><strong>Estimation:</strong> $10-50/mois</li>
+        </ul>
+    </li>
+</ul>
+
+<p><strong>2. EC2 (Elastic Compute Cloud)</strong></p>
+<ul>
+    <li><strong>Description:</strong> Machines virtuelles</li>
+    <li><strong>Spécifications recommandées:</strong>
+        <ul>
+            <li><strong>Démarrage:</strong> t3.small (2 vCPU, 2 GB RAM) - ~$15-20/mois</li>
+            <li><strong>Croissance:</strong> t3.medium (2 vCPU, 4 GB RAM) - ~$30-40/mois</li>
+            <li><strong>Échelle:</strong> t3.large ou m5.large (4 vCPU, 8 GB RAM) - ~$70-150/mois</li>
+        </ul>
+    </li>
+    <li><strong>Avantages:</strong>
+        <ul>
+            <li>Flexibilité</li>
+            <li>Large choix d'instances</li>
+            <li>Intégration avec services AWS</li>
+        </ul>
+    </li>
+</ul>
+
+<p><strong>3. Elastic Beanstalk (PaaS)</strong></p>
+<ul>
+    <li><strong>Description:</strong> Déploiement et gestion simplifiés</li>
+    <li><strong>Coût:</strong> Gratuit (payez seulement pour les ressources EC2)</li>
+    <li><strong>Estimation:</strong> $20-100/mois selon l'instance</li>
+</ul>
+
+<p><strong>Option C: DigitalOcean - Économique</strong></p>
+
+<p><strong>Services proposés:</strong></p>
+
+<p><strong>1. Droplets (VMs)</strong></p>
+<ul>
+    <li><strong>Description:</strong> Machines virtuelles simples et économiques</li>
+    <li><strong>Spécifications recommandées:</strong>
+        <ul>
+            <li><strong>Démarrage:</strong> Basic Droplet
+                <ul>
+                    <li>2 vCPU, 2 GB RAM, 50 GB SSD</li>
+                    <li><strong>Coût:</strong> $12/mois</li>
+                </ul>
+            </li>
+            <li><strong>Croissance:</strong> General Purpose Droplet
+                <ul>
+                    <li>4 vCPU, 8 GB RAM, 100 GB SSD</li>
+                    <li><strong>Coût:</strong> $48/mois</li>
+                </ul>
+            </li>
+            <li><strong>Échelle:</strong> CPU-Optimized Droplet
+                <ul>
+                    <li>8 vCPU, 16 GB RAM, 200 GB SSD</li>
+                    <li><strong>Coût:</strong> $96/mois</li>
+                </ul>
+            </li>
+        </ul>
+    </li>
+    <li><strong>Avantages:</strong>
+        <ul>
+            <li>Prix fixes et prévisibles</li>
+            <li>Interface simple</li>
+            <li>Bon support</li>
+            <li>Pas de frais cachés</li>
+        </ul>
+    </li>
+</ul>
+
+<p><strong>2. App Platform (PaaS)</strong></p>
+<ul>
+    <li><strong>Description:</strong> Plateforme gérée</li>
+    <li><strong>Coût:</strong>
+        <ul>
+            <li>Gratuit: 3 apps statiques</li>
+            <li>Payant: $5/mois pour app basique</li>
+            <li><strong>Estimation:</strong> $12-50/mois</li>
+        </ul>
+    </li>
+</ul>
+
+<p><strong>Option D: Vercel / Netlify (Frontend + API)</strong></p>
+
+<p><strong>Pour API Serverless:</strong></p>
+<ul>
+    <li><strong>Vercel:</strong>
+        <ul>
+            <li>Gratuit: 100 GB bandwidth/mois</li>
+            <li>Payant: $20/mois pour Pro</li>
+            <li><strong>Avantages:</strong> Déploiement instantané, CDN intégré</li>
+        </ul>
+    </li>
+    <li><strong>Netlify:</strong>
+        <ul>
+            <li>Gratuit: 100 GB bandwidth/mois</li>
+            <li>Payant: $19/mois pour Pro</li>
+            <li><strong>Avantages:</strong> Fonctions serverless, CDN global</li>
+        </ul>
+    </li>
+</ul>
+
+<p><strong>Option E: Heroku (PaaS Simple)</strong></p>
+
+<p><strong>Services proposés:</strong></p>
+<ul>
+    <li><strong>Hobby Dyno:</strong>
+        <ul>
+            <li>512 MB RAM</li>
+            <li><strong>Coût:</strong> $7/mois par dyno</li>
+        </ul>
+    </li>
+    <li><strong>Standard-1X:</strong>
+        <ul>
+            <li>512 MB RAM, 1 vCPU</li>
+            <li><strong>Coût:</strong> $25/mois</li>
+        </ul>
+    </li>
+    <li><strong>Standard-2X:</strong>
+        <ul>
+            <li>1 GB RAM, 2 vCPU</li>
+            <li><strong>Coût:</strong> $50/mois</li>
+        </ul>
+    </li>
+    <li><strong>Avantages:</strong>
+        <ul>
+            <li>Déploiement très simple (git push)</li>
+            <li>Gestion automatique</li>
+            <li>Add-ons disponibles</li>
+        </ul>
+    </li>
+    <li><strong>Inconvénients:</strong>
+        <ul>
+            <li>Plus cher que les alternatives</li>
+            <li>Moins de contrôle</li>
+        </ul>
+    </li>
+</ul>
+
+<h3>3.7.2 Comparaison des Options</h3>
+
+<table>
+    <tr>
+        <th>Option</th>
+        <th>Type</th>
+        <th>Coût Démarrage</th>
+        <th>Coût Échelle</th>
+        <th>Complexité</th>
+        <th>Recommandation</th>
+    </tr>
+    <tr>
+        <td><strong>GCP Cloud Run</strong></td>
+        <td>Serverless</td>
+        <td>$20-50/mois</td>
+        <td>$100-300/mois</td>
+        <td>Faible</td>
+        <td>⭐⭐⭐⭐⭐ MVP</td>
+    </tr>
+    <tr>
+        <td><strong>GCP Compute Engine</strong></td>
+        <td>VM</td>
+        <td>$30-50/mois</td>
+        <td>$200-600/mois</td>
+        <td>Moyenne</td>
+        <td>⭐⭐⭐⭐ Production</td>
+    </tr>
+    <tr>
+        <td><strong>AWS Lambda</strong></td>
+        <td>Serverless</td>
+        <td>$10-30/mois</td>
+        <td>$50-200/mois</td>
+        <td>Faible</td>
+        <td>⭐⭐⭐⭐ MVP</td>
+    </tr>
+    <tr>
+        <td><strong>AWS EC2</strong></td>
+        <td>VM</td>
+        <td>$15-40/mois</td>
+        <td>$70-300/mois</td>
+        <td>Moyenne</td>
+        <td>⭐⭐⭐⭐ Production</td>
+    </tr>
+    <tr>
+        <td><strong>DigitalOcean Droplets</strong></td>
+        <td>VM</td>
+        <td>$12/mois</td>
+        <td>$48-96/mois</td>
+        <td>Faible</td>
+        <td>⭐⭐⭐⭐⭐ Budget</td>
+    </tr>
+    <tr>
+        <td><strong>Heroku</strong></td>
+        <td>PaaS</td>
+        <td>$7-25/mois</td>
+        <td>$50-200/mois</td>
+        <td>Très faible</td>
+        <td>⭐⭐⭐ Débutant</td>
+    </tr>
+    <tr>
+        <td><strong>Vercel/Netlify</strong></td>
+        <td>Serverless</td>
+        <td>Gratuit-$20</td>
+        <td>$20-100/mois</td>
+        <td>Très faible</td>
+        <td>⭐⭐⭐ Frontend+API</td>
+    </tr>
+</table>
+
+<h3>3.7.3 Recommandation par Scénario</h3>
+
+<p><strong>Scénario 1: MVP / Démarrage (1K-5K utilisateurs)</strong></p>
+
+<p><strong>Recommandation:</strong> <strong>GCP Cloud Run</strong> ou <strong>DigitalOcean Droplet</strong></p>
+
+<p><strong>Configuration Cloud Run:</strong></p>
+<ul>
+    <li>1-2 instances</li>
+    <li>512 MB RAM</li>
+    <li>1 vCPU</li>
+    <li><strong>Coût estimé:</strong> $20-50/mois</li>
+</ul>
+
+<p><strong>Configuration DigitalOcean:</strong></p>
+<ul>
+    <li>Droplet Basic (2 vCPU, 2 GB RAM)</li>
+    <li><strong>Coût:</strong> $12/mois</li>
+    <li><strong>Avantages:</strong> Prix fixe, simple, prévisible</li>
+</ul>
+
+<p><strong>Scénario 2: Croissance (10K-50K utilisateurs)</strong></p>
+
+<p><strong>Recommandation:</strong> <strong>GCP Compute Engine</strong> ou <strong>AWS EC2</strong></p>
+
+<p><strong>Configuration GCP:</strong></p>
+<ul>
+    <li>e2-standard-2 (4 vCPU, 8 GB RAM)</li>
+    <li>Load Balancer</li>
+    <li><strong>Coût estimé:</strong> $100-200/mois</li>
+</ul>
+
+<p><strong>Configuration AWS:</strong></p>
+<ul>
+    <li>t3.medium ou m5.large</li>
+    <li>Application Load Balancer</li>
+    <li><strong>Coût estimé:</strong> $80-150/mois</li>
+</ul>
+
+<p><strong>Scénario 3: Échelle (100K+ utilisateurs)</strong></p>
+
+<p><strong>Recommandation:</strong> <strong>GCP Compute Engine avec Auto-scaling</strong> ou <strong>AWS EC2 Auto Scaling Group</strong></p>
+
+<p><strong>Configuration GCP:</strong></p>
+<ul>
+    <li>2-4 instances e2-highmem-4 (8 vCPU, 32 GB RAM)</li>
+    <li>Cloud Load Balancer</li>
+    <li>Auto-scaling basé sur CPU/Memory</li>
+    <li><strong>Coût estimé:</strong> $400-800/mois</li>
+</ul>
+
+<p><strong>Configuration AWS:</strong></p>
+<ul>
+    <li>2-4 instances m5.xlarge</li>
+    <li>Application Load Balancer</li>
+    <li>Auto Scaling Group</li>
+    <li><strong>Coût estimé:</strong> $300-600/mois</li>
+</ul>
+
+<h3>3.7.4 Stack Serveur Recommandée pour Neoori</h3>
+
+<p><strong>Architecture Hybride (Recommandée):</strong></p>
+
+<pre>
+┌─────────────────────────────────────────┐
+│         Load Balancer / CDN             │
+│    (Cloud Load Balancing / Cloudflare)  │
+└──────────────┬──────────────────────────┘
+               │
+    ┌───────────┼───────────┐
+    │           │           │
+┌───▼───┐  ┌───▼───┐  ┌───▼───┐
+│ API   │  │ API   │  │ API   │
+│ Node  │  │ Node  │  │ Node  │
+│ (GCP  │  │ (GCP  │  │ (GCP  │
+│ Cloud │  │ Cloud │  │ Cloud │
+│ Run)  │  │ Run)  │  │ Run)  │
+└───┬───┘  └───┬───┘  └───┬───┘
+    │           │           │
+    └───────────┼───────────┘
+                │
+    ┌───────────┼───────────┐
+    │           │           │
+┌───▼───┐  ┌───▼───┐  ┌───▼───┐
+│Redis  │  │Fire- │  │Cloud  │
+│Cache  │  │store │  │Storage│
+└───────┘  └──────┘  └───────┘
+</pre>
+
+<p><strong>Composants:</strong></p>
+
+<ol>
+    <li><strong>Load Balancer:</strong>
+        <ul>
+            <li>GCP Cloud Load Balancing ($20-50/mois)</li>
+            <li>Ou Cloudflare (gratuit pour basique, $20/mois Pro)</li>
+        </ul>
+    </li>
+    <li><strong>API Servers:</strong>
+        <ul>
+            <li><strong>Option A:</strong> GCP Cloud Run (serverless, auto-scaling)</li>
+            <li><strong>Option B:</strong> GCP Compute Engine (VMs avec auto-scaling)</li>
+            <li><strong>Option C:</strong> DigitalOcean Droplets (économique)</li>
+        </ul>
+    </li>
+    <li><strong>Base de données:</strong>
+        <ul>
+            <li>Firestore (NoSQL) ou Cloud SQL PostgreSQL</li>
+            <li>Redis pour le cache (Memorystore)</li>
+        </ul>
+    </li>
+    <li><strong>Stockage:</strong>
+        <ul>
+            <li>Firebase Storage ou Cloud Storage pour les vidéos</li>
+            <li>Cloud CDN pour la distribution</li>
+        </ul>
+    </li>
+</ol>
+
+<h3>3.7.5 Configuration Serveur Détaillée</h3>
+
+<p><strong>Pour Node.js/Express API:</strong></p>
+
+<p><strong>Fichier <code>package.json</code> recommandé:</strong></p>
+<pre>
+{
+  "name": "neoori-api",
+  "version": "1.0.0",
+  "scripts": {
+    "start": "node dist/index.js",
+    "dev": "ts-node-dev src/index.ts",
+    "build": "tsc",
+    "pm2:start": "pm2 start ecosystem.config.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2",
+    "cors": "^2.8.5",
+    "helmet": "^7.0.0",
+    "dotenv": "^16.3.1",
+    "firebase-admin": "^11.10.1",
+    "redis": "^4.6.7"
+  }
+}
+</pre>
+
+<p><strong>Configuration PM2 (pour VMs):</strong></p>
+<pre>
+// ecosystem.config.js
+module.exports = {
+  apps: [{
+    name: 'neoori-api',
+    script: './dist/index.js',
+    instances: 'max', // Utilise tous les CPU
+    exec_mode: 'cluster',
+    env: {
+      NODE_ENV: 'production',
+      PORT: 3000
+    },
+    error_file: './logs/err.log',
+    out_file: './logs/out.log',
+    log_date_format: 'YYYY-MM-DD HH:mm:ss Z'
+  }]
+};
+</pre>
+
+<p><strong>Variables d'environnement (.env):</strong></p>
+<pre>
+NODE_ENV=production
+PORT=3000
+FIREBASE_PROJECT_ID=neoori-app
+FIREBASE_PRIVATE_KEY=...
+REDIS_URL=redis://localhost:6379
+CORS_ORIGIN=https://app.neoori.com
+</pre>
+
+<h3>3.7.6 Monitoring et Maintenance</h3>
+
+<p><strong>Outils recommandés:</strong></p>
+
+<ol>
+    <li><strong>Monitoring:</strong>
+        <ul>
+            <li>GCP Cloud Monitoring (intégré)</li>
+            <li>Datadog ($15/host/mois)</li>
+            <li>New Relic ($25/mois)</li>
+            <li>Sentry pour les erreurs (gratuit jusqu'à 5K events/mois)</li>
+        </ul>
+    </li>
+    <li><strong>Logs:</strong>
+        <ul>
+            <li>GCP Cloud Logging (intégré)</li>
+            <li>Papertrail ($7/mois)</li>
+            <li>Loggly ($79/mois)</li>
+        </ul>
+    </li>
+    <li><strong>Uptime Monitoring:</strong>
+        <ul>
+            <li>UptimeRobot (gratuit pour 50 monitors)</li>
+            <li>Pingdom ($10/mois)</li>
+            <li>StatusCake (gratuit)</li>
+        </ul>
+    </li>
+</ol>
+
+<h3>3.7.7 Backup et Disaster Recovery</h3>
+
+<p><strong>Stratégie de backup:</strong></p>
+
+<ol>
+    <li><strong>Base de données:</strong>
+        <ul>
+            <li>Firestore: Backup automatique quotidien (gratuit)</li>
+            <li>Cloud SQL: Backup automatique (inclus)</li>
+            <li>Rétention: 7-30 jours</li>
+        </ul>
+    </li>
+    <li><strong>Fichiers/Vidéos:</strong>
+        <ul>
+            <li>Cloud Storage: Versioning activé</li>
+            <li>Backup vers Cloud Storage Nearline (archives)</li>
+        </ul>
+    </li>
+    <li><strong>Code:</strong>
+        <ul>
+            <li>GitHub (repository privé)</li>
+            <li>Tags de version pour chaque déploiement</li>
+        </ul>
+    </li>
+</ol>
+
+<p><strong>Plan de récupération:</strong></p>
+<ul>
+    <li>RTO (Recovery Time Objective): &lt; 1 heure</li>
+    <li>RPO (Recovery Point Objective): &lt; 24 heures</li>
+    <li>Tests de restauration: Mensuels</li>
+</ul>
+
+<hr>
+
+<h1 id="section4">4. PROPOSITION ARCHITECTURE FRONTEND</h1>
+
+<h2>4.1 Architecture Actuelle (React Native + Expo)</h2>
+
+<p><strong>Stack actuel:</strong></p>
+<ul>
+    <li><strong>React Native:</strong> 0.81.5</li>
+    <li><strong>Expo:</strong> ~54.0.22</li>
+    <li><strong>TypeScript:</strong> 5.9.2</li>
+    <li><strong>Navigation:</strong> React Navigation 7</li>
+    <li><strong>State Management:</strong> Context API</li>
+    <li><strong>Storage:</strong> AsyncStorage</li>
+</ul>
+
+<h2>4.2 Améliorations Proposées</h2>
+
+<h3>4.2.1 State Management</h3>
+
+<p><strong>Option 1: Context API (Actuel) - OK pour MVP</strong></p>
+<ul>
+    <li>Simple et intégré</li>
+    <li>Suffisant pour les besoins initiaux</li>
+    <li>Peut devenir complexe avec la croissance</li>
+</ul>
+
+<p><strong>Option 2: Redux Toolkit (Recommandé pour Production)</strong></p>
+<ul>
+    <li>Gestion d'état prévisible</li>
+    <li>DevTools pour le debugging</li>
+    <li>Middleware pour les async actions</li>
+    <li>Meilleure scalabilité</li>
+</ul>
+
+<p><strong>Option 3: Zustand (Léger)</strong></p>
+<ul>
+    <li>Plus simple que Redux</li>
+    <li>Moins de boilerplate</li>
+    <li>Performance optimale</li>
+</ul>
+
+<h3>4.2.2 API Client</h3>
+
+<p><strong>Configuration recommandée:</strong></p>
+<pre>
+// src/services/api/client.ts
+import axios from 'axios';
+import { getAuthToken } from '../storage/StorageService';
+
+const apiClient = axios.create({
+  baseURL: process.env.EXPO_PUBLIC_API_URL,
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
+// Interceptor pour ajouter le token
+apiClient.interceptors.request.use(async (config) => {
+  const token = await getAuthToken();
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+});
+
+// Interceptor pour gérer les erreurs
+apiClient.interceptors.response.use(
+  (response) => response,
+  async (error) => {
+    if (error.response?.status === 401) {
+      // Refresh token ou logout
+    }
+    return Promise.reject(error);
+  }
+);
+</pre>
+
+<h3>4.2.3 Gestion des Vidéos</h3>
+
+<p><strong>Optimisations:</strong></p>
+<ul>
+    <li>Lazy loading des vidéos</li>
+    <li>Cache des vidéos visionnées</li>
+    <li>Préchargement de la vidéo suivante</li>
+    <li>Compression des thumbnails</li>
+    <li>Progressive loading</li>
+</ul>
+
+<p><strong>Bibliothèques:</strong></p>
+<ul>
+    <li><code>expo-av</code> (actuel) pour la lecture</li>
+    <li><code>react-native-video</code> (alternative)</li>
+    <li><code>expo-image</code> pour les images optimisées</li>
+</ul>
+
+<h3>4.2.4 Offline Support</h3>
+
+<p><strong>Stratégie:</strong></p>
+<ul>
+    <li>Cache des vidéos avec AsyncStorage/MMKV</li>
+    <li>Queue des interactions offline</li>
+    <li>Sync automatique quand online</li>
+    <li>Indicateur de statut de connexion</li>
+</ul>
+
+<p><strong>Bibliothèques:</strong></p>
+<ul>
+    <li><code>@react-native-async-storage/async-storage</code></li>
+    <li><code>@react-native-community/netinfo</code></li>
+    <li><code>react-query</code> pour le cache et sync</li>
+</ul>
+
+<h3>4.2.5 Performance</h3>
+
+<p><strong>Optimisations:</strong></p>
+<ul>
+    <li>Code splitting avec React.lazy</li>
+    <li>Memoization des composants lourds</li>
+    <li>FlatList optimisée (déjà fait)</li>
+    <li>Images optimisées (WebP)</li>
+    <li>Bundle size optimization</li>
+</ul>
+
+<p><strong>Outils:</strong></p>
+<ul>
+    <li>Flipper pour le debugging</li>
+    <li>React DevTools</li>
+    <li>Performance Monitor d'Expo</li>
+</ul>
+
+<h2>4.3 Structure Frontend Proposée</h2>
+
+<pre>
+src/
+├── api/                    # API clients
+│   ├── client.ts          # Axios instance
+│   ├── authApi.ts         # Auth endpoints
+│   ├── videoApi.ts        # Video endpoints
+│   ├── userApi.ts         # User endpoints
+│   └── commentApi.ts      # Comment endpoints
+│
+├── components/            # Composants réutilisables
+│   ├── common/           # Composants communs
+│   ├── video/            # Composants vidéo
+│   └── navigation/       # Composants navigation
+│
+├── screens/              # Écrans de l'application
+│
+├── navigation/           # Configuration navigation
+│
+├── store/                # State management
+│   ├── slices/          # Redux slices (si Redux)
+│   └── contexts/        # Context providers
+│
+├── services/             # Services
+│   ├── api/             # API services
+│   ├── storage/         # Storage services
+│   └── analytics/       # Analytics services
+│
+├── hooks/                # Custom hooks
+│   ├── useAuth.ts
+│   ├── useVideos.ts
+│   └── useVideoPlayer.ts
+│
+├── utils/                # Utilitaires
+│   ├── formatters.ts
+│   ├── validators.ts
+│   └── constants.ts
+│
+└── types/                # TypeScript types
+</pre>
+
+<h2>4.4 Intégration Backend</h2>
+
+<h3>4.4.1 Remplacement des Mocks</h3>
+
+<p><strong>Étapes:</strong></p>
+<ol>
+    <li>Créer les services API (<code>src/services/api/</code>)</li>
+    <li>Remplacer <code>MOCK_VIDEOS</code> par des appels API</li>
+    <li>Mettre à jour <code>AuthContext</code> pour utiliser Firebase Auth</li>
+    <li>Mettre à jour <code>VideoContext</code> pour utiliser Firestore</li>
+    <li>Implémenter la gestion d'erreurs</li>
+    <li>Ajouter le loading states</li>
+</ol>
+
+<h3>4.4.2 Configuration Environnement</h3>
+
+<pre>
+// .env
+EXPO_PUBLIC_API_URL=https://api.neoori.com
+EXPO_PUBLIC_FIREBASE_API_KEY=...
+EXPO_PUBLIC_FIREBASE_AUTH_DOMAIN=...
+EXPO_PUBLIC_FIREBASE_PROJECT_ID=...
+</pre>
+
+<h2>4.5 Build et Déploiement</h2>
+
+<h3>4.5.1 EAS Build (Expo Application Services)</h3>
+
+<p><strong>Configuration:</strong></p>
+<ul>
+    <li>Build Android APK/AAB</li>
+    <li>Build iOS IPA</li>
+    <li>Gestion des credentials</li>
+    <li>Builds cloud</li>
+</ul>
+
+<p><strong>Coûts:</strong></p>
+<ul>
+    <li>Gratuit: 30 builds/mois</li>
+    <li>Payant: $29/mois pour 100 builds</li>
+</ul>
+
+<h3>4.5.2 CI/CD</h3>
+
+<p><strong>Pipeline recommandé:</strong></p>
+<ol>
+    <li>Push sur GitHub</li>
+    <li>Tests automatiques</li>
+    <li>Build avec EAS</li>
+    <li>Upload sur Google Play (test)</li>
+    <li>Déploiement automatique (optionnel)</li>
+</ol>
+
+<hr>
+
+<h1 id="section5">5. ESTIMATION DES COÛTS</h1>
+
+<h2>5.1 Coûts Initiaux (One-time)</h2>
+
+<table>
+    <tr>
+        <th>Service</th>
+        <th>Coût</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td>Google Play Developer</td>
+        <td>$25</td>
+        <td>Inscription à vie</td>
+    </tr>
+    <tr>
+        <td>Domaine (optionnel)</td>
+        <td>$10-15/an</td>
+        <td>neoori.com</td>
+    </tr>
+    <tr>
+        <td><strong>Total</strong></td>
+        <td><strong>$35-40</strong></td>
+        <td><strong>Coûts uniques</strong></td>
+    </tr>
+</table>
+
+<h2>5.2 Coûts Mensuels (Estimation)</h2>
+
+<h3>5.2.1 Firebase (Option 1 - MVP)</h3>
+
+<table>
+    <tr>
+        <th>Service</th>
+        <th>Gratuit</th>
+        <th>Payant (après)</th>
+        <th>Estimation mensuelle</th>
+    </tr>
+    <tr>
+        <td>Authentication</td>
+        <td>50K users</td>
+        <td>$0.0055/user</td>
+        <td>$0-50 (10K users)</td>
+    </tr>
+    <tr>
+        <td>Firestore</td>
+        <td>50K reads/jour</td>
+        <td>$0.06/100K reads</td>
+        <td>$10-50</td>
+    </tr>
+    <tr>
+        <td>Storage</td>
+        <td>5 GB</td>
+        <td>$0.026/GB</td>
+        <td>$20-100 (500 GB)</td>
+    </tr>
+    <tr>
+        <td>Bandwidth</td>
+        <td>1 GB/jour</td>
+        <td>$0.12/GB</td>
+        <td>$50-200 (500 GB)</td>
+    </tr>
+    <tr>
+        <td>Cloud Functions</td>
+        <td>2M invocations</td>
+        <td>$0.40/M</td>
+        <td>$10-30</td>
+    </tr>
+    <tr>
+        <td><strong>Total estimé</strong></td>
+        <td></td>
+        <td></td>
+        <td><strong>$90-430/mois</strong></td>
+    </tr>
+</table>
+
+<h3>5.2.2 Google Cloud Platform (Option 2 - Production)</h3>
+
+<table>
+    <tr>
+        <th>Service</th>
+        <th>Coût mensuel estimé</th>
+    </tr>
+    <tr>
+        <td>Cloud Run (API)</td>
+        <td>$20-100</td>
+    </tr>
+    <tr>
+        <td>Cloud SQL (PostgreSQL)</td>
+        <td>$30-150</td>
+    </tr>
+    <tr>
+        <td>Cloud Storage (Vidéos)</td>
+        <td>$50-300</td>
+    </tr>
+    <tr>
+        <td>Cloud CDN</td>
+        <td>$30-150</td>
+    </tr>
+    <tr>
+        <td>Load Balancer</td>
+        <td>$20-50</td>
+    </tr>
+    <tr>
+        <td><strong>Total estimé</strong></td>
+        <td><strong>$150-750/mois</strong></td>
+    </tr>
+</table>
+
+<h3>5.2.3 EAS Build</h3>
+
+<table>
+    <tr>
+        <th>Plan</th>
+        <th>Coût</th>
+        <th>Builds/mois</th>
+    </tr>
+    <tr>
+        <td>Free</td>
+        <td>$0</td>
+        <td>30</td>
+    </tr>
+    <tr>
+        <td>Production</td>
+        <td>$29</td>
+        <td>100</td>
+    </tr>
+    <tr>
+        <td>Enterprise</td>
+        <td>Custom</td>
+        <td>Illimité</td>
+    </tr>
+</table>
+
+<h2>5.3 Coûts selon le Trafic</h2>
+
+<p><strong>Scénario 1: Démarrage (1K utilisateurs actifs)</strong></p>
+<ul>
+    <li>Firebase: ~$50-100/mois</li>
+    <li>EAS Build: Gratuit</li>
+    <li><strong>Total: ~$50-100/mois</strong></li>
+</ul>
+
+<p><strong>Scénario 2: Croissance (10K utilisateurs actifs)</strong></p>
+<ul>
+    <li>Firebase: ~$200-400/mois</li>
+    <li>EAS Build: $29/mois</li>
+    <li><strong>Total: ~$230-430/mois</strong></li>
+</ul>
+
+<p><strong>Scénario 3: Échelle (100K utilisateurs actifs)</strong></p>
+<ul>
+    <li>Firebase: ~$1,000-2,000/mois</li>
+    <li>EAS Build: $29/mois</li>
+    <li>CDN supplémentaire: $200-500/mois</li>
+    <li><strong>Total: ~$1,230-2,530/mois</strong></li>
+</ul>
+
+<hr>
+
+<h1 id="section6">6. PLAN DE DÉPLOIEMENT</h1>
+
+<h2>6.1 Phase 1: Préparation (Semaine 1-2)</h2>
+
+<p><strong>Tâches:</strong></p>
+<ul>
+    <li>[ ] Créer compte Google Play Developer ($25)</li>
+    <li>[ ] Créer compte Google Cloud Platform</li>
+    <li>[ ] Configurer Firebase Project</li>
+    <li>[ ] Configurer EAS Build</li>
+    <li>[ ] Générer keystore pour Android</li>
+    <li>[ ] Préparer les assets (icônes, screenshots)</li>
+    <li>[ ] Rédiger politique de confidentialité</li>
+</ul>
+
+<h2>6.2 Phase 2: Backend Setup (Semaine 3-4)</h2>
+
+<p><strong>Tâches:</strong></p>
+<ul>
+    <li>[ ] Configurer Firebase Authentication</li>
+    <li>[ ] Créer structure Firestore</li>
+    <li>[ ] Configurer Firebase Storage</li>
+    <li>[ ] Créer Cloud Functions (si nécessaire)</li>
+    <li>[ ] Implémenter les endpoints API</li>
+    <li>[ ] Tests des APIs</li>
+    <li>[ ] Configuration de la sécurité</li>
+</ul>
+
+<h2>6.3 Phase 3: Intégration Frontend (Semaine 5-6)</h2>
+
+<p><strong>Tâches:</strong></p>
+<ul>
+    <li>[ ] Créer les services API dans le frontend</li>
+    <li>[ ] Remplacer les mocks par les vraies APIs</li>
+    <li>[ ] Implémenter l'authentification Firebase</li>
+    <li>[ ] Gestion des erreurs et loading states</li>
+    <li>[ ] Tests d'intégration</li>
+    <li>[ ] Optimisations de performance</li>
+</ul>
+
+<h2>6.4 Phase 4: Build et Tests (Semaine 7)</h2>
+
+<p><strong>Tâches:</strong></p>
+<ul>
+    <li>[ ] Build APK avec EAS</li>
+    <li>[ ] Tests internes</li>
+    <li>[ ] Correction des bugs</li>
+    <li>[ ] Optimisation de la taille de l'APK</li>
+    <li>[ ] Tests sur différents appareils</li>
+</ul>
+
+<h2>6.5 Phase 5: Publication (Semaine 8)</h2>
+
+<p><strong>Tâches:</strong></p>
+<ul>
+    <li>[ ] Soumission sur Google Play (test fermé)</li>
+    <li>[ ] Feedback des testeurs</li>
+    <li>[ ] Corrections finales</li>
+    <li>[ ] Publication en production</li>
+    <li>[ ] Monitoring post-lancement</li>
+</ul>
+
+<h2>6.6 Timeline Résumé</h2>
+
+<table>
+    <tr>
+        <th>Phase</th>
+        <th>Durée</th>
+        <th>Description</th>
+    </tr>
+    <tr>
+        <td>Phase 1</td>
+        <td>2 semaines</td>
+        <td>Préparation et configuration</td>
+    </tr>
+    <tr>
+        <td>Phase 2</td>
+        <td>2 semaines</td>
+        <td>Backend setup</td>
+    </tr>
+    <tr>
+        <td>Phase 3</td>
+        <td>2 semaines</td>
+        <td>Intégration frontend</td>
+    </tr>
+    <tr>
+        <td>Phase 4</td>
+        <td>1 semaine</td>
+        <td>Build et tests</td>
+    </tr>
+    <tr>
+        <td>Phase 5</td>
+        <td>1 semaine</td>
+        <td>Publication</td>
+    </tr>
+    <tr>
+        <td><strong>Total</strong></td>
+        <td><strong>8 semaines</strong></td>
+        <td><strong>~2 mois</strong></td>
+    </tr>
+</table>
+
+<hr>
+
+<h1>7. RECOMMANDATIONS FINALES</h1>
+
+<h2>7.1 Pour le MVP (Minimum Viable Product)</h2>
+
+<p><strong>Stack recommandé:</strong></p>
+<ul>
+    <li><strong>Backend:</strong> Firebase (Auth + Firestore + Storage)</li>
+    <li><strong>Frontend:</strong> React Native + Expo (actuel)</li>
+    <li><strong>Build:</strong> EAS Build (gratuit)</li>
+    <li><strong>Coût estimé:</strong> $50-100/mois</li>
+</ul>
+
+<p><strong>Avantages:</strong></p>
+<ul>
+    <li>Développement rapide</li>
+    <li>Coûts faibles au démarrage</li>
+    <li>Scaling automatique</li>
+    <li>Focus sur les fonctionnalités</li>
+</ul>
+
+<h2>7.2 Pour la Production (Scale)</h2>
+
+<p><strong>Stack recommandé:</strong></p>
+<ul>
+    <li><strong>Backend:</strong> Hybride (Firebase Auth + Cloud Run + Cloud SQL)</li>
+    <li><strong>Frontend:</strong> React Native + Expo + Redux</li>
+    <li><strong>Build:</strong> EAS Build Production</li>
+    <li><strong>CDN:</strong> Cloud CDN</li>
+    <li><strong>Coût estimé:</strong> $200-500/mois</li>
+</ul>
+
+<p><strong>Avantages:</strong></p>
+<ul>
+    <li>Performance optimale</li>
+    <li>Contrôle sur l'infrastructure</li>
+    <li>Coûts optimisés</li>
+    <li>Scalabilité élevée</li>
+</ul>
+
+<h2>7.3 Prochaines Étapes Immédiates</h2>
+
+<ol>
+    <li><strong>Créer le compte Google Play Developer</strong> ($25)</li>
+    <li><strong>Configurer Firebase Project</strong> (gratuit)</li>
+    <li><strong>Tester EAS Build</strong> pour générer un APK</li>
+    <li><strong>Implémenter Firebase Auth</strong> dans l'app</li>
+    <li><strong>Migrer les données vers Firestore</strong></li>
+</ol>
+
+<hr>
+
+<h1>8. CONTACTS ET RESSOURCES</h1>
+
+<h2>8.1 Documentation</h2>
+
+<ul>
+    <li><a href="https://play.google.com/console">Google Play Console</a></li>
+    <li><a href="https://firebase.google.com/docs">Firebase Documentation</a></li>
+    <li><a href="https://docs.expo.dev/build/introduction/">Expo EAS Build</a></li>
+    <li><a href="https://reactnative.dev/">React Native Documentation</a></li>
+</ul>
+
+<h2>8.2 Support</h2>
+
+<ul>
+    <li>Google Play Support: <a href="https://support.google.com/googleplay">support.google.com/googleplay</a></li>
+    <li>Firebase Support: <a href="https://firebase.google.com/support">firebase.google.com/support</a></li>
+    <li>Expo Support: <a href="https://forums.expo.dev">forums.expo.dev</a></li>
+</ul>
+
+<div class="footer">
+    <p><strong>Document préparé pour:</strong> Neoori App</p>
+    <p><strong>Date:</strong> Décembre 2024</p>
+    <p><strong>Version:</strong> 1.0</p>
+</div>
+
+</body>
+</html>
+

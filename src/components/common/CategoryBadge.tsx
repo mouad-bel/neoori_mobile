@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { FONTS, SPACING, BORDER_RADIUS } from '../../constants/theme';
+import { FONTS, SPACING, BORDER_RADIUS, COLORS } from '../../constants/theme';
 import { useTheme } from '../../store/ThemeContext';
 
 interface CategoryBadgeProps {
@@ -19,7 +19,7 @@ const CategoryBadge: React.FC<CategoryBadgeProps> = ({
 }) => {
   const { colors } = useTheme();
   // Si fixedColors est true, on utilise la couleur fournie ou une couleur fixe
-  const badgeColor = fixedColors ? (color || '#FF6B35') : (color || colors.primary); // Brand orange
+  const badgeColor = fixedColors ? (color || COLORS.primary) : (color || colors.primary); // Brand orange
   return (
     <View style={[styles.container, { backgroundColor: badgeColor + '20' }]}>
       <Ionicons name={icon} size={16} color={badgeColor} />

@@ -11,7 +11,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { Ionicons } from '@expo/vector-icons';
-import { FONTS, SPACING, BORDER_RADIUS } from '../../constants/theme';
+import { FONTS, SPACING, BORDER_RADIUS, COLORS } from '../../constants/theme';
 import { useTheme } from '../../store/ThemeContext';
 import { useAuth } from '../../store/AuthContext';
 import AppHeader from '../../components/navigation/AppHeader';
@@ -229,7 +229,7 @@ const ParametresScreen = () => {
         {/* Notifications Section */}
         <View style={[styles.section, { backgroundColor: colors.cardBackground }]}>
           <View style={styles.sectionHeader}>
-            <Ionicons name="notifications-outline" size={20} color="#FF6B35" />
+            <Ionicons name="notifications-outline" size={20} color={COLORS.primary} />
             <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
               Notifications
             </Text>
@@ -252,7 +252,7 @@ const ParametresScreen = () => {
               onValueChange={(value) =>
                 setNotificationSettings({ ...notificationSettings, emailNotifications: value })
               }
-              trackColor={{ false: colors.border, true: '#FF6B35' }}
+              trackColor={{ false: colors.border, true: COLORS.primary }}
               thumbColor="white"
             />
           </View>
@@ -274,7 +274,7 @@ const ParametresScreen = () => {
               onValueChange={(value) =>
                 setNotificationSettings({ ...notificationSettings, pushNotifications: value })
               }
-              trackColor={{ false: colors.border, true: '#FF6B35' }}
+              trackColor={{ false: colors.border, true: COLORS.primary }}
               thumbColor="white"
             />
           </View>
@@ -283,7 +283,7 @@ const ParametresScreen = () => {
         {/* Privacy Section */}
         <View style={[styles.section, { backgroundColor: colors.cardBackground }]}>
           <View style={styles.sectionHeader}>
-            <Ionicons name="shield-checkmark-outline" size={20} color="#FF8C42" />
+            <Ionicons name="shield-checkmark-outline" size={20} color={COLORS.primaryLight} />
             <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
               Confidentialité
             </Text>
@@ -305,7 +305,7 @@ const ParametresScreen = () => {
               onValueChange={(value) =>
                 setPrivacySettings({ ...privacySettings, publicProfile: value })
               }
-              trackColor={{ false: colors.border, true: '#FF6B35' }}
+              trackColor={{ false: colors.border, true: COLORS.primary }}
               thumbColor="white"
             />
           </View>
@@ -326,7 +326,7 @@ const ParametresScreen = () => {
               onValueChange={(value) =>
                 setPrivacySettings({ ...privacySettings, showEmail: value })
               }
-              trackColor={{ false: colors.border, true: '#FF6B35' }}
+              trackColor={{ false: colors.border, true: COLORS.primary }}
               thumbColor="white"
             />
           </View>
@@ -343,7 +343,7 @@ const ParametresScreen = () => {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.saveButton, { backgroundColor: '#FF6B35' }]}
+            style={[styles.saveButton, { backgroundColor: COLORS.primary }]}
             onPress={handleSave}
           >
             <Ionicons name="checkmark-circle-outline" size={20} color="white" />

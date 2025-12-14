@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, StyleSheet, Alert } from 'react-native';
-import { SPACING } from '../../constants/theme';
+import { SPACING, COLORS } from '../../constants/theme';
 import { useTheme } from '../../store/ThemeContext';
 import IconButton from '../common/IconButton';
 import { VideoContent } from '../../types';
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     height: SPACING.lg,
   },
   aiButton: {
-    backgroundColor: 'rgba(255, 107, 53, 0.2)', // Brand orange semi-transparent
+    backgroundColor: `${COLORS.primary}33`, // Brand orange semi-transparent
     borderRadius: 24,
   },
 });

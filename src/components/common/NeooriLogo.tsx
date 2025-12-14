@@ -1,141 +1,61 @@
 import React from 'react';
-import { View, Text, StyleSheet, ViewStyle, Image, ImageSourcePropType } from 'react-native';
+import { View, StyleSheet, ViewStyle, Image, ImageSourcePropType } from 'react-native';
 import { useTheme } from '../../store/ThemeContext';
 
 interface NeooriLogoProps {
   size?: 'small' | 'medium' | 'large';
   style?: ViewStyle;
-  showText?: boolean;
+  showText?: boolean; // Kept for backward compatibility but not used
 }
 
 const NeooriLogo: React.FC<NeooriLogoProps> = ({ 
   size = 'medium',
   style,
-  showText = true 
+  showText = true // Not used anymore, logo image contains the text
 }) => {
-  const { theme, colors } = useTheme();
+  const { theme } = useTheme();
   const isDarkMode = theme === 'dark';
 
+  // Size configuration - explicit width and height to prevent expansion
   const sizeConfig = {
-    small: { icon: 24, text: 16, spacing: 6 },
-    medium: { icon: 36, text: 24, spacing: 8 },
-    large: { icon: 56, text: 36, spacing: 12 },
+    small: { width: 60, height: 30 },
+    medium: { width: 100, height: 50 },
+    large: { width: 140, height: 70 },
   };
 
   const config = sizeConfig[size];
 
   // Logo image source - using require() ensures proper bundling for production
-  // Use dark logo for dark mode, regular logo for light mode
+  // Use negative/inverted logo for dark mode, original logo for light mode
+  // These logos already contain the "neoori" text, so we don't render text separately
   const logoSource: ImageSourcePropType = isDarkMode
-    ? require('../../../assets/images/darklogo.png')
-    : require('../../../assets/images/logo.png');
+    ? require('../../../assets/images/png/logo mode négatif alternative@2x-8.png')
+    : require('../../../assets/images/png/logo origine_1@2x-8.png');
 
   return (
-    <View style={[styles.container, style]}>
-      {/* Logo Image - Circular */}
-      <View style={[
-        styles.logoContainer,
-        {
-          width: config.icon,
-          height: config.icon,
-          borderRadius: config.icon / 2,
-        }
-      ]}>
-        <Image
-          source={logoSource}
-          style={[
-            styles.logoImage,
-            {
-              width: config.icon,
-              height: config.icon,
-              borderRadius: config.icon / 2,
-            }
-          ]}
-          resizeMode="cover"
-        />
-      </View>
-
-      {/* Wordmark "neoori" */}
-      {showText && (
-        <View style={[styles.textContainer, { marginLeft: config.spacing }]}>
-          {/* 'n' - theme color */}
-          <Text style={[
-            styles.text,
-            {
-              fontSize: config.text,
-              color: colors.textPrimary,
-            }
-          ]}>n</Text>
-          
-          {/* 'e' - theme color */}
-          <Text style={[
-            styles.text,
-            {
-              fontSize: config.text,
-              color: colors.textPrimary,
-            }
-          ]}>e</Text>
-          
-          {/* First 'o' - theme color */}
-          <Text style={[
-            styles.text,
-            {
-              fontSize: config.text,
-              color: colors.textPrimary,
-            }
-          ]}>o</Text>
-          
-          {/* Second 'o' - orange */}
-          <Text style={[
-            styles.text,
-            {
-              fontSize: config.text,
-              color: colors.primary,
-            }
-          ]}>o</Text>
-          
-          {/* 'r' - theme color */}
-          <Text style={[
-            styles.text,
-            {
-              fontSize: config.text,
-              color: colors.textPrimary,
-            }
-          ]}>r</Text>
-          
-          {/* 'i' - orange */}
-          <Text style={[
-            styles.text,
-            {
-              fontSize: config.text,
-              color: colors.primary,
-            }
-          ]}>i</Text>
-        </View>
-      )}
+    <View style={[styles.container, { width: config.width, height: config.height }, style]}>
+      <Image
+        source={logoSource}
+        style={[
+          styles.logoImage,
+          {
+            width: config.width,
+            height: config.height,
+          }
+        ]}
+        resizeMode="contain"
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  logoContainer: {
+    // Fixed size container - prevents expansion
     overflow: 'hidden',
-    backgroundColor: 'transparent',
   },
   logoImage: {
-    // Image will be circular with borderRadius
-  },
-  textContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  text: {
-    fontWeight: '700',
-    letterSpacing: 0.8,
+    // Explicit size constraints
   },
 });
 

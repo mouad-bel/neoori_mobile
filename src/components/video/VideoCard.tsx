@@ -9,11 +9,10 @@ import {
 } from 'react-native';
 import { Video, ResizeMode, AVPlaybackStatus } from 'expo-av';
 import { LinearGradient } from 'expo-linear-gradient';
-import { FONTS, SPACING } from '../../constants/theme';
+import { FONTS, SPACING, COLORS } from '../../constants/theme';
 import { useTheme } from '../../store/ThemeContext';
 import { VideoContent } from '../../types';
 import CategoryBadge from '../common/CategoryBadge';
-import MatchBadge from '../common/MatchBadge';
 import DurationBadge from '../common/DurationBadge';
 import InteractionBar from './InteractionBar';
 
@@ -182,24 +181,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onPress, isActive = false,
           </View>
         )}
 
-        {/* Content Overlay - Top Section */}
-        <View style={styles.content}>
-          {/* Top Section - Category and Duration */}
-          <View style={styles.topRow}>
-            <CategoryBadge
-              icon={video.category.icon as any}
-              label={video.category.name}
-              color={video.category.color}
-              fixedColors={true}
-            />
-            <DurationBadge 
-              duration={videoDuration || video.duration} 
-              fixedColors={true}
-            />
-          </View>
-        </View>
-
-        {/* Gradient Overlay - Stronger at bottom for text readability */}
+        {/* Gradient Overlay - For text readability */}
         <LinearGradient
           colors={['transparent', 'rgba(15, 23, 42, 0.2)', 'rgba(15, 23, 42, 0.8)']}
           locations={[0, 0.7, 1]}
@@ -207,38 +189,45 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onPress, isActive = false,
           pointerEvents="none"
         />
 
-        {/* Bottom Section - Main Info and Interactions */}
-        <View style={styles.bottomContent}>
-          <View style={styles.bottomLeftSection}>
-            {/* Creator Info */}
-            <View style={styles.creatorRow}>
-              <Image
-                source={
-                  typeof video.creator.avatar === 'string' && video.creator.avatar.startsWith('http')
-                    ? { uri: video.creator.avatar }
-                    : video.creator.avatar
-                }
-                style={styles.avatar}
-              />
-              <Text style={styles.creatorName}>{video.creator.name}</Text>
-              {video.creator.verified && (
-                <Text style={styles.verified}>✓</Text>
-              )}
-            </View>
+        {/* Top Section - Category and Duration Badges */}
+        <View style={styles.topSection}>
+          <CategoryBadge
+            icon={video.category.icon as any}
+            label={video.category.name}
+            color={video.category.color}
+            fixedColors={true}
+          />
+          <DurationBadge 
+            duration={videoDuration || video.duration} 
+            fixedColors={true}
+          />
+        </View>
 
-            {/* Title */}
-            <Text style={styles.title}>{video.title}</Text>
+        {/* Right Side - Interaction Buttons (Instagram style) */}
+        <View style={styles.rightInteractionBar}>
+          <InteractionBar video={video} />
+        </View>
 
-            {/* Description */}
-            <Text style={styles.description} numberOfLines={2}>
-              {video.description}
-            </Text>
+        {/* Bottom Left - Creator Info and Description (Instagram style) */}
+        <View style={[styles.bottomSection, { bottom: BOTTOM_BAR_HEIGHT }]}>
+          {/* Creator Info */}
+          <View style={styles.creatorRow}>
+            <Image
+              source={
+                typeof video.creator.avatar === 'string' && video.creator.avatar.startsWith('http')
+                  ? { uri: video.creator.avatar }
+                  : video.creator.avatar
+              }
+              style={styles.avatar}
+            />
+            <Text style={styles.creatorName}>{video.creator.name}</Text>
+            {video.creator.verified && (
+              <Text style={styles.verified}>✓</Text>
+            )}
           </View>
 
-          {/* Interaction Bar - Right Side */}
-          <View style={styles.interactionBarContainer}>
-            <InteractionBar video={video} />
-          </View>
+          {/* Description */}
+          <Text style={styles.description}>{video.description}</Text>
         </View>
       </View>
     </TouchableWithoutFeedback>
@@ -248,9 +237,10 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onPress, isActive = false,
 const styles = StyleSheet.create({
   container: {
     width,
-    height: VIDEO_HEIGHT, // Exact height without bottom bar (screenHeight - 70)
-    backgroundColor: '#0F172A', // Brand navy dark background
+    height: VIDEO_HEIGHT,
+    backgroundColor: '#0F172A',
     position: 'relative',
+    overflow: 'hidden',
   },
   video: {
     width: '100%',
@@ -272,84 +262,6 @@ const styles = StyleSheet.create({
     top: 0,
     bottom: 0,
   },
-  content: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 0,
-    padding: SPACING.lg,
-    paddingTop: 60, // Account for status bar
-  },
-  topRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-start',
-  },
-  bottomContent: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    bottom: 0, // At the very bottom of the video container
-    paddingHorizontal: SPACING.lg,
-    paddingBottom: 80, // Space for bottom bar (70px) + small gap (10px)
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
-    zIndex: 10, // Ensure it's above gradient
-  },
-  bottomLeftSection: {
-    flex: 1,
-    maxWidth: width - 100, // Leave space for interaction bar on the right
-    paddingRight: SPACING.md,
-    marginBottom: 0, // No extra margin
-  },
-  interactionBarContainer: {
-    justifyContent: 'flex-end',
-    alignItems: 'center',
-  },
-  bottomSection: {
-    maxWidth: width - 120, // Leave space for interaction bar
-  },
-  creatorRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: SPACING.md,
-  },
-  avatar: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
-    borderWidth: 2,
-    borderColor: '#FF6B35', // Brand orange
-  },
-  creatorName: {
-    fontSize: FONTS.sizes.md,
-    fontWeight: FONTS.weights.semiBold,
-    marginLeft: SPACING.md,
-    color: '#FFFFFF', // Texte blanc fixe
-  },
-  verified: {
-    fontSize: FONTS.sizes.md,
-    marginLeft: SPACING.xs,
-    color: '#FF6B35', // Brand orange
-  },
-  title: {
-    fontSize: FONTS.sizes.xxxl,
-    fontWeight: FONTS.weights.bold,
-    lineHeight: 38,
-    marginBottom: SPACING.md,
-    color: '#FFFFFF', // Texte blanc fixe
-  },
-  description: {
-    fontSize: FONTS.sizes.md,
-    fontWeight: FONTS.weights.regular,
-    lineHeight: 22,
-    marginBottom: SPACING.lg,
-    color: '#CBD5E1', // Texte secondaire fixe
-  },
-  matchContainer: {
-    alignSelf: 'flex-start',
-  },
   pauseOverlay: {
     position: 'absolute',
     top: 0,
@@ -359,7 +271,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(0, 0, 0, 0.3)',
     justifyContent: 'center',
     alignItems: 'center',
-    zIndex: 10,
+    zIndex: 20,
   },
   pauseIcon: {
     width: 80,
@@ -379,7 +291,68 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontWeight: FONTS.weights.semiBold,
   },
+  // Top Section - Badges
+  topSection: {
+    position: 'absolute',
+    top: 60, // Account for status bar
+    left: SPACING.lg,
+    right: SPACING.lg,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    zIndex: 10,
+  },
+  // Right Side - Interaction Buttons (Instagram style)
+  rightInteractionBar: {
+    position: 'absolute',
+    right: SPACING.md,
+    bottom: BOTTOM_BAR_HEIGHT + SPACING.lg, // Position above bottom bar
+    zIndex: 10,
+    alignItems: 'center',
+  },
+  // Bottom Left - Creator and Description (Instagram style)
+  bottomSection: {
+    position: 'absolute',
+    left: SPACING.lg,
+    right: 80, // Leave space for right interaction buttons
+    // bottom: BOTTOM_BAR_HEIGHT (set inline) - positions container just above bottom bar
+    paddingBottom: 0,
+    paddingTop: 0,
+    marginBottom: 0,
+    marginTop: 0,
+    zIndex: 10,
+  },
+  creatorRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: SPACING.xs,
+  },
+  avatar: {
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    borderWidth: 1.5,
+    borderColor: '#FFFFFF',
+    marginRight: SPACING.sm,
+  },
+  creatorName: {
+    fontSize: FONTS.sizes.sm,
+    fontWeight: FONTS.weights.semiBold,
+    color: '#FFFFFF',
+    marginRight: SPACING.xs,
+  },
+  verified: {
+    fontSize: FONTS.sizes.sm,
+    color: COLORS.primary,
+  },
+  description: {
+    fontSize: FONTS.sizes.sm,
+    fontWeight: FONTS.weights.regular,
+    lineHeight: FONTS.sizes.sm * 1.4,
+    color: '#FFFFFF',
+    margin: 0,
+    padding: 0,
+  },
 });
 
 export default VideoCard;
-

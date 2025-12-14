@@ -14,13 +14,13 @@ const PALETTE = {
   navyDark: '#0F172A', // Darker variant
   navyDarker: '#020617', // Darkest variant
   
-  // Accent Gradient: Orange
-  orange500: '#FF6B35', // Main orange
-  orange600: '#FF7A00', // Darker orange
-  orange400: '#FF8C42', // Lighter orange
-  orange300: '#FFA366', // Light orange
-  orange200: '#FFB380', // Peach
-  orange100: '#FFD4B3', // Light peach
+  // Accent Gradient: Orange (Best - Modern, Strong, Eye-friendly)
+  orange500: '#FF7D4A', // Best orange: modern, vibrant, comfortable for eyes
+  orange600: '#FF5D2A', // Darker orange variant
+  orange400: '#FF9D6B', // Lighter orange variant
+  orange300: '#FFBD8C', // Light orange variant
+  orange200: '#FFD4AD', // Peach variant
+  orange100: '#FFE5CE', // Light peach variant
   
   // Clarity Neutral: Light Gray
   neutral50: '#F8FAFC', // Almost white
@@ -74,10 +74,10 @@ const THEMES = {
     cardBackground: PALETTE.navyBase, // #1E293B
     surfaceBackground: PALETTE.navyBase, // #1E293B
     
-    // Primary - Using brand orange accent
-    primary: PALETTE.orange500, // #FF6B35 - Main orange
-    primaryDark: PALETTE.orange600, // #FF7A00 - Darker orange
-    primaryLight: PALETTE.orange400, // #FF8C42 - Lighter orange
+    // Primary - Using best orange color
+    primary: PALETTE.orange500, // #FF7D4A - Best orange: modern, vibrant, comfortable
+    primaryDark: PALETTE.orange600, // #FF5D2A - Darker orange
+    primaryLight: PALETTE.orange400, // #FF9D6B - Lighter orange
     
     // Brand Gradient Colors
     accentOrange: PALETTE.orange500, // Main orange
@@ -134,7 +134,7 @@ const THEMES = {
     // Brand Gradient Colors
     accentOrange: PALETTE.orange600, // Main orange for light mode
     accentOrangeLight: PALETTE.orange500, // Lighter orange
-    accentOrangeDark: '#E65A00', // Darker for light mode
+    accentOrangeDark: '#E65A2A', // Darker for light mode
     accentPeach: PALETTE.orange300, // Peach gradient
     navyPrimary: PALETTE.navyBase, // #1E293B
     navyDark: PALETTE.navyDark, // #0F172A

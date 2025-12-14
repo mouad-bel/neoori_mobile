@@ -13,7 +13,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { Ionicons } from '@expo/vector-icons';
-import { FONTS, SPACING, BORDER_RADIUS } from '../../constants/theme';
+import { FONTS, SPACING, BORDER_RADIUS, COLORS } from '../../constants/theme';
 import { useTheme } from '../../store/ThemeContext';
 import AppHeader from '../../components/navigation/AppHeader';
 import ProfileModal from '../../components/ui/ProfileModal';
@@ -35,7 +35,7 @@ const FormationsScreen = () => {
   const getLevelColor = (level: string) => {
     switch (level) {
       case 'Débutant':
-        return '#FF6B35';
+        return COLORS.primary;
       case 'Intermédiaire':
         return '#F59E0B';
       case 'Avancé':
@@ -58,11 +58,11 @@ const FormationsScreen = () => {
           </View>
         </View>
         <View style={styles.featuredBadges}>
-          <View style={[styles.categoryBadge, { backgroundColor: '#FF6B35' }]}>
+          <View style={[styles.categoryBadge, { backgroundColor: COLORS.primary }]}>
             <Text style={styles.categoryBadgeText}>{item.category}</Text>
           </View>
           {item.matchPercentage && (
-            <View style={[styles.matchBadge, { backgroundColor: '#FF8C42' }]}>
+            <View style={[styles.matchBadge, { backgroundColor: COLORS.primaryLight }]}>
               <Text style={styles.matchBadgeText}>{item.matchPercentage}% match</Text>
             </View>
           )}
@@ -102,11 +102,11 @@ const FormationsScreen = () => {
         <Image source={{ uri: item.thumbnail }} style={styles.recommendedImage} />
         <View style={styles.recommendedOverlay} />
         <View style={styles.recommendedBadges}>
-          <View style={[styles.categoryBadge, { backgroundColor: '#FF6B35' }]}>
+          <View style={[styles.categoryBadge, { backgroundColor: COLORS.primary }]}>
             <Text style={styles.categoryBadgeText}>{item.category}</Text>
           </View>
           {item.matchPercentage && (
-            <View style={[styles.matchBadge, { backgroundColor: '#FF8C42' }]}>
+            <View style={[styles.matchBadge, { backgroundColor: COLORS.primaryLight }]}>
               <Text style={styles.matchBadgeText}>{item.matchPercentage}% match</Text>
             </View>
           )}
@@ -139,7 +139,7 @@ const FormationsScreen = () => {
         </View>
         <View style={styles.recommendedFooter}>
           <Text style={[styles.freeText, { color: colors.textSecondary }]}>Gratuit</Text>
-          <TouchableOpacity style={[styles.explorerButton, { backgroundColor: '#FF6B35' }]}>
+          <TouchableOpacity style={[styles.explorerButton, { backgroundColor: COLORS.primary }]}>
             <Ionicons name="play" size={16} color="white" />
             <Text style={styles.explorerButtonText}>Explorer</Text>
           </TouchableOpacity>
@@ -156,7 +156,7 @@ const FormationsScreen = () => {
       <View style={styles.allFormationsImageContainer}>
         <Image source={{ uri: item.thumbnail }} style={styles.allFormationsImage} />
         <View style={styles.allFormationsOverlay} />
-        <View style={[styles.categoryBadge, { backgroundColor: '#FF6B35', position: 'absolute', top: SPACING.md, left: SPACING.md }]}>
+        <View style={[styles.categoryBadge, { backgroundColor: COLORS.primary, position: 'absolute', top: SPACING.md, left: SPACING.md }]}>
           <Text style={styles.categoryBadgeText}>{item.category}</Text>
         </View>
       </View>
@@ -195,11 +195,11 @@ const FormationsScreen = () => {
         {/* Hero Section */}
         <View style={styles.heroSection}>
           <View style={styles.heroBadges}>
-            <View style={[styles.heroBadge, { backgroundColor: '#FF6B35' }]}>
+            <View style={[styles.heroBadge, { backgroundColor: COLORS.primary }]}>
               <Ionicons name="school" size={14} color="white" />
               <Text style={styles.heroBadgeText}>Formations</Text>
             </View>
-            <View style={[styles.heroBadge, { backgroundColor: '#FF6B35' }]}>
+            <View style={[styles.heroBadge, { backgroundColor: COLORS.primary }]}>
               <Text style={styles.heroBadgeText}>{MOCK_FORMATIONS.length} formations disponibles</Text>
             </View>
           </View>
@@ -374,7 +374,7 @@ const styles = StyleSheet.create({
   filterButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FF6B35',
+    backgroundColor: COLORS.primary,
     paddingHorizontal: SPACING.lg,
     paddingVertical: SPACING.md,
     borderRadius: BORDER_RADIUS.md,
@@ -437,7 +437,7 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: '#FF6B35',
+    backgroundColor: COLORS.primary,
     justifyContent: 'center',
     alignItems: 'center',
   },

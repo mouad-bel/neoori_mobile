@@ -7,7 +7,7 @@ import {
   ViewStyle,
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { FONTS, SPACING, ICON_SIZES } from '../../constants/theme';
+import { FONTS, SPACING, ICON_SIZES, COLORS } from '../../constants/theme';
 import { useTheme } from '../../store/ThemeContext';
 
 interface IconButtonProps {
@@ -45,7 +45,7 @@ const IconButton: React.FC<IconButtonProps> = ({
           name={icon}
           size={iconSize}
           color={active 
-            ? (fixedColors ? '#FF6B35' : colors.primary) // Brand orange
+            ? (fixedColors ? COLORS.primary : colors.primary) // Brand orange
             : (fixedColors ? '#FFFFFF' : colors.textPrimary)}
         />
         {count !== undefined && count > 0 && (

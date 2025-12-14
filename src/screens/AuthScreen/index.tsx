@@ -9,12 +9,12 @@ import {
   ActivityIndicator,
   KeyboardAvoidingView,
   Platform,
+  Image,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useAuth } from '../../store/AuthContext';
 import { useTheme } from '../../store/ThemeContext';
 import { COLORS, FONTS, SPACING, BORDER_RADIUS, SHADOWS } from '../../constants/theme';
-import NeooriLogo from '../../components/common/NeooriLogo';
 
 const AuthScreen = () => {
   const [email, setEmail] = useState('');
@@ -42,11 +42,21 @@ const AuthScreen = () => {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
     >
       <View style={styles.content}>
-        {/* Logo and Title */}
+        {/* Logo Icon */}
         <View style={styles.header}>
-          <NeooriLogo size="large" />
+          <View style={styles.logoContainer}>
+            <Image
+              source={
+                isDarkMode
+                  ? require('../../../assets/images/png/icon bleu@2x-8.png')
+                  : require('../../../assets/images/png/icon orange dégradé@2x-8.png')
+              }
+              style={styles.logoIcon}
+              resizeMode="cover"
+            />
+          </View>
           <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-            Unlock Your Potential. Shape Your Tomorrow.
+            Révélez votre potentiel. Construisez l'avenir.
           </Text>
         </View>
 
@@ -120,9 +130,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginBottom: SPACING.xxxl * 2,
   },
+  logoContainer: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    overflow: 'hidden',
+    marginBottom: SPACING.lg,
+  },
+  logoIcon: {
+    width: '100%',
+    height: '100%',
+  },
   subtitle: {
     fontSize: FONTS.sizes.md,
     textAlign: 'center',
+    marginTop: SPACING.md,
   },
   form: {
     width: '100%',

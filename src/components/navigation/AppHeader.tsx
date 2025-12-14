@@ -144,7 +144,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: SPACING.lg,
     paddingVertical: SPACING.md,
-    paddingTop: 50,
+    paddingTop: 45,
+    minHeight: 70,
     zIndex: 100,
   },
   // Styles de fond gérés dynamiquement dans le composant

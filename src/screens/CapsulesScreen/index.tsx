@@ -13,7 +13,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { Ionicons } from '@expo/vector-icons';
-import { FONTS, SPACING, BORDER_RADIUS } from '../../constants/theme';
+import { FONTS, SPACING, BORDER_RADIUS, COLORS } from '../../constants/theme';
 import { useTheme } from '../../store/ThemeContext';
 import AppHeader from '../../components/navigation/AppHeader';
 import ProfileModal from '../../components/ui/ProfileModal';
@@ -32,11 +32,11 @@ const CapsulesScreen = () => {
   const getContentTypeColor = (type: string) => {
     switch (type) {
       case 'Lecture courte':
-        return '#FF6B35'; // Brand Orange
+        return COLORS.primary; // Brand Orange
       case 'Témoignage':
-        return '#FF8C42'; // Brand Orange Light
+        return COLORS.primaryLight; // Brand Orange Light
       case 'Étude approfondie':
-        return '#FFB380'; // Brand Orange Peach
+        return COLORS.accentPeach; // Brand Orange Peach
       default:
         return colors.primary;
     }
@@ -168,7 +168,7 @@ const CapsulesScreen = () => {
         {/* Hero Section */}
         <View style={styles.heroSection}>
           <View style={styles.heroBadges}>
-            <View style={[styles.heroBadge, { backgroundColor: '#FF6B35' }]}>
+            <View style={[styles.heroBadge, { backgroundColor: COLORS.primary }]}>
               <Ionicons name="videocam" size={14} color="white" />
               <Text style={styles.heroBadgeText}>Capsules & lectures</Text>
             </View>
@@ -313,7 +313,7 @@ const styles = StyleSheet.create({
   filterButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FF6B35',
+    backgroundColor: COLORS.primary,
     paddingHorizontal: SPACING.lg,
     paddingVertical: SPACING.md,
     borderRadius: BORDER_RADIUS.md,
@@ -376,7 +376,7 @@ const styles = StyleSheet.create({
     width: 64,
     height: 64,
     borderRadius: 32,
-    backgroundColor: '#FF6B35',
+    backgroundColor: COLORS.primary,
     justifyContent: 'center',
     alignItems: 'center',
   },

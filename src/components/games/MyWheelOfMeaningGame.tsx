@@ -1,6 +1,7 @@
 import React from 'react';
 import { Game } from '../../types';
 import { BaseGameProps } from './BaseGameInterface';
+import { COLORS } from '../../constants/theme';
 import WheelOfMeaningGame from './WheelOfMeaningGame';
 
 interface MyWheelOfMeaningGameProps extends BaseGameProps {}
@@ -11,7 +12,7 @@ const MyWheelOfMeaningGame: React.FC<MyWheelOfMeaningGameProps> = ({ game, onCom
       id: 'values',
       label: 'Valeurs',
       icon: 'heart',
-      color: '#FF6B35',
+      color: COLORS.primary,
       questions: [
         {
           id: 'v1',

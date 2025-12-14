@@ -11,7 +11,7 @@ import {
 import { useNavigation } from '@react-navigation/native';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { Ionicons } from '@expo/vector-icons';
-import { FONTS, SPACING, BORDER_RADIUS } from '../../constants/theme';
+import { FONTS, SPACING, BORDER_RADIUS, COLORS } from '../../constants/theme';
 import { useTheme } from '../../store/ThemeContext';
 import AppHeader from '../../components/navigation/AppHeader';
 import ProfileModal from '../../components/ui/ProfileModal';
@@ -35,7 +35,7 @@ const RecompensesScreen = () => {
       name: 'Explorateur',
       description: "A complété son premier test d'intérêts",
       icon: 'star',
-      color: '#FF6B35',
+      color: COLORS.primary,
       unlocked: true,
       progress: 100,
     },
@@ -44,7 +44,7 @@ const RecompensesScreen = () => {
       name: 'Communicant',
       description: 'A obtenu un score élevé en communication',
       icon: 'people',
-      color: '#FF8C42',
+      color: COLORS.primaryLight,
       unlocked: true,
       progress: 100,
     },
@@ -53,7 +53,7 @@ const RecompensesScreen = () => {
       name: 'Profil complet',
       description: 'A rempli toutes les sections du profil',
       icon: 'person',
-      color: '#FF6B35',
+      color: COLORS.primary,
       unlocked: false,
       progress: 65,
     },
@@ -62,7 +62,7 @@ const RecompensesScreen = () => {
       name: 'Mentor',
       description: 'A aidé 3 autres utilisateurs',
       icon: 'people-outline',
-      color: '#F97316',
+      color: COLORS.primary,
       unlocked: false,
       progress: 33,
     },
@@ -76,7 +76,7 @@ const RecompensesScreen = () => {
       credits: 15,
       completed: true,
       icon: 'checkmark-circle',
-      iconColor: '#FF6B35',
+      iconColor: COLORS.primary,
     },
     {
       id: '2',
@@ -95,7 +95,7 @@ const RecompensesScreen = () => {
       credits: 10,
       completed: true,
       icon: 'checkmark-circle',
-      iconColor: '#FF6B35',
+      iconColor: COLORS.primary,
     },
     {
       id: '4',
@@ -169,7 +169,7 @@ const RecompensesScreen = () => {
         {/* Hero Section */}
         <View style={styles.heroSection}>
           <View style={styles.heroBadges}>
-            <View style={[styles.heroBadge, { backgroundColor: '#FF6B35' }]}>
+            <View style={[styles.heroBadge, { backgroundColor: COLORS.primary }]}>
               <Text style={styles.heroBadgeText}>Récompenses</Text>
             </View>
             <View style={[styles.heroBadge, { backgroundColor: colors.surfaceBackground }]}>
@@ -180,7 +180,7 @@ const RecompensesScreen = () => {
           </View>
           <Text style={[styles.heroTitle, { color: colors.textPrimary }]}>
             Récompenses & Crédits pour{' '}
-            <Text style={{ color: '#FF6B35' }}>valoriser tes efforts</Text>
+            <Text style={{ color: COLORS.primary }}>valoriser tes efforts</Text>
           </Text>
           <Text style={[styles.heroDescription, { color: colors.textSecondary }]}>
             Tes efforts te récompensent. Gagne des crédits et débloque des avantages exclusifs pour
@@ -195,7 +195,7 @@ const RecompensesScreen = () => {
                 style={[
                   styles.categoryTag,
                   { backgroundColor: colors.surfaceBackground },
-                  selectedCategory === category && { backgroundColor: '#FF6B35' },
+                  selectedCategory === category && { backgroundColor: COLORS.primary },
                 ]}
                 onPress={() => setSelectedCategory(category)}
               >
@@ -217,10 +217,10 @@ const RecompensesScreen = () => {
         <View style={[styles.creditsCard, { backgroundColor: colors.cardBackground }]}>
           <View style={styles.creditsLeft}>
             <View style={styles.creditsIcon}>
-              <Ionicons name="logo-bitcoin" size={32} color="#FF6B35" />
+              <Ionicons name="logo-bitcoin" size={32} color={COLORS.primary} />
             </View>
             <View style={styles.creditsInfo}>
-              <Text style={[styles.creditsAmount, { color: '#FF6B35' }]} numberOfLines={1}>
+              <Text style={[styles.creditsAmount, { color: COLORS.primary }]} numberOfLines={1}>
                 {currentCredits} crédits
               </Text>
               <Text style={[styles.creditsSubtext, { color: colors.textSecondary }]} numberOfLines={2}>
@@ -228,7 +228,7 @@ const RecompensesScreen = () => {
               </Text>
             </View>
           </View>
-          <TouchableOpacity style={[styles.earnMoreButton, { backgroundColor: '#FF6B35' }]}>
+          <TouchableOpacity style={[styles.earnMoreButton, { backgroundColor: COLORS.primary }]}>
             <Text style={styles.earnMoreButtonText} numberOfLines={1}>
               Gagner plus de crédits →
             </Text>
@@ -242,7 +242,7 @@ const RecompensesScreen = () => {
             {/* Badges Section */}
             <View style={styles.section}>
               <View style={styles.sectionHeader}>
-                <Ionicons name="trophy" size={24} color="#FF6B35" />
+                <Ionicons name="trophy" size={24} color={COLORS.primary} />
                 <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
                   Badges gagnés
                 </Text>
@@ -308,7 +308,7 @@ const RecompensesScreen = () => {
             {/* How to Earn Credits Section */}
             <View style={styles.section}>
               <View style={styles.sectionHeader}>
-                <Ionicons name="gift" size={24} color="#FF6B35" />
+                <Ionicons name="gift" size={24} color={COLORS.primary} />
                 <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
                   Comment gagner des crédits
                 </Text>
@@ -325,7 +325,7 @@ const RecompensesScreen = () => {
                         <View
                           style={[
                             styles.taskIconContainer,
-                            { backgroundColor: task.completed ? '#FF6B3520' : colors.surfaceBackground },
+                            { backgroundColor: task.completed ? `${COLORS.primary}20` : colors.surfaceBackground },
                           ]}
                         >
                           <Ionicons name={task.icon as any} size={24} color={task.iconColor} />
@@ -340,7 +340,7 @@ const RecompensesScreen = () => {
                         </View>
                       </View>
                       <View style={styles.taskRight}>
-                        <Text style={[styles.taskCredits, { color: '#FF6B35' }]}>
+                        <Text style={[styles.taskCredits, { color: COLORS.primary }]}>
                           +{task.credits} crédits
                         </Text>
                       </View>
@@ -363,7 +363,7 @@ const RecompensesScreen = () => {
             {/* Unlockable Rewards Section */}
             <View style={styles.section}>
               <View style={styles.sectionHeader}>
-                <Ionicons name="gift-outline" size={24} color="#FF6B35" />
+                <Ionicons name="gift-outline" size={24} color={COLORS.primary} />
                 <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
                   À débloquer
                 </Text>
@@ -378,7 +378,7 @@ const RecompensesScreen = () => {
                     <View style={styles.rewardImageContainer}>
                       <Image source={{ uri: reward.image }} style={styles.rewardImage} />
                       <View style={styles.rewardBadges}>
-                        <View style={[styles.categoryBadge, { backgroundColor: '#FF6B35' }]}>
+                        <View style={[styles.categoryBadge, { backgroundColor: COLORS.primary }]}>
                           <Text style={styles.categoryBadgeText}>{reward.category}</Text>
                         </View>
                         {reward.popular && (
@@ -401,8 +401,8 @@ const RecompensesScreen = () => {
                           {reward.validity}
                         </Text>
                         <View style={styles.rewardCredits}>
-                          <Ionicons name="logo-bitcoin" size={16} color="#FF6B35" />
-                          <Text style={[styles.rewardCreditsText, { color: '#FF6B35' }]}>
+                          <Ionicons name="logo-bitcoin" size={16} color={COLORS.primary} />
+                          <Text style={[styles.rewardCreditsText, { color: COLORS.primary }]}>
                             {reward.credits} crédits
                           </Text>
                         </View>
@@ -411,7 +411,7 @@ const RecompensesScreen = () => {
                         style={[
                           styles.unlockButton,
                           {
-                            backgroundColor: reward.available ? '#FF6B35' : colors.surfaceBackground,
+                            backgroundColor: reward.available ? COLORS.primary : colors.surfaceBackground,
                           },
                         ]}
                         disabled={!reward.available}
@@ -432,7 +432,7 @@ const RecompensesScreen = () => {
             </View>
 
             {/* Motivational Section */}
-            <View style={[styles.motivationCard, { backgroundColor: '#FF6B3520' }]}>
+            <View style={[styles.motivationCard, { backgroundColor: `${COLORS.primary}20` }]}>
               <Text style={[styles.motivationTitle, { color: colors.textPrimary }]}>
                 Tes efforts te donnent du pouvoir d'action
               </Text>
@@ -440,7 +440,7 @@ const RecompensesScreen = () => {
                 Chaque action que tu entreprends sur la plateforme te rapproche de tes objectifs et te
                 permet de débloquer des ressources précieuses pour ton avenir professionnel.
               </Text>
-              <TouchableOpacity style={[styles.motivationButton, { backgroundColor: '#FF6B35' }]}>
+              <TouchableOpacity style={[styles.motivationButton, { backgroundColor: COLORS.primary }]}>
                 <Ionicons name="ribbon-outline" size={20} color="white" />
                 <Text style={styles.motivationButtonText}>Découvrir les opportunités</Text>
               </TouchableOpacity>
@@ -523,7 +523,7 @@ const styles = StyleSheet.create({
     width: 56,
     height: 56,
     borderRadius: 28,
-    backgroundColor: '#FF6B3520',
+    backgroundColor: `${COLORS.primary}20`,
     justifyContent: 'center',
     alignItems: 'center',
   },
