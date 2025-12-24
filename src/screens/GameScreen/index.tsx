@@ -19,6 +19,9 @@ import CompetenciesPuzzleGame from '../../components/games/CompetenciesPuzzleGam
 import MyWheelOfMeaningGame from '../../components/games/MyWheelOfMeaningGame';
 import CareerSkillMatchGame from '../../components/games/CareerSkillMatchGame';
 import ImagePuzzleGame from '../../components/games/ImagePuzzleGame';
+import ConnectFourGame from '../../components/games/ConnectFourGame';
+import HangmanGame from '../../components/games/HangmanGame';
+import Couch2048Game from '../../components/games/Couch2048Game';
 
 type GameScreenRouteProp = RouteProp<MainDrawerParamList, 'Game'>;
 
@@ -90,6 +93,12 @@ const GameScreen = () => {
             instructions="Clique sur une pièce pour la sélectionner, puis clique sur l'espace vide pour la déplacer. Les pièces correctement placées sont marquées en vert."
           />
         );
+      case '15':
+        return <ConnectFourGame game={game} onComplete={handleGameComplete} />;
+      case '16':
+        return <HangmanGame game={game} onComplete={handleGameComplete} />;
+      case '17':
+        return <Couch2048Game game={game} onComplete={handleGameComplete} />;
       default:
         return null;
     }

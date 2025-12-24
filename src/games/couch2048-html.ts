@@ -1,0 +1,2015 @@
+// Auto-generated file - do not edit manually
+// Generated from: assets/games/couch2048-bundle.html
+
+export const COUCH2048_HTML = `<!doctype html>
+<html>
+    <head>
+        <meta charset=utf8>
+        <meta name=viewport content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <title>Couch 2048</title>
+        <style>
+html, body {
+    background: #263238;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    -ms-text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+}
+
+#container {
+    position: absolute;
+}
+
+#container > *, label {
+    -moz-user-select: none;
+    -moz-user-select: -moz-none;
+    -ms-user-select: none;
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+#backcanvas, #canvas, #load, #home, #end {
+    display: block;
+    height: 100%;
+    left: 0;
+    position: absolute;
+    top: 0;
+    -webkit-transform: translate3d(0,0,0);
+    transform: translate3d(0,0,0);
+    width: 100%;
+}
+
+#backcanvas {
+    background: #455A64;
+}
+
+#load, #home, #end {
+    background: rgba(0,0,0,0.5);
+    box-sizing: border-box;
+    color: #fff;
+    cursor: default;
+    font: 300 64px/96px 'Segoe UI', 'Helvetica Neue', sans-serif;
+    height: 1080px;
+    padding: 0 100px;
+    transform-origin: 0 0;
+    width: 1920px;
+}
+
+#load + #home {
+    display: none;
+}
+
+#load > *, #home > *, #end > * {
+    margin: 40px 0;
+}
+
+h1 {
+    font: 300 96px/1 'Segoe UI', 'Helvetica Neue', sans-serif;
+    margin-top: 80px;
+    text-shadow: 2px 0 0 #f00, -2px 0 0 #0ff;
+}
+
+p {
+    text-shadow: 1px 0 0 #f00, -1px 0 0 #0ff;
+}
+
+#start, #reset {
+    -webkit-animation: blink .7s steps(2, start) infinite;
+    animation: blink .7s steps(2, start) infinite;
+    background: #E1FF5F;
+    border-radius: 2px;
+    color: #202020;
+    cursor: pointer;
+    display: inline-block;
+    font-size: 48px;
+    font-weight: bold;
+    outline: 4px none;
+    outline-offset: 4px;
+    padding: 40px 120px;
+}
+
+#start:hover, #reset:hover {
+    background: #fff;
+}
+
+@-webkit-keyframes blink {
+    to {
+        outline: 4px solid #E1FF5F;
+    }
+}
+
+@keyframes blink {
+    to {
+        outline: 4px solid #E1FF5F;
+    }
+}
+
+#menu {
+    position: absolute;
+    right: 0;
+    top: 0;
+    transform: translate3d(0,0,0);
+    width: 550px;
+}
+
+.opt, .opt::after, .opt::before {
+    box-sizing: border-box;
+}
+
+.opt {
+    /* -moz-appearance: none; */
+    -webkit-appearance: none;
+    height: 48px;
+    margin: 0 10px;
+    outline: 0;
+    position: relative;
+    width: 80px;
+}
+
+.opt::after, .opt::before {
+    border-radius: 100px;
+    content: '';
+    display: inline-block;
+    transition: all 0.2s;
+}
+
+.opt::after {
+    background: #fff;
+    border: 2px solid #607d8b;
+    height: 40px;
+    left: 4px;
+    position: absolute;
+    top: 4px;
+    width: 40px;
+}
+
+.opt::before {
+    background: #b0bec5;
+    height: 48px;
+    width: 80px;
+}
+
+.opt:checked::after {
+    left: 36px;
+}
+
+.opt:checked::before {
+    background: #c6ff00;
+}
+
+label {
+    color: #eeff41;
+}
+
+body.mobile #menu > * {
+    display: none;
+}
+
+#q {
+    display: inline-block !important;
+}
+
+#q + label {
+    display: inline !important;
+}
+
+        </style>
+    </head>
+    <body>
+        <div id=container>
+            <canvas id=backcanvas></canvas>
+            <canvas id=canvas></canvas>
+            <div id=load>
+                <h1>Loading</h1>
+            </div>
+            <div id=home>
+                <h1>Couch 2048</h1>
+                <p>
+                    <b>How to play:</b><br>
+                    ⭐️ Drag pieces around<br>
+                    ⭐️ Stack those with the same number<br>
+                    ⭐️ Get to 2048 to win the game<br>
+                    ⭐️ REVEL IN GLORY <small>(optional but recommended)</small>
+                </p>
+                <div id=start>NEW GAME</div>
+                <div id=menu>
+                    <input type=checkbox class=opt id=m checked><label for=m> Music</label><br>
+                    <input type=checkbox class=opt id=s checked><label for=s> Sound FX</label><br>
+                    <input type=checkbox class=opt id=q checked><label for=q> High Quality</label>
+                </div>
+            </div>
+            <div id=end style=display:none>
+                <h1>You win</h1>
+                <p>
+                    <b>Let's party!</b><br>
+                    <small>Success is commemorated; failure merely remembered</small><br>
+                    Written for js13kGames–2016
+                </p>
+                <div id=reset>PLAY AGAIN</div>
+            </div>
+        </div>
+
+        <script>
+if (!Math.log2) {
+    Math.log2 = function (x) {
+        return Math.log(x) / Math.LN2
+    }
+}
+
+if (!Math.log10) {
+    Math.log10 = function (x) {
+        return Math.log(x) / Math.LN10
+    }
+}
+
+if (!Date.now) {
+    Date.now = function () {
+        return new Date().getTime()
+    }
+}
+
+if (!Element.prototype.requestFullscreen) {
+    Element.prototype.requestFullscreen =
+        Element.prototype.mozRequestFullScreen ||
+        Element.prototype.msRequestFullscreen ||
+        Element.prototype.webkitRequestFullscreen
+}
+
+        </script>
+        <script>
+~function(){function H(){this.A=function(e){for(var f=0;24>f;f++)this[String.fromCharCode(97+f)]=e[f]||0;0.01>this.c&&(this.c=0.01);e=this.b+this.c+this.e;0.18>e&&(e=0.18/e,this.b*=e,this.c*=e,this.e*=e)}}var U=new function(){this.z=new H;var e,f,d,h,j,w,I,J,K,y,k,L;this.reset=function(){var b=this.z;h=100/(b.f*b.f+0.001);j=100/(b.g*b.g+0.001);w=1-0.01*b.h*b.h*b.h;I=1E-6*-b.i*b.i*b.i;b.a||(k=0.5-b.n/2,L=5E-5*-b.o);J=1+b.l*b.l*(0<b.l?-0.9:10);K=0;y=1==b.m?0:2E4*(1-b.m)*(1-b.m)+32};this.C=function(){this.reset();var b=this.z;e=1E5*b.b*b.b;f=1E5*b.c*b.c;d=1E5*b.e*b.e+12;return 3*((e+f+d)/3|0)};this.B=function(b,M){var a=this.z,N=1!=a.s||a.v,o=0.1*a.v*a.v,O=1+3E-4*a.w,l=0.1*a.s*a.s*a.s,V=1+1E-4*a.t,W=1!=a.s,X=a.x*a.x,Y=a.g,P=a.q||a.r,Z=0.2*a.r*a.r*a.r,B=a.q*a.q*(0>a.q?-1020:1020),Q=a.p?(2E4*(1-a.p)*(1-a.p)|0)+32:0,$=a.d,R=a.j/2,aa=0.01*a.k*a.k,C=a.a,D=e,ba=1/e,ca=1/f,da=1/d,a=5/(1+20*a.u*a.u)*(0.01+l);0.8<a&&(a=0.8);for(var a=1-a,E=!1,S=0,s=0,t=0,z=0,q=0,u,r=0,g,m=0,p,F=0,c,T=0,n,G=0,A=Array(1024),v=Array(32),i=A.length;i--;)A[i]=0;for(i=v.length;i--;)v[i]=2*Math.random()-1;for(i=0;i<M;i++){if(E)return i;Q&&++T>=Q&&(T=0,this.reset());y&&++K>=y&&(y=0,h*=J);w+=I;h*=w;h>j&&(h=j,0<Y&&(E=!0));g=h;0<R&&(G+=aa,g*=1+Math.sin(G)*R);g|=0;8>g&&(g=8);C||(k+=L,0>k?k=0:0.5<k&&(k=0.5));if(++s>D)switch(s=0,++S){case 1:D=f;break;case 2:D=d}switch(S){case 0:t=s*ba;break;case 1:t=1+2*(1-s*ca)*$;break;case 2:t=1-s*da;break;case 3:t=0,E=!0}P&&(B+=Z,p=B|0,0>p?p=-p:1023<p&&(p=1023));N&&O&&(o*=O,1E-5>o?o=1E-5:0.1<o&&(o=0.1));n=0;for(var ea=8;ea--;){m++;if(m>=g&&(m%=g,3==C))for(u=v.length;u--;)v[u]=2*Math.random()-1;switch(C){case 0:c=m/g<k?0.5:-0.5;break;case 1:c=1-2*(m/g);break;case 2:c=m/g;c=6.28318531*(0.5<c?c-1:c);c=1.27323954*c+0.405284735*c*c*(0>c?1:-1);c=0.225*((0>c?-1:1)*c*c-c)+c;break;case 3:c=v[Math.abs(32*m/g|0)]}N&&(u=r,l*=V,0>l?l=0:0.1<l&&(l=0.1),W?(q+=(c-r)*l,q*=a):(r=c,q=0),r+=q,z+=r-u,c=z*=1-o);P&&(A[F%1024]=c,c+=A[(F-p+1024)%1024],F++);n+=c}n*=0.125*t*X;b[i]=1<=n?32767:-1>=n?-32768:32767*n|0}return M}};window.SOUND=function(e){U.z.A(e);var f=U.C(),e=new Uint8Array(4*((f+1)/2|0)+44),f=2*U.B(new Uint16Array(e.buffer,44),f),d=new Uint32Array(e.buffer,0,44);d[0]=1179011410;d[1]=f+36;d[2]=1163280727;d[3]=544501094;d[4]=16;d[5]=65537;d[6]=44100;d[7]=88200;d[8]=1048578;d[9]=1635017060;d[10]=f;for(var f=f+44,d=0,h="data:audio/wav;base64,",x="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";d<f;d+=3)var j=e[d]<<16|e[d+1]<<8|e[d+2],h=h+(x[j>>18]+x[j>>12&63]+x[j>>6&63]+x[j&63]);return h}}()
+
+        </script>
+        <script>
+//------------------------------------------------------------------------------
+// -*- mode: javascript; tab-width: 4; indent-tabs-mode: nil; -*-
+//------------------------------------------------------------------------------
+// Sonant for JavaScript, v1.0
+//   A sound synth system targeted for tiny demos.
+//
+// This is a port of the Sonant player routine, originally written in C by
+// Jake Taylor (Ferris / Youth Uprising).
+//------------------------------------------------------------------------------
+// Copyright (c) 2008-2009 Jake Taylor
+// Copyright (c) 2011 Marcus Geelnard
+//
+// This software is provided 'as-is', without any express or implied
+// warranty. In no event will the authors be held liable for any damages
+// arising from the use of this software.
+//
+// Permission is granted to anyone to use this software for any purpose,
+// including commercial applications, and to alter it and redistribute it
+// freely, subject to the following restrictions:
+//
+// 1. The origin of this software must not be misrepresented; you must not
+//    claim that you wrote the original software. If you use this software
+//    in a product, an acknowledgment in the product documentation would be
+//    appreciated but is not required.
+//
+// 2. Altered source versions must be plainly marked as such, and must not be
+//    misrepresented as being the original software.
+//
+// 3. This notice may not be removed or altered from any source
+//    distribution.
+//------------------------------------------------------------------------------
+//
+// Example usage:
+//
+//   var songGen = new sonant();
+//   for (var t = 0; t < 8; t++)
+//       songGen.generate(t);
+//   var audio = songGen.createAudio();
+//   audio.loop = true;
+//   audio.play();
+//
+//------------------------------------------------------------------------------
+
+var sonant = function()
+{
+    //--------------------------------------------------------------------------
+    // Private members
+    //--------------------------------------------------------------------------
+
+    //**************************************************************************
+    // Music
+    //**************************************************************************
+
+    // *** INSERT MUSIC HERE ***
+    // var song = ???;
+
+    //**************************************************************************
+    // End of Music
+    //**************************************************************************
+
+    // Wave data configuration
+    var WAVE_SPS = 44100;                    // Samples per second
+    var WAVE_CHAN = 2;                       // Channels
+    var WAVE_SIZE = WAVE_SPS * song.songLen; // Total song size (in samples)
+ 
+    // Work buffers
+    var chnBufWork, mixBufWork;
+
+
+    //--------------------------------------------------------------------------
+    // Private methods
+    //--------------------------------------------------------------------------
+
+    // Initialize buffers etc. (constructor)
+    (function ()
+    {
+        // Note 1: We use a CanvasPixelArray instead of a traditional ECMAScript
+        // array of numbers, since that gives us a typed byte array (much more
+        // compact, and quite fast).
+        //
+        // Note 2: We would LIKE to create an (N x 1) bitmap buffer, but some
+        // browsers (hrrr-o-mme...) have an upper bitmap size limit of
+        // 32767 x 32767, so we create a square bitmap buffer (with some
+        // trailing bytes that we don't care too much about)
+        var size = Math.ceil(Math.sqrt(WAVE_SIZE * WAVE_CHAN / 2));
+
+        var ctx = document.createElement('canvas').getContext('2d');
+
+        // Create the channel work buffer
+        chnBufWork = ctx.createImageData(size, size).data;
+
+        // Create & clear the channel mix buffer
+        var b, mixBuf = ctx.createImageData(size, size).data;
+        for(b = size * size * 4 - 2; b >= 0 ; b -= 2)
+        {
+            mixBuf[b] = 0;
+            mixBuf[b + 1] = 128;
+        }
+        mixBufWork = mixBuf;
+    })();
+
+    // Oscillators
+    function osc_sin(value)
+    {
+        return Math.sin(value * 6.283184);
+    }
+
+    function osc_square(value)
+    {
+        if(osc_sin(value) < 0) return -1;
+        return 1;
+    }
+
+    function osc_saw(value)
+    {
+        return (value % 1) - 0.5;
+    }
+
+    function osc_tri(value)
+    {
+        var v2 = (value % 1) * 4;
+        if(v2 < 2) return v2 - 1;
+        return 3 - v2;
+    }
+
+    function getnotefreq(n)
+    {
+        return 0.00390625 * Math.pow(1.059463094, n - 128);
+    }
+
+
+    //--------------------------------------------------------------------------
+    // Public members
+    //--------------------------------------------------------------------------
+
+    // Number of lines per second (song speed)
+    this.lps = WAVE_SPS / song.rowLen;
+
+
+    //--------------------------------------------------------------------------
+    // Public methods
+    //--------------------------------------------------------------------------
+
+    // Generate audio data for a single track
+    this.generate = function (track)
+    {
+        // Array of oscillator functions
+        var oscillators =
+        [
+            osc_sin,
+            osc_square,
+            osc_saw,
+            osc_tri
+        ];
+
+        // Local variables
+        var i, j, k, b, p, row, n, currentpos, cp,
+            c1, c2, q, low, band, high, t, lfor, e, x,
+            rsample, f, da, o1t, o2t;
+
+        // Preload/precalc some properties/expressions (for improved performance)
+        var chnBuf = chnBufWork,
+            mixBuf = mixBufWork,
+            waveSamples = WAVE_SIZE,
+            waveBytes = WAVE_SIZE * WAVE_CHAN * 2,
+            instr = song.songData[track],
+            rowLen = song.rowLen,
+            osc_lfo = oscillators[instr.lfo_waveform],
+            osc1 = oscillators[instr.osc1_waveform],
+            osc2 = oscillators[instr.osc2_waveform],
+            attack = instr.env_attack,
+            sustain = instr.env_sustain,
+            release = instr.env_release,
+            panFreq = Math.pow(2, instr.fx_pan_freq - 8) / rowLen,
+            lfoFreq = Math.pow(2, instr.lfo_freq - 8) / rowLen;
+
+        // Clear buffer
+        for(b = 0; b < waveBytes; b += 2)
+        {
+            chnBuf[b] = 0;
+            chnBuf[b+1] = 128;
+        }
+
+        currentpos = 0;
+        for(p = 0; p < song.endPattern - 1; ++p) // Patterns
+        {
+            cp = instr.p[p];
+            for(row = 0;row < 32; ++row) // Rows
+            {
+                if(cp)
+                {
+                    n = instr.c[cp - 1].n[row];
+                    if(n)
+                    {
+                        c1 = c2 = 0;
+
+                        // Precalculate frequencues
+                        o1t = getnotefreq(n + (instr.osc1_oct - 8) * 12 + instr.osc1_det) * (1 + 0.0008 * instr.osc1_detune);
+                        o2t = getnotefreq(n + (instr.osc2_oct - 8) * 12 + instr.osc2_det) * (1 + 0.0008 * instr.osc2_detune);
+
+                        // State variable init
+                        q = instr.fx_resonance / 255;
+                        low = band = 0;
+                        for (j = attack + sustain + release - 1; j >= 0; --j)
+                        {
+                            k = j + currentpos;
+
+                            // LFO
+                            lfor = osc_lfo(k * lfoFreq) * instr.lfo_amt / 512 + 0.5;
+
+                            // Envelope
+                            e = 1;
+                            if(j < attack)
+                                e = j / attack;
+                            else if(j >= attack + sustain)
+                                e -= (j - attack - sustain) / release;
+
+                            // Oscillator 1
+                            t = o1t;
+                            if(instr.lfo_osc1_freq) t += lfor;
+                            if(instr.osc1_xenv) t *= e * e;
+                            c1 += t;
+                            rsample = osc1(c1) * instr.osc1_vol;
+
+                            // Oscillator 2
+                            t = o2t;
+                            if(instr.osc2_xenv) t *= e * e;
+                            c2 += t;
+                            rsample += osc2(c2) * instr.osc2_vol;
+
+                            // Noise oscillator
+                            if(instr.noise_fader) rsample += (2*Math.random()-1) * instr.noise_fader * e;
+
+                            rsample *= e / 255;
+
+                            // State variable filter
+                            f = instr.fx_freq;
+                            if(instr.lfo_fx_freq) f *= lfor;
+                            f = 1.5 * Math.sin(f * 3.141592 / WAVE_SPS);
+                            low += f * band;
+                            high = q * (rsample - band) - low;
+                            band += f * high;
+                            switch(instr.fx_filter)
+                            {
+                                case 1: // Hipass
+                                    rsample = high;
+                                    break;
+                                case 2: // Lopass
+                                    rsample = low;
+                                    break;
+                                case 3: // Bandpass
+                                    rsample = band;
+                                    break;
+                                case 4: // Notch
+                                    rsample = low + high;
+                                default:
+                            }
+
+                            // Panning & master volume
+                            t = osc_sin(k * panFreq) * instr.fx_pan_amt / 512 + 0.5;
+                            rsample *= 39 * instr.env_master;
+
+                            // Add to 16-bit channel buffer
+                            k <<= 2;
+                            x = chnBuf[k] + (chnBuf[k+1] << 8) + rsample * (1 - t);
+                            chnBuf[k] = x & 255;
+                            chnBuf[k+1] = (x >> 8) & 255;
+                            x = chnBuf[k+2] + (chnBuf[k+3] << 8) + rsample * t;
+                            chnBuf[k+2] = x & 255;
+                            chnBuf[k+3] = (x >> 8) & 255;
+                        }
+                    }
+                }
+                currentpos += rowLen;
+            }
+        }
+
+        // Delay
+        p = (instr.fx_delay_time * rowLen) >> 1;
+        t = instr.fx_delay_amt / 255;
+
+        for(n = 0; n < waveSamples - p; ++n)
+        {
+            b = 4 * n;
+            k = 4 * (n + p);
+
+            // Left channel = left + right[-p] * t
+            x = chnBuf[k] + (chnBuf[k+1] << 8) +
+                (chnBuf[b+2] + (chnBuf[b+3] << 8) - 32768) * t;
+            chnBuf[k] = x & 255;
+            chnBuf[k+1] = (x >> 8) & 255;
+
+            // Right channel = right + left[-p] * t
+            x = chnBuf[k+2] + (chnBuf[k+3] << 8) +
+                (chnBuf[b] + (chnBuf[b+1] << 8) - 32768) * t;
+            chnBuf[k+2] = x & 255;
+            chnBuf[k+3] = (x >> 8) & 255;
+        }
+
+        // Add to mix buffer
+        for(b = 0; b < waveBytes; b += 2)
+        {
+            x = mixBuf[b] + (mixBuf[b+1] << 8) + chnBuf[b] + (chnBuf[b+1] << 8) - 32768;
+            mixBuf[b] = x & 255;
+            mixBuf[b+1] = (x >> 8) & 255;
+        }
+    };
+
+    // Create an HTML audio element from the generated audio data
+    this.createAudio = function()
+    {
+        // Local variables
+        var b, k, x, wave, l1, l2, s, y;
+
+        // Turn critical object properties into local variables (performance)
+        var mixBuf = mixBufWork,
+            waveBytes = WAVE_SIZE * WAVE_CHAN * 2;
+
+        // We no longer need the channel working buffer
+        chnBufWork = null;
+
+        // Convert to a WAVE file (in a binary string)
+        l1 = waveBytes - 8;
+        l2 = l1 - 36;
+        wave = String.fromCharCode(82,73,70,70,
+                                   l1 & 255,(l1 >> 8) & 255,(l1 >> 16) & 255,(l1 >> 24) & 255,
+                                   87,65,86,69,102,109,116,32,16,0,0,0,1,0,2,0,
+                                   68,172,0,0,16,177,2,0,4,0,16,0,100,97,116,97,
+                                   l2 & 255,(l2 >> 8) & 255,(l2 >> 16) & 255,(l2 >> 24) & 255);
+        for (b = 0; b < waveBytes;)
+        {
+            // This is a GC & speed trick: don't add one char at a time - batch up
+            // larger partial strings
+            x = "";
+            for (k = 0; k < 256 && b < waveBytes; ++k, b += 2)
+            {
+                // Note: We amplify and clamp here
+                y = 4 * (mixBuf[b] + (mixBuf[b+1] << 8) - 32768);
+                y = y < -32768 ? -32768 : (y > 32767 ? 32767 : y);
+                x += String.fromCharCode(y & 255, (y >> 8) & 255);
+            }
+            wave += x;
+        }
+
+        // Convert the string buffer to a base64 data uri
+        s = "data:audio/wav;base64," + btoa(wave);
+        wave = null;
+
+        // Return the music as an audio element
+        return new Audio(s);
+    };
+
+    // Get n samples of wave data at time t [s]. Wave data in range [0,1].
+    this.getData = function(t, n)
+    {
+        for (var i = Math.floor(t * WAVE_SPS), j = 0, d = [], b = mixBufWork; j < 2*n; j += 2)
+        {
+            var k = 4 * (i + j) + 1;
+            d.push(t > 0 && k < b.length ? (b[k] + b[k-1]/256) / 256 : 0.5);
+        }
+        return d;
+    };
+};
+
+        </script>
+        <script>
+    // Song data
+    var song = {
+      // Song length in seconds (how much data to generate)
+      songLen: 37,  // Tune this to fit your needs!
+
+      songData: [
+        { // Instrument 0
+          // Oscillator 1
+          osc1_oct: 7,
+          osc1_det: 0,
+          osc1_detune: 0,
+          osc1_xenv: 0,
+          osc1_vol: 192,
+          osc1_waveform: 3,
+          // Oscillator 2
+          osc2_oct: 7,
+          osc2_det: 0,
+          osc2_detune: 7,
+          osc2_xenv: 0,
+          osc2_vol: 201,
+          osc2_waveform: 3,
+          // Noise oscillator
+          noise_fader: 0,
+          // Envelope
+          env_attack: 789,
+          env_sustain: 1234,
+          env_release: 13636,
+          env_master: 191,
+          // Effects
+          fx_filter: 2,
+          fx_freq: 5839,
+          fx_resonance: 254,
+          fx_delay_time: 6,
+          fx_delay_amt: 121,
+          fx_pan_freq: 6,
+          fx_pan_amt: 147,
+          // LFO
+          lfo_osc1_freq: 0,
+          lfo_fx_freq: 1,
+          lfo_freq: 6,
+          lfo_amt: 195,
+          lfo_waveform: 0,
+          // Patterns
+          p: [1,2,0,0,1,2,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          // Columns
+          c: [
+            {n: [154,0,154,0,152,0,147,0,0,0,0,0,0,0,0,0,154,0,154,0,152,0,157,0,0,0,156,0,0,0,0,0]},
+            {n: [154,0,154,0,152,0,147,0,0,0,0,0,0,0,0,0,154,0,154,0,152,0,157,0,0,0,159,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]}
+          ]
+        },
+        { // Instrument 1
+          // Oscillator 1
+          osc1_oct: 7,
+          osc1_det: 0,
+          osc1_detune: 0,
+          osc1_xenv: 0,
+          osc1_vol: 255,
+          osc1_waveform: 2,
+          // Oscillator 2
+          osc2_oct: 8,
+          osc2_det: 0,
+          osc2_detune: 18,
+          osc2_xenv: 1,
+          osc2_vol: 191,
+          osc2_waveform: 2,
+          // Noise oscillator
+          noise_fader: 0,
+          // Envelope
+          env_attack: 3997,
+          env_sustain: 56363,
+          env_release: 100000,
+          env_master: 255,
+          // Effects
+          fx_filter: 2,
+          fx_freq: 392,
+          fx_resonance: 255,
+          fx_delay_time: 8,
+          fx_delay_amt: 69,
+          fx_pan_freq: 5,
+          fx_pan_amt: 67,
+          // LFO
+          lfo_osc1_freq: 0,
+          lfo_fx_freq: 1,
+          lfo_freq: 4,
+          lfo_amt: 57,
+          lfo_waveform: 3,
+          // Patterns
+          p: [1,2,1,2,1,2,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          // Columns
+          c: [
+            {n: [130,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [123,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]}
+          ]
+        },
+        { // Instrument 2
+          // Oscillator 1
+          osc1_oct: 8,
+          osc1_det: 0,
+          osc1_detune: 0,
+          osc1_xenv: 0,
+          osc1_vol: 0,
+          osc1_waveform: 0,
+          // Oscillator 2
+          osc2_oct: 8,
+          osc2_det: 0,
+          osc2_detune: 0,
+          osc2_xenv: 0,
+          osc2_vol: 0,
+          osc2_waveform: 0,
+          // Noise oscillator
+          noise_fader: 60,
+          // Envelope
+          env_attack: 50,
+          env_sustain: 419,
+          env_release: 4607,
+          env_master: 130,
+          // Effects
+          fx_filter: 1,
+          fx_freq: 10332,
+          fx_resonance: 120,
+          fx_delay_time: 4,
+          fx_delay_amt: 16,
+          fx_pan_freq: 5,
+          fx_pan_amt: 108,
+          // LFO
+          lfo_osc1_freq: 0,
+          lfo_fx_freq: 0,
+          lfo_freq: 5,
+          lfo_amt: 187,
+          lfo_waveform: 0,
+          // Patterns
+          p: [0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          // Columns
+          c: [
+            {n: [0,0,147,0,0,0,147,147,0,0,147,0,0,147,0,147,0,0,147,0,0,0,147,147,0,0,147,0,0,147,0,147]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]}
+          ]
+        },
+        { // Instrument 3
+          // Oscillator 1
+          osc1_oct: 7,
+          osc1_det: 0,
+          osc1_detune: 0,
+          osc1_xenv: 1,
+          osc1_vol: 255,
+          osc1_waveform: 0,
+          // Oscillator 2
+          osc2_oct: 7,
+          osc2_det: 0,
+          osc2_detune: 0,
+          osc2_xenv: 1,
+          osc2_vol: 255,
+          osc2_waveform: 0,
+          // Noise oscillator
+          noise_fader: 0,
+          // Envelope
+          env_attack: 50,
+          env_sustain: 150,
+          env_release: 4800,
+          env_master: 200,
+          // Effects
+          fx_filter: 2,
+          fx_freq: 600,
+          fx_resonance: 254,
+          fx_delay_time: 0,
+          fx_delay_amt: 0,
+          fx_pan_freq: 0,
+          fx_pan_amt: 0,
+          // LFO
+          lfo_osc1_freq: 0,
+          lfo_fx_freq: 0,
+          lfo_freq: 0,
+          lfo_amt: 0,
+          lfo_waveform: 0,
+          // Patterns
+          p: [1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          // Columns
+          c: [
+            {n: [147,0,0,0,0,0,0,0,147,0,0,0,0,0,0,0,147,0,0,0,0,0,0,0,147,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]}
+          ]
+        },
+        { // Instrument 4
+          // Oscillator 1
+          osc1_oct: 7,
+          osc1_det: 0,
+          osc1_detune: 0,
+          osc1_xenv: 0,
+          osc1_vol: 255,
+          osc1_waveform: 2,
+          // Oscillator 2
+          osc2_oct: 7,
+          osc2_det: 0,
+          osc2_detune: 9,
+          osc2_xenv: 0,
+          osc2_vol: 154,
+          osc2_waveform: 2,
+          // Noise oscillator
+          noise_fader: 0,
+          // Envelope
+          env_attack: 2418,
+          env_sustain: 1075,
+          env_release: 10614,
+          env_master: 240,
+          // Effects
+          fx_filter: 3,
+          fx_freq: 2962,
+          fx_resonance: 255,
+          fx_delay_time: 6,
+          fx_delay_amt: 117,
+          fx_pan_freq: 3,
+          fx_pan_amt: 73,
+          // LFO
+          lfo_osc1_freq: 0,
+          lfo_fx_freq: 1,
+          lfo_freq: 5,
+          lfo_amt: 124,
+          lfo_waveform: 0,
+          // Patterns
+          p: [0,0,0,0,1,2,1,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          // Columns
+          c: [
+            {n: [154,0,154,0,152,0,147,0,0,0,0,0,0,0,0,0,154,0,154,0,152,0,157,0,0,0,156,0,0,0,0,0]},
+            {n: [154,0,154,0,152,0,147,0,0,0,0,0,0,0,0,0,154,0,147,0,152,0,157,0,0,0,159,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]}
+          ]
+        },
+        { // Instrument 5
+          // Oscillator 1
+          osc1_oct: 7,
+          osc1_det: 0,
+          osc1_detune: 0,
+          osc1_xenv: 0,
+          osc1_vol: 192,
+          osc1_waveform: 1,
+          // Oscillator 2
+          osc2_oct: 6,
+          osc2_det: 0,
+          osc2_detune: 9,
+          osc2_xenv: 0,
+          osc2_vol: 192,
+          osc2_waveform: 1,
+          // Noise oscillator
+          noise_fader: 0,
+          // Envelope
+          env_attack: 137,
+          env_sustain: 2000,
+          env_release: 4611,
+          env_master: 192,
+          // Effects
+          fx_filter: 1,
+          fx_freq: 982,
+          fx_resonance: 89,
+          fx_delay_time: 6,
+          fx_delay_amt: 25,
+          fx_pan_freq: 6,
+          fx_pan_amt: 77,
+          // LFO
+          lfo_osc1_freq: 0,
+          lfo_fx_freq: 1,
+          lfo_freq: 3,
+          lfo_amt: 69,
+          lfo_waveform: 0,
+          // Patterns
+          p: [1,2,1,3,1,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          // Columns
+          c: [
+            {n: [130,0,130,0,142,0,130,130,0,142,130,0,142,0,130,0,130,0,130,0,142,0,130,130,0,142,130,0,142,0,130,0]},
+            {n: [123,0,123,0,135,0,123,123,0,135,123,0,135,0,123,0,123,0,123,0,135,0,123,123,0,135,123,0,135,0,123,0]},
+            {n: [135,0,135,0,147,0,135,135,0,147,135,0,147,0,135,0,135,0,135,0,147,0,135,135,0,147,135,0,147,0,135,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]}
+          ]
+        },
+        { // Instrument 6
+          // Oscillator 1
+          osc1_oct: 7,
+          osc1_det: 0,
+          osc1_detune: 0,
+          osc1_xenv: 0,
+          osc1_vol: 255,
+          osc1_waveform: 3,
+          // Oscillator 2
+          osc2_oct: 8,
+          osc2_det: 0,
+          osc2_detune: 0,
+          osc2_xenv: 0,
+          osc2_vol: 255,
+          osc2_waveform: 0,
+          // Noise oscillator
+          noise_fader: 127,
+          // Envelope
+          env_attack: 22,
+          env_sustain: 88,
+          env_release: 3997,
+          env_master: 255,
+          // Effects
+          fx_filter: 3,
+          fx_freq: 4067,
+          fx_resonance: 234,
+          fx_delay_time: 4,
+          fx_delay_amt: 33,
+          fx_pan_freq: 2,
+          fx_pan_amt: 84,
+          // LFO
+          lfo_osc1_freq: 0,
+          lfo_fx_freq: 1,
+          lfo_freq: 3,
+          lfo_amt: 28,
+          lfo_waveform: 0,
+          // Patterns
+          p: [0,0,1,2,1,2,1,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          // Columns
+          c: [
+            {n: [0,0,142,0,154,0,0,0,142,0,0,0,154,0,0,0,0,0,142,0,154,0,0,0,142,0,0,0,154,0,0,0]},
+            {n: [0,0,147,0,154,0,0,0,147,0,0,0,154,0,0,0,0,0,147,0,154,0,147,0,0,0,154,0,0,0,154,0]},
+            {n: [0,0,147,0,154,0,0,0,147,0,0,0,154,0,0,0,0,0,147,0,154,0,0,0,147,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]}
+          ]
+        },
+        { // Instrument 7
+          // Oscillator 1
+          osc1_oct: 8,
+          osc1_det: 0,
+          osc1_detune: 0,
+          osc1_xenv: 0,
+          osc1_vol: 0,
+          osc1_waveform: 0,
+          // Oscillator 2
+          osc2_oct: 8,
+          osc2_det: 0,
+          osc2_detune: 0,
+          osc2_xenv: 0,
+          osc2_vol: 0,
+          osc2_waveform: 0,
+          // Noise oscillator
+          noise_fader: 255,
+          // Envelope
+          env_attack: 140347,
+          env_sustain: 9216,
+          env_release: 133417,
+          env_master: 208,
+          // Effects
+          fx_filter: 2,
+          fx_freq: 2500,
+          fx_resonance: 16,
+          fx_delay_time: 2,
+          fx_delay_amt: 157,
+          fx_pan_freq: 8,
+          fx_pan_amt: 207,
+          // LFO
+          lfo_osc1_freq: 0,
+          lfo_fx_freq: 1,
+          lfo_freq: 2,
+          lfo_amt: 51,
+          lfo_waveform: 0,
+          // Patterns
+          p: [0,0,1,1,1,1,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],
+          // Columns
+          c: [
+            {n: [147,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]},
+            {n: [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]}
+          ]
+        }
+      ],
+      rowLen: 5513,   // In sample lengths
+      endPattern: 9  // End pattern
+    };
+
+        </script>
+        <script>
+/// <reference path="couch.d.ts" />
+var AAudio = /** @class */ (function () {
+    function AAudio() {
+        this.on = true;
+        this.sounds = {};
+    }
+    AAudio.prototype.add = function (name, count, settings) {
+        this.sounds[name] = {
+            tick: 0,
+            count: count,
+            pool: [],
+        };
+        for (var i = 0; i < count; ++i) {
+            var audio = new Audio;
+            audio.src = window.SOUND(settings);
+            this.sounds[name].pool.push(audio);
+        }
+    };
+    AAudio.prototype.play = function (name) {
+        if (!this.on)
+            return;
+        var sound = this.sounds[name];
+        sound.pool[sound.tick].play();
+        if (++sound.tick >= sound.count) {
+            sound.tick = 0;
+        }
+    };
+    return AAudio;
+}());
+var aa = new AAudio;
+var isMobile = navigator.userAgent.match(/Android|iPhone|iPad/i) != null;
+if (isMobile) {
+    aa.on = false;
+}
+else {
+    aa.add('bip', 9, [1, , 0.1241, , 0.1855, 0.5336, , , , , , , , , , , , , 1, , , 0.1, , 0.64]);
+    aa.add('die', 4, [1, 0.0013, 0.3576, 0.0681, 0.8007, 0.5117, , -0.3453, 0.0049, 0.148, -0.2563, -0.2717, 0.2608, , -0.3543, -0.1884, -0.0106, -0.0281, 0.9971, -0.6629, -0.7531, 0.0097, -0.0086, 0.5]);
+    aa.add('new', 2, [1, , 0.2548, , 0.1007, 0.7539, 0.0996, -0.5302, , , , , , 0.7769, -0.4436, , , , 1, , , , , 0.5]);
+    aa.add('win', 1, [1, 0.0309, 0.5597, 0.0464, 0.7472, 0.369, , -0.1366, , -0.3111, , -0.1581, -0.8665, , -0.0414, 0.2802, 0.0258, -0.1198, 0.9955, 0.1759, , , -0.0005, 0.64]);
+}
+
+        </script>
+        <script>
+/// <reference path="couch.d.ts" />
+var Body = /** @class */ (function () {
+    function Body(mass) {
+        if (mass === void 0) { mass = 1; }
+        this.vertices = [];
+        this.positions = [];
+        this.constraints = [];
+        this.boundaries = [];
+        this.center = new Vec2;
+        this.halfExtents = new Vec2;
+        this.mass = mass;
+    }
+    Body.prototype.boundingBox = function () {
+        var xmin = 99999;
+        var ymin = 99999;
+        var xmax = -99999;
+        var ymax = -99999;
+        for (var _i = 0, _a = this.positions; _i < _a.length; _i++) {
+            var p = _a[_i];
+            if (p.x < xmin)
+                xmin = p.x;
+            if (p.y < ymin)
+                ymin = p.y;
+            if (p.x > xmax)
+                xmax = p.x;
+            if (p.y > ymax)
+                ymax = p.y;
+        }
+        this.center.set((xmin + xmax) * 0.5, (ymin + ymax) * 0.5);
+        this.halfExtents.set((xmax - xmin) * 0.5, (ymax - ymin) * 0.5);
+    };
+    Body.prototype.project = function (a) {
+        this._min = 99999;
+        this._max = -99999;
+        for (var _i = 0, _a = this.positions; _i < _a.length; _i++) {
+            var p = _a[_i];
+            var product = p.dot(a);
+            if (product < this._min)
+                this._min = product;
+            if (product > this._max)
+                this._max = product;
+        }
+    };
+    Body.prototype.drag = function () {
+        if (pointer.dragging && !draggingPoint &&
+            context.isPointInPath(pointer.x, pointer.y)) {
+            var minDistance = 99999;
+            for (var _i = 0, _a = this.vertices; _i < _a.length; _i++) {
+                var p = _a[_i];
+                var distance = p.position.distance(pointer);
+                if (distance < minDistance) {
+                    minDistance = distance;
+                    draggingPoint = p;
+                }
+            }
+        }
+    };
+    return Body;
+}());
+
+        </script>
+        <script>
+/// <reference path="couch.d.ts" />
+var Constraint = /** @class */ (function () {
+    function Constraint(parent, v0, v1, stiffness, isBoundary) {
+        if (isBoundary === void 0) { isBoundary = false; }
+        this.parent = parent;
+        this.v0 = v0;
+        this.v1 = v1;
+        this.p0 = v0.position;
+        this.p1 = v1.position;
+        this.length = this.p0.distance(this.p1);
+        this.stiffness = stiffness;
+        this.isBoundary = isBoundary;
+        parent.constraints.push(this);
+        if (isBoundary)
+            parent.boundaries.push(this);
+        constraints.push(this);
+    }
+    Constraint.prototype.solve = function () {
+        register0.setSubtract(this.p0, this.p1);
+        var length = register0.length();
+        if (length) {
+            register0.multiplyScalar(this.stiffness * (this.length - length) / length);
+            this.p0.add(register0);
+            this.p1.subtract(register0);
+        }
+    };
+    return Constraint;
+}());
+
+        </script>
+        <script>
+/// <reference path="couch.d.ts" />
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var Cushion = /** @class */ (function (_super) {
+    __extends(Cushion, _super);
+    function Cushion(x, y, width, height, append) {
+        if (append === void 0) { append = true; }
+        var _this = _super.call(this, 250) || this;
+        var p0 = _this.handle0 = new Point(_this, x, y + Cushion.chamfer);
+        var p1 = new Point(_this, x + Cushion.chamfer, y);
+        var p2 = new Point(_this, x + width - Cushion.chamfer, y);
+        var p3 = _this.handle1 = new Point(_this, x + width, y + Cushion.chamfer);
+        var p4 = new StaticPoint(_this, x + width, y + height);
+        var p5 = new StaticPoint(_this, x, y + height);
+        new Constraint(_this, p0, p1, 0.1, true);
+        new Constraint(_this, p1, p2, 0.1, true);
+        new Constraint(_this, p2, p3, 0.1, true);
+        new Constraint(_this, p3, p4, 0.1, true);
+        new Constraint(_this, p4, p5, 0.1, true);
+        new Constraint(_this, p5, p0, 0.1, true);
+        new Constraint(_this, p0, p3, 0.1);
+        new Constraint(_this, p0, p4, 0.1);
+        new Constraint(_this, p1, p4, 0.1);
+        new Constraint(_this, p1, p5, 0.1);
+        new Constraint(_this, p2, p4, 0.1);
+        new Constraint(_this, p2, p5, 0.1);
+        new Constraint(_this, p3, p5, 0.1);
+        if (append) {
+            bodies.push(_this);
+        }
+        return _this;
+    }
+    Cushion.prototype.paint = function (context, color) {
+        context.beginPath();
+        var p0 = this.positions[0];
+        var p1 = this.positions[1];
+        context.moveTo(0.5 * (p0.x + p1.x), 0.5 * (p0.y + p1.y));
+        for (var i = 1; i <= 6 /*this.positions.length*/; ++i) {
+            // bottom part
+            if (i == 4 || i == 5) {
+                context.lineTo(this.positions[i].x, this.positions[i].y);
+                continue;
+            }
+            p0 = this.positions[i % 6 /*this.positions.length*/];
+            p1 = this.positions[(i + 1) % 6 /*this.positions.length*/];
+            context.quadraticCurveTo(p0.x, p0.y, 0.5 * (p0.x + p1.x), 0.5 * (p0.y + p1.y));
+        }
+        context.fillStyle = color || '#00B0FF';
+        context.fill();
+    };
+    Cushion.prototype.paintLow = function (context, color) {
+        context.beginPath();
+        for (var _i = 0, _a = this.positions; _i < _a.length; _i++) {
+            var p = _a[_i];
+            context.lineTo(p.x, p.y);
+        }
+        context.fillStyle = color || '#00B0FF';
+        context.fill();
+    };
+    Cushion.chamfer = 10;
+    return Cushion;
+}(Body));
+
+        </script>
+        <script>
+/// <reference path="couch.d.ts" />
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var FILL_COLOR = {};
+~[
+    'eee4da', 'ede0c8', 'f2b179', 'f59563',
+    'f67c5f', 'f65e3b', 'edcf72', 'edcc61',
+    'edc850', 'edc53f', 'edc22e'
+].forEach(function (color, index) {
+    FILL_COLOR[Math.pow(2, index + 1)] = '#' + color;
+});
+function numberOfPoints(r) {
+    return Math.min((0 | 0.04 * Math.PI * r) << 1, 16);
+}
+var Piece = /** @class */ (function (_super) {
+    __extends(Piece, _super);
+    function Piece(x, y, n, append) {
+        if (y === void 0) { y = -40; }
+        if (n === void 0) { n = 2; }
+        if (append === void 0) { append = true; }
+        var _this = _super.call(this, 1 + 0.2 * Math.log10(n)) || this;
+        ++count[_this.n = n];
+        _this.r = 40 + 4 * (Math.log2(n) - 1);
+        _this.font = "bold ".concat(0.1 * _this.r + 28, "px 'Segoe UI','Helvetica Neue',sans-serif");
+        var nPoints = numberOfPoints(_this.r);
+        var aStep = 2 * Math.PI / nPoints;
+        for (var i = 0; i < nPoints; ++i) {
+            var a = i * aStep;
+            new Point(_this, x + _this.r * Math.cos(a), y + _this.r * Math.sin(a));
+        }
+        for (var i = 0; i < nPoints - 1; ++i) {
+            for (var j = i + 1; j < nPoints; ++j) {
+                new Constraint(_this, _this.vertices[i], _this.vertices[j], 0.005, j == i + 1);
+            }
+        }
+        if (append) {
+            _this.boundingBox();
+            bodies.push(_this);
+        }
+        return _this;
+    }
+    Piece.prototype.paint = function (context) {
+        context.beginPath();
+        var p0 = this.positions[0];
+        var p1 = this.positions[1];
+        context.moveTo(0.5 * (p0.x + p1.x), 0.5 * (p0.y + p1.y));
+        for (var i = 1; i <= this.positions.length; ++i) {
+            p0 = this.positions[i % this.positions.length];
+            p1 = this.positions[(i + 1) % this.positions.length];
+            context.quadraticCurveTo(p0.x, p0.y, 0.5 * (p0.x + p1.x), 0.5 * (p0.y + p1.y));
+        }
+        context.fillStyle = FILL_COLOR[this.n];
+        context.fill();
+        context.save();
+        context.translate(this.center.x, this.center.y);
+        context.rotate(Math.atan2(p0.y - this.center.y, p0.x - this.center.x));
+        context.font = this.font;
+        context.fillStyle = this.n > 4 ? '#f9f6f2' : '#776e65';
+        context.fillText('' + this.n, 0, 0);
+        context.restore();
+        this.drag();
+    };
+    Piece.prototype.paintLow = function (context) {
+        context.beginPath();
+        var p0 = this.boundaries[0].p0;
+        context.moveTo(p0.x, p0.y);
+        for (var _i = 0, _a = this.boundaries; _i < _a.length; _i++) {
+            var p1 = _a[_i].p1;
+            context.lineTo(p1.x, p1.y);
+        }
+        context.fillStyle = FILL_COLOR[this.n];
+        context.fill();
+        context.save();
+        context.translate(this.center.x, this.center.y);
+        context.rotate(Math.atan2(p0.y - this.center.y, p0.x - this.center.x));
+        context.font = this.font;
+        context.fillStyle = this.n > 4 ? '#f9f6f2' : '#776e65';
+        context.fillText('' + this.n, 0, 0);
+        context.restore();
+        this.drag();
+    };
+    return Piece;
+}(Body));
+
+        </script>
+        <script>
+/// <reference path="couch.d.ts" />
+var Point = /** @class */ (function () {
+    function Point(parent, x, y) {
+        this.parent = parent;
+        this.position = new Vec2(x, y);
+        this.oldPosition = new Vec2(x, y);
+        parent.vertices.push(this);
+        parent.positions.push(this.position);
+        vertices.push(this);
+    }
+    Point.prototype.integrate = function () {
+        var p = this.position;
+        var o = this.oldPosition;
+        var x = p.x;
+        var y = p.y;
+        p.x += p.x - o.x;
+        p.y += p.y - o.y + kGravity;
+        o.set(x, y);
+        // screen limits
+        if (p.y < -100)
+            p.y = -100;
+        else if (p.y >= canvas.height + 250) {
+            p.x -= (p.x - o.x) * kFrictionGround;
+            p.y = canvas.height - 1;
+        }
+        if (p.x < 0)
+            p.x = 0;
+        else if (p.x >= canvas.width)
+            p.x = canvas.width - 1;
+    };
+    return Point;
+}());
+
+        </script>
+        <script>
+/// <reference path="couch.d.ts" />
+var __extends = (this && this.__extends) || (function () {
+    var extendStatics = function (d, b) {
+        extendStatics = Object.setPrototypeOf ||
+            ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
+            function (d, b) { for (var p in b) if (Object.prototype.hasOwnProperty.call(b, p)) d[p] = b[p]; };
+        return extendStatics(d, b);
+    };
+    return function (d, b) {
+        if (typeof b !== "function" && b !== null)
+            throw new TypeError("Class extends value " + String(b) + " is not a constructor or null");
+        extendStatics(d, b);
+        function __() { this.constructor = d; }
+        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+    };
+})();
+var StaticPoint = /** @class */ (function (_super) {
+    __extends(StaticPoint, _super);
+    function StaticPoint(parent, x, y) {
+        var _this = _super.call(this, parent, x, y) || this;
+        _this.x = x;
+        _this.y = y;
+        return _this;
+    }
+    StaticPoint.prototype.integrate = function () {
+        this.position.set(this.x, this.y);
+        this.oldPosition.set(this.x, this.y);
+    };
+    return StaticPoint;
+}(Point));
+
+        </script>
+        <script>
+/// <reference path="couch.d.ts" />
+var Vec2 = /** @class */ (function () {
+    function Vec2(x, y) {
+        if (x === void 0) { x = 0; }
+        if (y === void 0) { y = 0; }
+        this.x = x;
+        this.y = y;
+    }
+    Vec2.prototype.set = function (x, y) {
+        this.x = x;
+        this.y = y;
+    };
+    Vec2.prototype.setTo = function (other) {
+        this.x = other.x;
+        this.y = other.y;
+    };
+    Vec2.prototype.length = function () {
+        return Math.sqrt(this.x * this.x + this.y * this.y);
+    };
+    Vec2.prototype.distance = function (other) {
+        var x = this.x - other.x;
+        var y = this.y - other.y;
+        return Math.sqrt(x * x + y * y);
+    };
+    Vec2.prototype.add = function (other) {
+        this.x += other.x;
+        this.y += other.y;
+    };
+    Vec2.prototype.subtract = function (other) {
+        this.x -= other.x;
+        this.y -= other.y;
+    };
+    Vec2.prototype.setSubtract = function (a, b) {
+        this.x = a.x - b.x;
+        this.y = a.y - b.y;
+    };
+    Vec2.prototype.dot = function (other) {
+        return this.x * other.x + this.y * other.y;
+    };
+    Vec2.prototype.multiplyScalar = function (a) {
+        this.x *= a;
+        this.y *= a;
+    };
+    Vec2.prototype.setMultiplyScalar = function (other, a) {
+        this.x = other.x * a;
+        this.y = other.y * a;
+    };
+    Vec2.prototype.setNormal = function (a, b) {
+        // perpendicular
+        var x = a.y - b.y;
+        var y = b.x - a.x;
+        // normalize
+        var length = Math.sqrt(x * x + y * y);
+        if (length < Number.MIN_VALUE) {
+            this.x = x;
+            this.y = y;
+            return;
+        }
+        var inverseLength = 1 / length;
+        this.x = x * inverseLength;
+        this.y = y * inverseLength;
+    };
+    return Vec2;
+}());
+
+        </script>
+        <script>
+/// <reference path="couch.d.ts" />
+var backCushion = null;
+function initBackground() {
+    backCushion = new Cushion(255, 360, 450, 180, false);
+}
+function paintBackground() {
+    backcontext.clearRect(0, 0, cwidth, cheight);
+    backcontext.save();
+    backcontext.shadowColor = 'rgba(0,0,0,0.4)';
+    backcontext.shadowBlur = 25;
+    backCushion.paint(backcontext, '#0091EA');
+    backcontext.shadowColor = '#000';
+    backcontext.translate(0, 1);
+    couch.paint(backcontext, 'rgba(55,71,79,0.4)');
+    armrest0.paint(backcontext, 'rgba(55,71,79,0.4)');
+    armrest1.paint(backcontext, 'rgba(55,71,79,0.4)');
+    backcontext.restore();
+}
+
+        </script>
+        <script>
+/// <reference path="couch.d.ts" />
+var cwidth = 960;
+var cheight = 540;
+var aspect = 16 / 9;
+var cscale = 1;
+var container = document.getElementById('container');
+var backcanvas = document.getElementById('backcanvas');
+var canvas = document.getElementById('canvas');
+var backcontext = backcanvas.getContext('2d');
+var context = canvas.getContext('2d');
+var transformProperty = 'transform';
+if (!(transformProperty in container.style)) {
+    transformProperty = 'webkitTransform';
+}
+backcanvas.width = canvas.width = cwidth;
+backcanvas.height = canvas.height = cheight;
+context.lineWidth = 2;
+context.textAlign = 'center';
+context.textBaseline = 'middle';
+function setSize(x, property, value) {
+    x.style[property] = "".concat(value, "px");
+}
+function handleResize() {
+    var w = window.innerWidth;
+    var h = window.innerHeight;
+    if (w / h > aspect)
+        w = h * aspect;
+    else
+        h = w / aspect;
+    cscale = cwidth / w;
+    setSize(container, 'width', w);
+    setSize(container, 'height', h);
+    setSize(container, 'left', 0.5 * (window.innerWidth - w));
+    setSize(container, 'top', 0.5 * (window.innerHeight - h));
+    var scale = 0.5 * w / cwidth;
+    var scale3d = "scale3d(".concat(scale, ",").concat(scale, ",1)");
+    startScreen.style[transformProperty] = scale3d;
+    endScreen.style[transformProperty] = scale3d;
+}
+//handleResize()
+window.addEventListener('resize', handleResize);
+window.addEventListener('orientationchange', handleResize);
+canvas.addEventListener('contextmenu', function (event) {
+    event.preventDefault();
+});
+
+        </script>
+        <script>
+/// <reference path="couch.d.ts" />
+var _a = (function () {
+    var satDistance;
+    var satAxis = new Vec2;
+    var satBoundary;
+    var satPoint;
+    // Separating Axis Theorem collision test
+    function sat(b0, b1) {
+        // aabb overlap test
+        if (Math.abs(b1.center.x - b0.center.x) - (b0.halfExtents.x + b1.halfExtents.x) >= 0 ||
+            Math.abs(b1.center.y - b0.center.y) - (b0.halfExtents.y + b1.halfExtents.y) >= 0)
+            return false;
+        satDistance = 99999;
+        for (var _i = 0, _a = [b0, b1]; _i < _a.length; _i++) {
+            var b = _a[_i];
+            for (var _b = 0, _c = b.boundaries; _b < _c.length; _b++) {
+                var boundary = _c[_b];
+                register0.setNormal(boundary.p0, boundary.p1);
+                b0.project(register0);
+                b1.project(register0);
+                var distance = (b0._min < b1._min) ? b1._min - b0._max : b0._min - b1._max;
+                if (distance > 0)
+                    return false;
+                distance *= -1; // == Math.abs(distance)
+                if (distance < satDistance) {
+                    satDistance = distance;
+                    satAxis.setTo(register0);
+                    satBoundary = boundary;
+                }
+            }
+        }
+        if (satBoundary.parent != b1) {
+            // [b0, b1] = [b1, b0]
+            var t = b0;
+            b0 = b1;
+            b1 = t;
+        }
+        register0.setSubtract(b0.center, b1.center);
+        if (register0.dot(satAxis) < 0) {
+            satAxis.multiplyScalar(-1);
+        }
+        var minDistance = 99999;
+        for (var _d = 0, _e = b0.vertices; _d < _e.length; _d++) {
+            var p = _e[_d];
+            register0.setSubtract(p.position, b1.center);
+            var distance = satAxis.dot(register0);
+            if (distance < minDistance) {
+                minDistance = distance;
+                satPoint = p;
+            }
+        }
+        return true;
+    }
+    // collision resolution
+    function resolve() {
+        var p0 = satBoundary.p0;
+        var p1 = satBoundary.p1;
+        var o0 = satBoundary.v0.oldPosition;
+        var o1 = satBoundary.v1.oldPosition;
+        var pp = satPoint.position;
+        var po = satPoint.oldPosition;
+        register0.setMultiplyScalar(satAxis, satDistance);
+        var t = (Math.abs(p0.x - p1.x) > Math.abs(p0.y - p1.y)) ?
+            (pp.x - register0.x - p0.x) / (p1.x - p0.x) :
+            (pp.y - register0.y - p0.y) / (p1.y - p0.y);
+        var u = 1 / (t * t + (1 - t) * (1 - t));
+        var m0 = satPoint.parent.mass;
+        var m1 = satBoundary.parent.mass;
+        var tm = m0 + m1;
+        m0 /= tm * 2;
+        m1 /= tm;
+        var k0 = (1 - t) * u * m0;
+        var k1 = t * u * m0;
+        p0.x -= register0.x * k0;
+        p0.y -= register0.y * k0;
+        p1.x -= register0.x * k1;
+        p1.y -= register0.y * k1;
+        pp.x += register0.x * m1;
+        pp.y += register0.y * m1;
+        //if (kFriction) {
+        register0.set(pp.x - po.x - (p0.x + p1.x - o0.x - o1.x) * 0.5, pp.y - po.y - (p0.y + p1.y - o0.y - o1.y) * 0.5);
+        register1.set(-satAxis.y, satAxis.x);
+        register0.setMultiplyScalar(register1, register0.dot(register1));
+        o0.x -= register0.x * kFriction * k0;
+        o0.y -= register0.y * kFriction * k0;
+        o1.x -= register0.x * kFriction * k1;
+        o1.y -= register0.y * kFriction * k1;
+        po.x += register0.x * kFriction * m1;
+        po.y += register0.y * kFriction * m1;
+        //}
+    }
+    return [sat, resolve];
+}()), sat = _a[0], resolve = _a[1];
+
+        </script>
+        <script>
+function debounce(proc, wait) {
+    var timeout = null;
+    var lastCall;
+    return function () {
+        lastCall = Date.now();
+        function wrapped() {
+            var napping = Date.now() - lastCall;
+            if (napping < wait) {
+                timeout = setTimeout(wrapped, wait - napping);
+            }
+            else {
+                timeout = null;
+                proc();
+            }
+        }
+        if (!timeout) {
+            timeout = setTimeout(wrapped, wait);
+        }
+    };
+}
+
+        </script>
+        <script>
+/// <reference path="couch.d.ts" />
+var loadingScreen = document.getElementById('load');
+var startScreen = document.getElementById('home');
+var startButton = document.getElementById('start');
+var endScreen = document.getElementById('end');
+var resetButton = document.getElementById('reset');
+startScreen.addEventListener('mousedown', cancel);
+startScreen.addEventListener('touchstart', cancel);
+startButton.addEventListener('mousedown', start);
+startButton.addEventListener('touchstart', start);
+endScreen.addEventListener('mousedown', cancel);
+endScreen.addEventListener('touchstart', cancel);
+resetButton.addEventListener('mousedown', reset);
+resetButton.addEventListener('touchstart', reset);
+function cancel(event) {
+    var target = event.target;
+    if (target.tagName != 'INPUT' && target.tagName != 'LABEL') {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+}
+function start() {
+    container.removeChild(startScreen);
+    aa.play('new');
+    if ((isMobile || cscale > 1) && document.body.requestFullscreen) {
+        document.body.requestFullscreen();
+    }
+}
+function gameover() {
+    endScreen.style.display = 'block';
+    aa.play('win');
+}
+function reset() {
+    endScreen.style.display = 'none';
+    aa.play('new');
+    bodies = [];
+    vertices = [];
+    constraints = [];
+    draggingPoint = null;
+    pointer.dragging = false;
+    init();
+}
+
+        </script>
+        <script>
+/// <reference path="couch.d.ts" />
+var kGravity = 0.6;
+var kAttractiveForce = 0.1;
+var kNumIterations = 40;
+var kFriction = 0.9;
+var kFrictionGround = 0.6;
+var kForceDrag = 0.24;
+var bodies = [];
+var vertices = [];
+var constraints = [];
+var draggingPoint = null;
+var register0 = new Vec2;
+var register1 = new Vec2;
+var count = {};
+//const numberOfCushions = 3
+function mainloop() {
+    context.clearRect(0, 0, cwidth, cheight);
+    for (var _i = 0, vertices_1 = vertices; _i < vertices_1.length; _i++) {
+        var p = vertices_1[_i];
+        p.integrate();
+    }
+    var addPieces = false;
+    var _loop_1 = function (i) {
+        var b = bodies[i];
+        //if (!(b instanceof Piece)) continue
+        if (b.center.y >= cheight + b.r) {
+            constraints = constraints.filter(function (c) { return c.parent != b; });
+            vertices = vertices.filter(function (p) { return p.parent != b; });
+            if (draggingPoint && draggingPoint.parent == b) {
+                draggingPoint = null;
+                pointer.dragging = false;
+            }
+            bodies.splice(i, 1);
+            --count[b.n];
+            aa.play('die');
+            addPieces = true;
+            --i;
+        }
+        out_i_1 = i;
+    };
+    var out_i_1;
+    for (var i = 3 /*numberOfCushions*/; i < bodies.length; ++i) {
+        _loop_1(i);
+        i = out_i_1;
+    }
+    var _loop_2 = function (i) {
+        var b = bodies[i];
+        //if (!(b instanceof Piece)) continue
+        var attractDistance = 2.5 * b.r;
+        var minDistance = 99999;
+        var other = null;
+        var index = 0;
+        for (var j = i + 1; j < bodies.length; ++j) {
+            var bb = bodies[j];
+            //if (!(bb instanceof Piece)) continue
+            if (b.n != bb.n)
+                continue;
+            var distance = b.center.distance(bb.center);
+            if (distance < attractDistance && distance < minDistance) {
+                minDistance = distance;
+                other = bb;
+                index = j;
+            }
+        }
+        if (!other)
+            return "continue";
+        var x = 0.5 * (b.center.x + other.center.x);
+        var y = 0.5 * (b.center.y + other.center.y);
+        if (minDistance > 2 * b.r) {
+            for (var _d = 0, _e = b.positions; _d < _e.length; _d++) {
+                var p = _e[_d];
+                p.x += (x - p.x) * kAttractiveForce;
+                p.y += (y - p.y) * kAttractiveForce;
+            }
+            for (var _f = 0, _g = other.positions; _f < _g.length; _f++) {
+                var p = _g[_f];
+                p.x += (x - p.x) * kAttractiveForce;
+                p.y += (y - p.y) * kAttractiveForce;
+            }
+        }
+        else {
+            constraints = constraints.filter(function (c) { return c.parent != b && c.parent != other; });
+            vertices = vertices.filter(function (p) { return p.parent != b && p.parent != other; });
+            if (draggingPoint && (draggingPoint.parent == b || draggingPoint.parent == other)) {
+                draggingPoint = null;
+                pointer.dragging = false;
+            }
+            bodies.splice(index, 1);
+            bodies[i] = new Piece(x, y, b.n << 1, false);
+            count[b.n] -= 2;
+            aa.play('bip');
+            addPieces = true;
+            if (b.n == 1024) {
+                gameover();
+            }
+        }
+    };
+    for (var i = 3 /*numberOfCushions*/; i < bodies.length - 1; ++i) {
+        _loop_2(i);
+    }
+    if (addPieces) {
+        addPiecesRateLimit();
+    }
+    if (draggingPoint) {
+        draggingPoint.position.x += (pointer.x - draggingPoint.position.x) * kForceDrag;
+        draggingPoint.position.y += (pointer.y - draggingPoint.position.y) * kForceDrag;
+    }
+    for (var n = 0; n < kNumIterations; ++n) {
+        for (var _a = 0, constraints_1 = constraints; _a < constraints_1.length; _a++) {
+            var c = constraints_1[_a];
+            c.solve();
+        }
+        for (var _b = 0, bodies_1 = bodies; _b < bodies_1.length; _b++) {
+            var b = bodies_1[_b];
+            b.boundingBox();
+        }
+        for (var i = 0; i < bodies.length - 1; ++i) {
+            for (var j = i + 1; j < bodies.length; ++j) {
+                if (sat(bodies[i], bodies[j])) {
+                    resolve();
+                }
+            }
+        }
+    }
+    for (var _c = 0, bodies_2 = bodies; _c < bodies_2.length; _c++) {
+        var b = bodies_2[_c];
+        b.paint(context);
+    }
+    if (draggingPoint) {
+        context.beginPath();
+        context.moveTo(draggingPoint.position.x, draggingPoint.position.y);
+        context.lineTo(pointer.x, pointer.y);
+        context.strokeStyle = '#FFD600';
+        context.stroke();
+    }
+    requestAnimationFrame(mainloop);
+}
+function spawnLocation() {
+    return (Math.random() * 0.3 + 0.35) * cwidth;
+}
+var addPiecesRateLimit = debounce(function () {
+    var has256 = count[256] || count[512] || count[1024];
+    if (count[2]) {
+        new Piece(spawnLocation());
+    }
+    else if (count[4]) {
+        new Piece(spawnLocation(), -44, 4);
+    }
+    else if (has256) {
+        if (count[8]) {
+            new Piece(spawnLocation(), -48, 8);
+        }
+        else {
+            new Piece(0.35 * cwidth, -44, 4);
+            new Piece(0.65 * cwidth, -44, 4);
+        }
+    }
+    else {
+        new Piece(0.35 * cwidth);
+        new Piece(0.65 * cwidth);
+    }
+    aa.play('new');
+}, 300);
+var couch = null;
+var armrest0 = null;
+var armrest1 = null;
+function init() {
+    for (var n = 2; n <= 2048; n *= 2) {
+        count[n] = 0;
+    }
+    couch = new Cushion(280, 480, 400, 60);
+    armrest0 = new Cushion(220, 420, 60, 120);
+    armrest1 = new Cushion(680, 420, 60, 120);
+    new Constraint(couch, couch.handle0, armrest0.handle0, 0.1);
+    new Constraint(couch, couch.handle1, armrest1.handle1, 0.1);
+    var y = cheight * 0.5;
+    new Piece(0.35 * cwidth, y);
+    new Piece(0.65 * cwidth, y);
+}
+
+        </script>
+        <script>
+/// <reference path="couch.d.ts" />
+var pointer = {
+    dragging: false,
+    x: 0,
+    y: 0,
+};
+function setPointerPosition(event) {
+    pointer.x = (event.clientX - container.offsetLeft) * cscale;
+    pointer.y = (event.clientY - container.offsetTop) * cscale;
+}
+addEventListener('mousedown', function (event) {
+    event.preventDefault();
+    pointer.dragging = true;
+    setPointerPosition(event);
+});
+addEventListener('mousemove', function (event) {
+    event.preventDefault();
+    setPointerPosition(event);
+});
+addEventListener('mouseup', function (event) {
+    event.preventDefault();
+    pointer.dragging = false;
+    draggingPoint = null;
+});
+document.addEventListener('touchstart', function (event) {
+    var target = event.target;
+    if (target.tagName != 'INPUT' && target.tagName != 'LABEL') {
+        event.preventDefault();
+    }
+    pointer.dragging = true;
+    setPointerPosition(event.targetTouches[0]);
+});
+document.addEventListener('touchmove', function (event) {
+    event.preventDefault();
+    setPointerPosition(event.targetTouches[0]);
+});
+document.addEventListener('touchend', function (event) {
+    pointer.dragging = false;
+    draggingPoint = null;
+});
+document.addEventListener('touchcancel', function (event) {
+    pointer.dragging = false;
+    draggingPoint = null;
+});
+
+        </script>
+        <script>
+/// <reference path="couch.d.ts" />
+var music = null;
+function initMusic() {
+    var synth = new sonant;
+    for (var i = 0; i < 8; ++i) {
+        synth.generate(i);
+    }
+    music = synth.createAudio();
+    music.loop = true;
+    music.volume = 0.9;
+}
+if (!isMobile) {
+    try {
+        initMusic();
+    }
+    catch (err) {
+    }
+}
+function initMainMenu() {
+    if (isMobile)
+        document.body.className = 'mobile';
+    var musicToggle = document.getElementById('m');
+    var soundToggle = document.getElementById('s');
+    var qualityToggle = document.getElementById('q');
+    musicToggle.addEventListener('change', function (event) {
+        if (!music)
+            return;
+        if (musicToggle.checked) {
+            music.currentTime = 0;
+            music.play();
+        }
+        else
+            music.pause();
+    });
+    soundToggle.addEventListener('change', function (event) {
+        aa.on = soundToggle.checked;
+    });
+    var _cpaint = Cushion.prototype.paint;
+    var _cpaintLow = Cushion.prototype.paintLow;
+    var _ppaint = Piece.prototype.paint;
+    var _ppaintLow = Piece.prototype.paintLow;
+    if (isMobile) {
+        qualityToggle.checked = false;
+        Cushion.prototype.paint = _cpaintLow;
+        Piece.prototype.paint = _ppaintLow;
+    }
+    qualityToggle.addEventListener('change', function (event) {
+        Cushion.prototype.paint = qualityToggle.checked ? _cpaint : _cpaintLow;
+        Piece.prototype.paint = qualityToggle.checked ? _ppaint : _ppaintLow;
+        paintBackground();
+    });
+    container.removeChild(loadingScreen);
+    if (music)
+        music.play();
+}
+handleResize();
+initMainMenu();
+init();
+initBackground();
+requestAnimationFrame(mainloop);
+paintBackground();
+
+        </script>
+    </body>
+</html>`;
