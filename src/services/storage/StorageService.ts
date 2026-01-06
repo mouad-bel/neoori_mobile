@@ -4,6 +4,7 @@ import { User, UserInteraction, GameProgress } from '../../types';
 // Storage Keys
 export const STORAGE_KEYS = {
   AUTH_TOKEN: '@neoori_auth_token',
+  REFRESH_TOKEN: '@neoori_refresh_token',
   USER_DATA: '@neoori_user_data',
   INTERACTIONS: '@neoori_interactions',
   BOOKMARKS: '@neoori_bookmarks',
@@ -35,6 +36,34 @@ class StorageService {
       await AsyncStorage.removeItem(STORAGE_KEYS.AUTH_TOKEN);
     } catch (error) {
       console.error('Error removing auth token:', error);
+      throw error;
+    }
+  }
+
+  // Refresh Token Methods
+  async saveRefreshToken(token: string): Promise<void> {
+    try {
+      await AsyncStorage.setItem(STORAGE_KEYS.REFRESH_TOKEN, token);
+    } catch (error) {
+      console.error('Error saving refresh token:', error);
+      throw error;
+    }
+  }
+
+  async getRefreshToken(): Promise<string | null> {
+    try {
+      return await AsyncStorage.getItem(STORAGE_KEYS.REFRESH_TOKEN);
+    } catch (error) {
+      console.error('Error getting refresh token:', error);
+      return null;
+    }
+  }
+
+  async removeRefreshToken(): Promise<void> {
+    try {
+      await AsyncStorage.removeItem(STORAGE_KEYS.REFRESH_TOKEN);
+    } catch (error) {
+      console.error('Error removing refresh token:', error);
       throw error;
     }
   }
@@ -228,6 +257,7 @@ class StorageService {
     try {
       await AsyncStorage.multiRemove([
         STORAGE_KEYS.AUTH_TOKEN,
+        STORAGE_KEYS.REFRESH_TOKEN,
         STORAGE_KEYS.USER_DATA,
         STORAGE_KEYS.INTERACTIONS,
         STORAGE_KEYS.BOOKMARKS,

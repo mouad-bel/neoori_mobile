@@ -18,6 +18,7 @@ import MyCareerVisionGame from '../../components/games/MyCareerVisionGame';
 import CompetenciesPuzzleGame from '../../components/games/CompetenciesPuzzleGame';
 import MyWheelOfMeaningGame from '../../components/games/MyWheelOfMeaningGame';
 import CareerSkillMatchGame from '../../components/games/CareerSkillMatchGame';
+import ValuesMatchGame from '../../components/games/ValuesMatchGame';
 import ImagePuzzleGame from '../../components/games/ImagePuzzleGame';
 import ConnectFourGame from '../../components/games/ConnectFourGame';
 import HangmanGame from '../../components/games/HangmanGame';
@@ -99,6 +100,8 @@ const GameScreen = () => {
         return <HangmanGame game={game} onComplete={handleGameComplete} />;
       case '17':
         return <Couch2048Game game={game} onComplete={handleGameComplete} />;
+      case '18':
+        return <ValuesMatchGame game={game} onComplete={handleGameComplete} />;
       default:
         return null;
     }

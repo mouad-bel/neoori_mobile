@@ -719,6 +719,18 @@ export const MOCK_GAMES: Game[] = [
     status: 'not-started',
     gameType: 'interactive',
   },
+  {
+    id: '18',
+    title: 'Valeurs Professionnelles',
+    duration: '4 min',
+    description: 'Découvre tes valeurs professionnelles à travers des situations concrètes',
+    credits: 75,
+    difficulty: 'Facile',
+    icon: 'heart',
+    image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800',
+    status: 'not-started',
+    gameType: 'interactive',
+  },
 ];
 
 // Mock Game Categories for filtering

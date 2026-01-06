@@ -1,11 +1,13 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { AuthState, User } from '../types';
+import { AuthState, User, LoginRequest, RegisterRequest } from '../types';
 import StorageService from '../services/storage/StorageService';
-import { MOCK_USER } from '../constants/mockData';
+import authService from '../services/api/authService';
 
 interface AuthContextType extends AuthState {
   login: (email: string, password: string) => Promise<void>;
+  register: (data: RegisterRequest) => Promise<void>;
   logout: () => Promise<void>;
+  refreshAuth: () => Promise<void>;
   isLoading: boolean;
 }
 
@@ -29,18 +31,93 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const token = await StorageService.getAuthToken();
       const user = await StorageService.getUserData();
+      const refreshToken = await StorageService.getRefreshToken();
 
       if (token && user) {
-        setAuthState({
-          isAuthenticated: true,
-          user,
-          token,
-        });
+        // Verify token is still valid by fetching current user
+        try {
+          const response = await authService.getCurrentUser();
+          if (response.success && response.data) {
+            // Token is valid, update user data
+            await StorageService.saveUserData(response.data);
+            setAuthState({
+              isAuthenticated: true,
+              user: response.data,
+              token,
+              refreshToken: refreshToken || undefined,
+            });
+          } else {
+            // Token invalid, try to refresh
+            if (refreshToken) {
+              await refreshAuth();
+            } else {
+              throw new Error('Invalid token');
+            }
+          }
+        } catch (error) {
+          // Token invalid, try to refresh
+          if (refreshToken) {
+            await refreshAuth();
+          } else {
+            // No valid auth, clear everything
+            await StorageService.clearAll();
+            setAuthState({
+              isAuthenticated: false,
+              user: null,
+            });
+          }
+        }
       }
     } catch (error) {
       console.error('Error checking auth:', error);
+      await StorageService.clearAll();
+      setAuthState({
+        isAuthenticated: false,
+        user: null,
+      });
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const refreshAuth = async () => {
+    try {
+      const refreshToken = await StorageService.getRefreshToken();
+      if (!refreshToken) {
+        throw new Error('No refresh token');
+      }
+
+      const response = await authService.refreshToken(refreshToken);
+      if (response.success && response.data) {
+        const { accessToken, refreshToken: newRefreshToken } = response.data;
+        
+        await StorageService.saveAuthToken(accessToken);
+        if (newRefreshToken) {
+          await StorageService.saveRefreshToken(newRefreshToken);
+        }
+
+        // Fetch current user
+        const userResponse = await authService.getCurrentUser();
+        if (userResponse.success && userResponse.data) {
+          await StorageService.saveUserData(userResponse.data);
+          setAuthState({
+            isAuthenticated: true,
+            user: userResponse.data,
+            token: accessToken,
+            refreshToken: newRefreshToken || refreshToken,
+          });
+        }
+      } else {
+        throw new Error(response.error || 'Failed to refresh token');
+      }
+    } catch (error) {
+      console.error('Error refreshing auth:', error);
+      await StorageService.clearAll();
+      setAuthState({
+        isAuthenticated: false,
+        user: null,
+      });
+      throw error;
     }
   };
 
@@ -48,29 +125,95 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       setIsLoading(true);
       
-      // Mock authentication - in production, this would call your API
-      // For now, we'll accept any email/password and use mock user
-      const mockToken = `mock_token_${Date.now()}`;
-      
-      await StorageService.saveAuthToken(mockToken);
-      await StorageService.saveUserData(MOCK_USER);
+      const loginData: LoginRequest = { email, password };
+      const response = await authService.login(loginData);
 
-      setAuthState({
-        isAuthenticated: true,
-        user: MOCK_USER,
-        token: mockToken,
-      });
-    } catch (error) {
+      if (response.success && response.data) {
+        const { user, accessToken, refreshToken } = response.data;
+        
+        // Save tokens and user data
+        await StorageService.saveAuthToken(accessToken);
+        if (refreshToken) {
+          await StorageService.saveRefreshToken(refreshToken);
+        }
+        await StorageService.saveUserData(user);
+
+        setAuthState({
+          isAuthenticated: true,
+          user,
+          token: accessToken,
+          refreshToken: refreshToken || undefined,
+        });
+      } else {
+        throw new Error(response.error || 'Login failed');
+      }
+    } catch (error: any) {
       console.error('Login error:', error);
-      throw error;
+      throw new Error(error.message || 'Login failed. Please check your credentials.');
     } finally {
       setIsLoading(false);
+    }
+  };
+
+  const register = async (data: RegisterRequest) => {
+    try {
+      setIsLoading(true);
+      
+      const response = await authService.register(data);
+
+      if (response.success && response.data) {
+        const { user, accessToken, refreshToken } = response.data;
+        
+        // Save tokens and user data
+        await StorageService.saveAuthToken(accessToken);
+        if (refreshToken) {
+          await StorageService.saveRefreshToken(refreshToken);
+        }
+        await StorageService.saveUserData(user);
+
+        setAuthState({
+          isAuthenticated: true,
+          user,
+          token: accessToken,
+          refreshToken: refreshToken || undefined,
+        });
+      } else {
+        throw new Error(response.error || 'Registration failed');
+      }
+    } catch (error: any) {
+      console.error('Registration error:', error);
+      throw new Error(error.message || 'Registration failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  const updateUser = async (updatedUser: User) => {
+    try {
+      // Update user in storage and state without refreshing token
+      await StorageService.saveUserData(updatedUser);
+      setAuthState((prev) => ({
+        ...prev,
+        user: updatedUser,
+      }));
+    } catch (error) {
+      console.error('Error updating user:', error);
     }
   };
 
   const logout = async () => {
     try {
       setIsLoading(true);
+      
+      // Call logout endpoint to invalidate tokens on server
+      try {
+        await authService.logout();
+      } catch (error) {
+        // Even if logout fails on server, clear local storage
+        console.warn('Logout API call failed, clearing local storage anyway:', error);
+      }
+      
+      // Clear local storage
       await StorageService.clearAll();
       setAuthState({
         isAuthenticated: false,
@@ -78,7 +221,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       });
     } catch (error) {
       console.error('Logout error:', error);
-      throw error;
+      // Still clear local storage even if there's an error
+      await StorageService.clearAll();
+      setAuthState({
+        isAuthenticated: false,
+        user: null,
+      });
     } finally {
       setIsLoading(false);
     }
@@ -89,7 +237,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
       value={{
         ...authState,
         login,
+        register,
         logout,
+        refreshAuth,
+        updateUser,
         isLoading,
       }}
     >

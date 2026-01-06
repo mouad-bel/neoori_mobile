@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   View,
   Text,
@@ -7,12 +7,14 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
+  RefreshControl,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
 import { Ionicons } from '@expo/vector-icons';
 import { FONTS, SPACING, BORDER_RADIUS, COLORS } from '../../constants/theme';
 import { useTheme } from '../../store/ThemeContext';
+import { useProfile } from '../../hooks/useProfile';
 import AppHeader from '../../components/navigation/AppHeader';
 import ProfileModal from '../../components/ui/ProfileModal';
 import { MainDrawerParamList } from '../../types';
@@ -23,21 +25,54 @@ const isLargeScreen = width > 768;
 const RecompensesScreen = () => {
   const navigation = useNavigation<DrawerNavigationProp<MainDrawerParamList>>();
   const { colors } = useTheme();
+  const { profile, refreshProfile, loading: profileLoading } = useProfile();
   const [showProfileModal, setShowProfileModal] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('Tous');
+  const [refreshing, setRefreshing] = useState(false);
 
-  const currentCredits = 75;
+  const currentCredits = profile?.credits || 0;
   const categories = ['#Carrière', '#Formation', '#Conseil', '#Support'];
 
-  const badges = [
+  // Calculate profile completion for badge
+  const profileCompletion = useMemo(() => {
+    if (!profile) return 0;
+    let completed = 0;
+    let total = 0;
+
+    total += 3;
+    if (profile.bio) completed++;
+    if (profile.location?.city || profile.location?.address) completed++;
+    
+    total += 1;
+    if (profile.education && profile.education.length > 0) completed++;
+    
+    total += 1;
+    if (profile.experiences && profile.experiences.length > 0) completed++;
+    
+    total += 1;
+    if (profile.skills && profile.skills.length > 0) completed++;
+    
+    total += 1;
+    if (profile.documents && profile.documents.length > 0) completed++;
+
+    return Math.round((completed / total) * 100);
+  }, [profile]);
+
+  // Calculate completed games count
+  const completedGamesCount = useMemo(() => {
+    if (!profile?.gameProgress) return 0;
+    return profile.gameProgress.filter(gp => gp.completed).length;
+  }, [profile?.gameProgress]);
+
+  const badges = useMemo(() => [
     {
       id: '1',
       name: 'Explorateur',
       description: "A complété son premier test d'intérêts",
       icon: 'star',
       color: COLORS.primary,
-      unlocked: true,
-      progress: 100,
+      unlocked: completedGamesCount > 0,
+      progress: completedGamesCount > 0 ? 100 : 0,
     },
     {
       id: '2',
@@ -45,8 +80,8 @@ const RecompensesScreen = () => {
       description: 'A obtenu un score élevé en communication',
       icon: 'people',
       color: COLORS.primaryLight,
-      unlocked: true,
-      progress: 100,
+      unlocked: completedGamesCount >= 2,
+      progress: completedGamesCount >= 2 ? 100 : Math.min((completedGamesCount / 2) * 100, 100),
     },
     {
       id: '3',
@@ -54,8 +89,8 @@ const RecompensesScreen = () => {
       description: 'A rempli toutes les sections du profil',
       icon: 'person',
       color: COLORS.primary,
-      unlocked: false,
-      progress: 65,
+      unlocked: profileCompletion >= 100,
+      progress: profileCompletion,
     },
     {
       id: '4',
@@ -63,51 +98,51 @@ const RecompensesScreen = () => {
       description: 'A aidé 3 autres utilisateurs',
       icon: 'people-outline',
       color: COLORS.primary,
-      unlocked: false,
-      progress: 33,
+      unlocked: false, // TODO: Implement mentoring system
+      progress: 0,
     },
-  ];
+  ], [completedGamesCount, profileCompletion]);
 
-  const tasks = [
+  const tasks = useMemo(() => [
     {
       id: '1',
       title: 'Terminer un test',
       description: "Complète n'importe quel test dans la section Jeux & Tests",
       credits: 15,
-      completed: true,
-      icon: 'checkmark-circle',
-      iconColor: COLORS.primary,
+      completed: completedGamesCount > 0,
+      icon: completedGamesCount > 0 ? 'checkmark-circle' : 'play-outline',
+      iconColor: completedGamesCount > 0 ? COLORS.primary : colors.textSecondary,
     },
     {
       id: '2',
       title: 'Compléter le profil',
       description: 'Ajoute toutes les informations demandées dans ton profil',
       credits: 20,
-      completed: false,
-      icon: 'person-outline',
-      iconColor: colors.textSecondary,
-      actionText: 'Commencer maintenant',
+      completed: profileCompletion >= 100,
+      icon: profileCompletion >= 100 ? 'checkmark-circle' : 'person-outline',
+      iconColor: profileCompletion >= 100 ? COLORS.primary : colors.textSecondary,
+      actionText: profileCompletion < 100 ? 'Commencer maintenant' : undefined,
     },
     {
       id: '3',
       title: 'Échanger avec le coach',
       description: 'Pose au moins 3 questions à ton coach IA',
       credits: 10,
-      completed: true,
-      icon: 'checkmark-circle',
-      iconColor: COLORS.primary,
+      completed: false, // TODO: Implement coach interaction tracking
+      icon: 'chatbubble-outline',
+      iconColor: colors.textSecondary,
     },
     {
       id: '4',
       title: 'Télécharger un document',
       description: 'Ajoute ton CV ou un bulletin de notes à ton profil',
       credits: 15,
-      completed: false,
-      icon: 'document-outline',
-      iconColor: colors.textSecondary,
-      actionText: 'Commencer maintenant',
+      completed: (profile?.documents && profile.documents.length > 0) || false,
+      icon: (profile?.documents && profile.documents.length > 0) ? 'checkmark-circle' : 'document-outline',
+      iconColor: (profile?.documents && profile.documents.length > 0) ? COLORS.primary : colors.textSecondary,
+      actionText: (profile?.documents && profile.documents.length === 0) ? 'Commencer maintenant' : undefined,
     },
-  ];
+  ], [completedGamesCount, profileCompletion, profile?.documents, colors.textSecondary]);
 
   const rewards = [
     {
@@ -165,7 +200,22 @@ const RecompensesScreen = () => {
         onProfilePress={() => setShowProfileModal(true)}
         title="Récompenses"
       />
-      <ScrollView style={styles.scrollContent} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={async () => {
+              setRefreshing(true);
+              await refreshProfile();
+              setRefreshing(false);
+            }}
+            tintColor={colors.primary}
+            colors={[colors.primary]}
+          />
+        }
+      >
         {/* Hero Section */}
         <View style={styles.heroSection}>
           <View style={styles.heroBadges}>

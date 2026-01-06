@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   View,
   Text,
@@ -16,8 +16,12 @@ import { Ionicons } from '@expo/vector-icons';
 import { FONTS, SPACING, BORDER_RADIUS, COLORS } from '../../constants/theme';
 import { useTheme } from '../../store/ThemeContext';
 import { useAuth } from '../../store/AuthContext';
+import { useProfile } from '../../hooks/useProfile';
 import { MainDrawerParamList } from '../../types';
 import ThemeToggle from './ThemeToggle';
+import apiClient from '../../services/api/apiClient';
+import StorageService from '../../services/storage/StorageService';
+import API_CONFIG from '../../config/api';
 
 const { height } = Dimensions.get('window');
 
@@ -29,7 +33,113 @@ interface ProfileModalProps {
 const ProfileModal: React.FC<ProfileModalProps> = ({ visible, onClose }) => {
   const { colors, theme } = useTheme();
   const { user, logout } = useAuth();
+  const { profile } = useProfile();
   const navigation = useNavigation<DrawerNavigationProp<MainDrawerParamList>>();
+  const [avatarDataUri, setAvatarDataUri] = useState<string | null>(null);
+
+  // Helper function to fix localhost URLs
+  const fixAvatarUrl = (url: string | null | undefined): string | null => {
+    if (!url) return null;
+    if (url.includes('localhost')) {
+      try {
+        const apiBaseUrl = API_CONFIG.BASE_URL;
+        const apiUrlObj = new URL(apiBaseUrl);
+        const urlObj = new URL(url);
+        urlObj.host = apiUrlObj.host;
+        urlObj.protocol = apiUrlObj.protocol;
+        return urlObj.toString();
+      } catch (error) {
+        return url;
+      }
+    }
+    return url;
+  };
+
+  // Helper to convert ArrayBuffer to base64
+  const arrayBufferToBase64 = (buffer: ArrayBuffer): string => {
+    const bytes = new Uint8Array(buffer);
+    let binary = '';
+    for (let i = 0; i < bytes.byteLength; i++) {
+      binary += String.fromCharCode(bytes[i]);
+    }
+    return btoa(binary);
+  };
+
+  // Load authenticated avatar image
+  const loadAvatarImage = async (url: string) => {
+    try {
+      if (url.startsWith('file://')) {
+        setAvatarDataUri(url);
+        return;
+      }
+
+      const urlObj = new URL(url);
+      const fullPath = urlObj.pathname;
+      const apiPath = fullPath.startsWith('/api/') 
+        ? fullPath.substring(4)
+        : fullPath.startsWith('/')
+        ? fullPath.substring(1)
+        : fullPath;
+      
+      const response = await apiClient.getClient().get(apiPath, {
+        responseType: 'arraybuffer',
+      });
+
+      const base64 = arrayBufferToBase64(response.data);
+      const contentType = response.headers['content-type'] || 'image/jpeg';
+      const dataUri = `data:${contentType};base64,${base64}`;
+      setAvatarDataUri(dataUri);
+    } catch (error: any) {
+      console.error('Error loading avatar image in ProfileModal:', error);
+      setAvatarDataUri(null);
+    }
+  };
+
+  useEffect(() => {
+    if (user?.avatar) {
+      const fixedUrl = fixAvatarUrl(user.avatar);
+      if (fixedUrl && fixedUrl.startsWith('http')) {
+        loadAvatarImage(fixedUrl);
+      } else if (fixedUrl && fixedUrl.startsWith('file://')) {
+        setAvatarDataUri(fixedUrl);
+      } else {
+        setAvatarDataUri(null);
+      }
+    } else {
+      setAvatarDataUri(null);
+    }
+  }, [user?.avatar]);
+
+  // Calculate profile completion percentage
+  const profileCompletion = useMemo(() => {
+    if (!profile) return 0;
+    let completed = 0;
+    let total = 0;
+
+    // Basic info (name is always there, check bio, location)
+    total += 3;
+    if (user?.name) completed++;
+    if (profile.bio) completed++;
+    if (profile.location?.city || profile.location?.address) completed++;
+
+    // Education
+    total += 1;
+    if (profile.education && profile.education.length > 0) completed++;
+
+    // Experiences
+    total += 1;
+    if (profile.experiences && profile.experiences.length > 0) completed++;
+
+    // Skills
+    total += 1;
+    if (profile.skills && profile.skills.length > 0) completed++;
+
+    // Documents
+    total += 1;
+    if (profile.documents && profile.documents.length > 0) completed++;
+
+    return Math.round((completed / total) * 100);
+  }, [profile, user]);
 
   const handleLogout = async () => {
     try {
@@ -127,7 +237,10 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ visible, onClose }) => {
                 <View style={[styles.notificationDot, { backgroundColor: COLORS.primary }]} />
               </TouchableOpacity>
               {user?.avatar && (
-                <Image source={{ uri: user.avatar }} style={styles.headerAvatar} />
+                <Image 
+                  source={{ uri: avatarDataUri || fixAvatarUrl(user.avatar) || user.avatar }} 
+                  style={styles.headerAvatar} 
+                />
               )}
             </View>
             <View style={styles.headerRight}>
@@ -154,7 +267,10 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ visible, onClose }) => {
             >
               <View style={styles.profileAvatarContainer}>
                 {user?.avatar && (
-                  <Image source={{ uri: user.avatar }} style={styles.profileAvatar} />
+                  <Image 
+                    source={{ uri: avatarDataUri || fixAvatarUrl(user.avatar) || user.avatar }} 
+                    style={styles.profileAvatar} 
+                  />
                 )}
                 <View style={styles.onlineIndicator} />
               </View>
@@ -163,9 +279,9 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ visible, onClose }) => {
                 <Text style={styles.profileEmail}>{user?.email || 'user@neoori.com'}</Text>
                 <View style={styles.progressContainer}>
                   <View style={styles.progressBar}>
-                    <View style={[styles.progressFill, { width: '80%' }]} />
+                    <View style={[styles.progressFill, { width: `${profileCompletion}%` }]} />
                   </View>
-                  <Text style={styles.progressText}>80%</Text>
+                  <Text style={styles.progressText}>{profileCompletion}%</Text>
                 </View>
               </View>
             </LinearGradient>

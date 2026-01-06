@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,8 @@ import {
   TextInput,
   TouchableOpacity,
   Switch,
+  Alert,
+  ActivityIndicator,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
@@ -14,6 +16,8 @@ import { Ionicons } from '@expo/vector-icons';
 import { FONTS, SPACING, BORDER_RADIUS, COLORS } from '../../constants/theme';
 import { useTheme } from '../../store/ThemeContext';
 import { useAuth } from '../../store/AuthContext';
+import { useProfile } from '../../hooks/useProfile';
+import profileService from '../../services/api/profileService';
 import AppHeader from '../../components/navigation/AppHeader';
 import ProfileModal from '../../components/ui/ProfileModal';
 import { MainDrawerParamList } from '../../types';
@@ -21,14 +25,16 @@ import { MainDrawerParamList } from '../../types';
 const ParametresScreen = () => {
   const navigation = useNavigation<DrawerNavigationProp<MainDrawerParamList>>();
   const { colors } = useTheme();
-  const { user } = useAuth();
+  const { user, updateUser } = useAuth();
+  const { profile, updateProfile, updatePreferences, loading: profileLoading } = useProfile();
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const [saving, setSaving] = useState(false);
 
   // Personal Info State
   const [personalInfo, setPersonalInfo] = useState({
     fullName: user?.name || '',
     email: user?.email || '',
-    phone: '+33 6 12 34 56 78',
+    phone: '',
   });
 
   // Security State
@@ -53,9 +59,92 @@ const ParametresScreen = () => {
     showEmail: false,
   });
 
-  const handleSave = () => {
-    console.log('Saving settings...');
-    // TODO: Implement save functionality
+  // Load profile data
+  useEffect(() => {
+    if (profile) {
+      setPersonalInfo(prev => ({
+        ...prev,
+        phone: profile.phone || '',
+      }));
+      if (profile.preferences) {
+        setNotificationSettings({
+          emailNotifications: profile.preferences.notifications?.email ?? true,
+          pushNotifications: profile.preferences.notifications?.push ?? true,
+        });
+        setPrivacySettings({
+          publicProfile: profile.preferences.privacy?.publicProfile ?? true,
+          showEmail: profile.preferences.privacy?.showEmail ?? false,
+        });
+      }
+    }
+  }, [profile]);
+
+  const handleSave = async () => {
+    try {
+      setSaving(true);
+
+      // Update profile (phone, name)
+      const updateData: any = {};
+      if (personalInfo.phone !== (profile?.phone || '')) {
+        updateData.phone = personalInfo.phone;
+      }
+
+      if (Object.keys(updateData).length > 0) {
+        await updateProfile(updateData);
+      }
+
+      // Update preferences
+      await updatePreferences({
+        notifications: {
+          email: notificationSettings.emailNotifications,
+          push: notificationSettings.pushNotifications,
+        },
+        privacy: {
+          publicProfile: privacySettings.publicProfile,
+          showEmail: privacySettings.showEmail,
+        },
+      });
+
+      // Change password if provided
+      if (securityInfo.newPassword) {
+        if (securityInfo.newPassword !== securityInfo.confirmPassword) {
+          Alert.alert('Erreur', 'Les mots de passe ne correspondent pas');
+          setSaving(false);
+          return;
+        }
+
+        if (securityInfo.newPassword.length < 6) {
+          Alert.alert('Erreur', 'Le mot de passe doit contenir au moins 6 caractères');
+          setSaving(false);
+          return;
+        }
+
+        if (!securityInfo.currentPassword) {
+          Alert.alert('Erreur', 'Veuillez entrer votre mot de passe actuel');
+          setSaving(false);
+          return;
+        }
+
+        const passwordResponse = await profileService.changePassword(securityInfo.currentPassword, securityInfo.newPassword);
+        if (!passwordResponse.success) {
+          Alert.alert('Erreur', passwordResponse.error || 'Erreur lors du changement de mot de passe');
+          setSaving(false);
+          return;
+        }
+        // Clear password fields on success
+        setSecurityInfo({
+          currentPassword: '',
+          newPassword: '',
+          confirmPassword: '',
+        });
+      }
+
+      Alert.alert('Succès', 'Les modifications ont été enregistrées');
+    } catch (error: any) {
+      Alert.alert('Erreur', error.message || 'Une erreur est survenue lors de l\'enregistrement');
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleCancel = () => {
@@ -89,25 +178,31 @@ const ParametresScreen = () => {
           <View style={styles.formGroup}>
             <Text style={[styles.label, { color: colors.textSecondary }]}>Nom complet</Text>
             <TextInput
-              style={[styles.input, { backgroundColor: colors.surfaceBackground, color: colors.textPrimary }]}
+              style={[styles.input, { backgroundColor: colors.surfaceBackground, color: colors.textPrimary, opacity: 0.6 }]}
               value={personalInfo.fullName}
-              onChangeText={(text) => setPersonalInfo({ ...personalInfo, fullName: text })}
+              editable={false}
               placeholder="Votre nom complet"
               placeholderTextColor={colors.textTertiary}
             />
+            <Text style={[styles.helpText, { color: colors.textTertiary }]}>
+              Le nom complet ne peut pas être modifié ici
+            </Text>
           </View>
 
           <View style={styles.formGroup}>
             <Text style={[styles.label, { color: colors.textSecondary }]}>Email</Text>
             <TextInput
-              style={[styles.input, { backgroundColor: colors.surfaceBackground, color: colors.textPrimary }]}
+              style={[styles.input, { backgroundColor: colors.surfaceBackground, color: colors.textPrimary, opacity: 0.6 }]}
               value={personalInfo.email}
-              onChangeText={(text) => setPersonalInfo({ ...personalInfo, email: text })}
+              editable={false}
               placeholder="votre.email@exemple.com"
               placeholderTextColor={colors.textTertiary}
               keyboardType="email-address"
               autoCapitalize="none"
             />
+            <Text style={[styles.helpText, { color: colors.textTertiary }]}>
+              L'email ne peut pas être modifié ici
+            </Text>
           </View>
 
           <View style={styles.formGroup}>
@@ -343,11 +438,18 @@ const ParametresScreen = () => {
             </Text>
           </TouchableOpacity>
           <TouchableOpacity
-            style={[styles.saveButton, { backgroundColor: COLORS.primary }]}
+            style={[styles.saveButton, { backgroundColor: COLORS.primary, opacity: saving ? 0.7 : 1 }]}
             onPress={handleSave}
+            disabled={saving}
           >
-            <Ionicons name="checkmark-circle-outline" size={20} color="white" />
-            <Text style={styles.saveButtonText}>Enregistrer les modifications</Text>
+            {saving ? (
+              <ActivityIndicator size="small" color="white" />
+            ) : (
+              <>
+                <Ionicons name="checkmark-circle-outline" size={20} color="white" />
+                <Text style={styles.saveButtonText}>Enregistrer les modifications</Text>
+              </>
+            )}
           </TouchableOpacity>
         </View>
 
@@ -405,6 +507,11 @@ const styles = StyleSheet.create({
     fontSize: FONTS.sizes.sm,
     marginBottom: SPACING.xs,
     fontWeight: FONTS.weights.medium,
+  },
+  helpText: {
+    fontSize: FONTS.sizes.xs,
+    marginTop: SPACING.xs,
+    fontStyle: 'italic',
   },
   input: {
     paddingHorizontal: SPACING.lg,

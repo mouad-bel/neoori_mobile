@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   View,
   Text,
@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Image,
   Dimensions,
+  RefreshControl,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { DrawerNavigationProp } from '@react-navigation/drawer';
@@ -15,9 +16,12 @@ import { Ionicons } from '@expo/vector-icons';
 import { FONTS, SPACING, BORDER_RADIUS, COLORS } from '../../constants/theme';
 import { useTheme } from '../../store/ThemeContext';
 import { useAuth } from '../../store/AuthContext';
+import { useProfile } from '../../hooks/useProfile';
+import { MOCK_GAMES } from '../../constants/mockData';
+import StorageService from '../../services/storage/StorageService';
 import AppHeader from '../../components/navigation/AppHeader';
 import ProfileModal from '../../components/ui/ProfileModal';
-import { MainDrawerParamList } from '../../types';
+import { MainDrawerParamList, Game, GameProgress } from '../../types';
 
 const { width } = Dimensions.get('window');
 const isLargeScreen = width > 768;
@@ -26,38 +30,155 @@ const DashboardScreen = () => {
   const navigation = useNavigation<DrawerNavigationProp<MainDrawerParamList>>();
   const { colors } = useTheme();
   const { user } = useAuth();
+  const { profile, loading: profileLoading, refreshProfile } = useProfile();
   const [showProfileModal, setShowProfileModal] = useState(false);
+  const [gamesWithProgress, setGamesWithProgress] = useState<Game[]>([]);
+  const [refreshing, setRefreshing] = useState(false);
 
-  const userName = user?.name?.split(' ')[1] || 'Fahmani';
-  const profileCompletion = 65;
+  const userName = user?.name?.split(' ')[1] || user?.name || 'Utilisateur';
+  
+  // Calculate profile completion percentage
+  const profileCompletion = useMemo(() => {
+    if (!profile) return 0;
+    let completed = 0;
+    let total = 0;
+
+    // Basic info (name is always there, check bio, location)
+    total += 3;
+    if (user?.name) completed++;
+    if (profile.bio) completed++;
+    if (profile.location?.city || profile.location?.address) completed++;
+
+    // Education
+    total += 1;
+    if (profile.education && profile.education.length > 0) completed++;
+
+    // Experiences
+    total += 1;
+    if (profile.experiences && profile.experiences.length > 0) completed++;
+
+    // Skills
+    total += 1;
+    if (profile.skills && profile.skills.length > 0) completed++;
+
+    // Documents
+    total += 1;
+    if (profile.documents && profile.documents.length > 0) completed++;
+
+    return Math.round((completed / total) * 100);
+  }, [profile, user]);
+
+  // Calculate profile section statuses
+  const profileSections = useMemo(() => {
+    const sections = [];
+    
+    // Basic info
+    sections.push({
+      id: '1',
+      title: 'Informations de base',
+      status: (user?.name && (profile?.bio || profile?.location?.city || profile?.location?.address)) 
+        ? 'completed' 
+        : (user?.name ? 'in-progress' : 'to-complete'),
+      icon: 'checkmark-circle',
+    });
+
+    // Experiences
+    sections.push({
+      id: '2',
+      title: 'Expériences',
+      status: (profile?.experiences && profile.experiences.length > 0) 
+        ? 'completed' 
+        : 'to-complete',
+      icon: 'checkmark-circle',
+    });
+
+    // Skills
+    sections.push({
+      id: '3',
+      title: 'Compétences',
+      status: (profile?.skills && profile.skills.length > 0) 
+        ? 'completed' 
+        : 'to-complete',
+      icon: 'checkmark-circle',
+    });
+
+    // Documents
+    sections.push({
+      id: '4',
+      title: 'Documents',
+      status: (profile?.documents && profile.documents.length > 0) 
+        ? 'completed' 
+        : 'to-complete',
+      icon: 'document-outline',
+    });
+
+    return sections;
+  }, [profile, user]);
+
+  // Load games with progress
+  useEffect(() => {
+    const loadGames = async () => {
+      try {
+        const allProgress = await StorageService.getAllGameProgress();
+        const updatedGames = MOCK_GAMES.slice(0, 2).map(game => {
+          const progress = allProgress.find(p => p.gameId === game.id);
+          if (progress) {
+            let progressPercentage = 0;
+            if (progress.completed) {
+              progressPercentage = 100;
+            } else if (progress.currentQuestion !== undefined && progress.totalQuestions !== undefined) {
+              progressPercentage = Math.round(((progress.currentQuestion + 1) / progress.totalQuestions) * 100);
+            }
+            
+            return {
+              ...game,
+              progress: progressPercentage,
+              status: progress.completed ? 'completed' as const : 'in-progress' as const,
+            };
+          }
+          return { ...game, progress: 0, status: 'not-started' as const };
+        });
+        setGamesWithProgress(updatedGames);
+      } catch (error) {
+        console.error('Error loading games:', error);
+        setGamesWithProgress(MOCK_GAMES.slice(0, 2));
+      }
+    };
+    loadGames();
+  }, []);
+
+  // Calculate completed games count
+  const completedGamesCount = useMemo(() => {
+    return gamesWithProgress.filter(g => g.status === 'completed').length;
+  }, [gamesWithProgress]);
   const currentDate = new Date().toLocaleDateString('fr-FR', {
     weekday: 'long',
     day: 'numeric',
     month: 'long',
   });
 
-  const stats = [
+  const stats = useMemo(() => [
     {
       id: '1',
       icon: 'grid-outline',
       title: 'Tests complétés',
-      value: '3',
-      change: '+1',
+      value: completedGamesCount.toString(),
+      change: null,
       iconBg: COLORS.primary,
     },
     {
       id: '2',
       icon: 'ribbon-outline',
       title: 'Crédits disponibles',
-      value: '75',
-      change: '+15',
+      value: (profile?.credits || 0).toString(),
+      change: null,
       iconBg: COLORS.primary,
     },
     {
       id: '3',
       icon: 'trending-up-outline',
       title: 'Recommandations',
-      value: '8',
+      value: '0', // TODO: Get from recommendations
       change: null,
       iconBg: COLORS.primaryLight,
     },
@@ -65,37 +186,11 @@ const DashboardScreen = () => {
       id: '4',
       icon: 'person-outline',
       title: 'Profil complété',
-      value: '65%',
+      value: `${profileCompletion}%`,
       change: null,
       iconBg: COLORS.accentPeach,
     },
-  ];
-
-  const profileSections = [
-    { id: '1', title: 'Informations de base', status: 'completed', icon: 'checkmark-circle' },
-    { id: '2', title: 'Expériences', status: 'completed', icon: 'checkmark-circle' },
-    { id: '3', title: 'Compétences', status: 'in-progress', icon: 'time-outline' },
-    { id: '4', title: 'Documents', status: 'to-complete', icon: 'document-outline' },
-  ];
-
-  const gamesTests = [
-    {
-      id: '1',
-      icon: 'star-outline',
-      title: 'Intérêts & Motivation',
-      description: 'Découvrez ce qui vous anime',
-      progress: 100,
-      action: 'Refaire',
-    },
-    {
-      id: '2',
-      icon: 'people-outline',
-      title: 'Soft skills en action',
-      description: 'Évaluez vos compétences relationnelles',
-      progress: 25,
-      action: 'Continuer',
-    },
-  ];
+  ], [completedGamesCount, profileCompletion, profile?.credits]);
 
   const recommendations = [
     {
@@ -114,11 +209,36 @@ const DashboardScreen = () => {
     },
   ];
 
-  const recentActivities = [
-    { id: '1', text: 'Vous avez complété le test "Intérêts & Motivation"', time: 'Il y a 2 jours' },
-    { id: '2', text: 'Vous avez gagné 15 crédits', time: 'Il y a 2 jours' },
-    { id: '3', text: 'Vous avez mis à jour votre profil', time: 'Il y a 5 jours' },
-  ];
+  // Format time ago helper
+  const formatTimeAgo = (dateString: string) => {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffTime = Math.abs(now.getTime() - date.getTime());
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    
+    if (diffDays === 0) return "Aujourd'hui";
+    if (diffDays === 1) return 'Hier';
+    if (diffDays < 7) return `Il y a ${diffDays} jours`;
+    if (diffDays < 30) return `Il y a ${Math.floor(diffDays / 7)} semaine${Math.floor(diffDays / 7) > 1 ? 's' : ''}`;
+    if (diffDays < 365) return `Il y a ${Math.floor(diffDays / 30)} mois`;
+    return `Il y a ${Math.floor(diffDays / 365)} an${Math.floor(diffDays / 365) > 1 ? 's' : ''}`;
+  };
+
+  // Recent activities from profile
+  const recentActivities = useMemo(() => {
+    if (!profile?.recentActivities || profile.recentActivities.length === 0) {
+      return [];
+    }
+    // Sort by createdAt descending and take first 3
+    return profile.recentActivities
+      .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      .slice(0, 3)
+      .map((activity) => ({
+        id: activity.id,
+        text: activity.text,
+        time: formatTimeAgo(activity.createdAt),
+      }));
+  }, [profile?.recentActivities]);
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -152,7 +272,42 @@ const DashboardScreen = () => {
         onProfilePress={() => setShowProfileModal(true)}
         title="Tableau de bord"
       />
-      <ScrollView style={styles.scrollContent} showsVerticalScrollIndicator={false}>
+      <ScrollView
+        style={styles.scrollContent}
+        showsVerticalScrollIndicator={false}
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={async () => {
+              setRefreshing(true);
+              await refreshProfile();
+              // Reload games progress
+              const allProgress = await StorageService.getAllGameProgress();
+              const updatedGames = MOCK_GAMES.slice(0, 2).map(game => {
+                const progress = allProgress.find(p => p.gameId === game.id);
+                if (progress) {
+                  let progressPercentage = 0;
+                  if (progress.completed) {
+                    progressPercentage = 100;
+                  } else if (progress.currentQuestion !== undefined && progress.totalQuestions !== undefined) {
+                    progressPercentage = Math.round(((progress.currentQuestion + 1) / progress.totalQuestions) * 100);
+                  }
+                  return {
+                    ...game,
+                    progress: progressPercentage,
+                    status: progress.completed ? 'completed' as const : 'in-progress' as const,
+                  };
+                }
+                return { ...game, progress: 0, status: 'not-started' as const };
+              });
+              setGamesWithProgress(updatedGames);
+              setRefreshing(false);
+            }}
+            tintColor={colors.primary}
+            colors={[colors.primary]}
+          />
+        }
+      >
         {/* Hero Section with Gradient - Strong Beautiful Orange Composition */}
         <LinearGradient
           colors={[
@@ -220,7 +375,10 @@ const DashboardScreen = () => {
                 <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
                   Progression de votre profil
                 </Text>
-                <TouchableOpacity style={[styles.completeButton, { backgroundColor: colors.primary }]}>
+                <TouchableOpacity 
+                  style={[styles.completeButton, { backgroundColor: colors.primary }]}
+                  onPress={() => navigation.navigate('MainTabs', { screen: 'Moi' })}
+                >
                   <Text style={styles.completeButtonText}>Compléter →</Text>
                 </TouchableOpacity>
               </View>
@@ -270,43 +428,51 @@ const DashboardScreen = () => {
                 <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
                   Jeux & Tests
                 </Text>
-                <TouchableOpacity onPress={() => navigation.navigate('Jeux')}>
+                <TouchableOpacity onPress={() => navigation.navigate('MainTabs', { screen: 'Decouvrir' })}>
                   <Text style={[styles.seeAllText, { color: colors.primary }]}>Voir tous →</Text>
                 </TouchableOpacity>
               </View>
-              {gamesTests.map((game) => (
-                <View key={game.id} style={styles.gameCard}>
-                  <View style={styles.gameHeader}>
-                    <Ionicons name={game.icon as any} size={24} color={colors.textPrimary} />
-                    <View style={styles.gameInfo}>
-                      <Text style={[styles.gameTitle, { color: colors.textPrimary }]}>
-                        {game.title}
+              {gamesWithProgress.length > 0 ? gamesWithProgress.map((game) => {
+                const actionText = game.status === 'completed' ? 'Refaire' : game.progress > 0 ? 'Continuer' : 'Commencer';
+                return (
+                  <View key={game.id} style={styles.gameCard}>
+                    <View style={styles.gameHeader}>
+                      <Ionicons name={game.icon as any} size={24} color={colors.textPrimary} />
+                      <View style={styles.gameInfo}>
+                        <Text style={[styles.gameTitle, { color: colors.textPrimary }]}>
+                          {game.title}
+                        </Text>
+                        <Text style={[styles.gameDescription, { color: colors.textSecondary }]}>
+                          {game.description}
+                        </Text>
+                      </View>
+                    </View>
+                    <View style={styles.gameProgress}>
+                      <Text style={[styles.gameProgressLabel, { color: colors.textSecondary }]}>
+                        Progression
                       </Text>
-                      <Text style={[styles.gameDescription, { color: colors.textSecondary }]}>
-                        {game.description}
+                      <View style={styles.gameProgressBar}>
+                        <View
+                          style={[styles.gameProgressFill, { width: `${game.progress}%` }]}
+                        />
+                      </View>
+                      <Text style={[styles.gameProgressPercent, { color: colors.primary }]}>
+                        {game.progress}%
                       </Text>
                     </View>
+                    <TouchableOpacity
+                      style={[styles.gameActionButton, { backgroundColor: colors.primary }]}
+                      onPress={() => navigation.navigate('Game', { gameId: game.id })}
+                    >
+                      <Text style={styles.gameActionText}>{actionText}</Text>
+                    </TouchableOpacity>
                   </View>
-                  <View style={styles.gameProgress}>
-                    <Text style={[styles.gameProgressLabel, { color: colors.textSecondary }]}>
-                      Progression
-                    </Text>
-                    <View style={styles.gameProgressBar}>
-                      <View
-                        style={[styles.gameProgressFill, { width: `${game.progress}%` }]}
-                      />
-                    </View>
-                    <Text style={[styles.gameProgressPercent, { color: colors.primary }]}>
-                      {game.progress}%
-                    </Text>
-                  </View>
-                  <TouchableOpacity
-                    style={[styles.gameActionButton, { backgroundColor: colors.primary }]}
-                  >
-                    <Text style={styles.gameActionText}>{game.action}</Text>
-                  </TouchableOpacity>
-                </View>
-              ))}
+                );
+              }) : (
+                <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
+                  Aucun jeu disponible
+                </Text>
+              )}
             </View>
 
             {/* Recommandations Section */}
@@ -397,7 +563,7 @@ const DashboardScreen = () => {
                 <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
                   Vos crédits
                 </Text>
-                <Text style={[styles.creditsValue, { color: colors.primary }]}>75</Text>
+                <Text style={[styles.creditsValue, { color: colors.primary }]}>{profile?.credits || 0}</Text>
               </View>
               <Text style={[styles.creditsDescription, { color: colors.textSecondary }]}>
                 Utilisez vos crédits pour débloquer des services premium comme des sessions de
@@ -836,6 +1002,11 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 2,
     borderColor: COLORS.primary,
+  },
+  emptyText: {
+    fontSize: FONTS.sizes.md,
+    textAlign: 'center',
+    padding: SPACING.lg,
   },
 });
 

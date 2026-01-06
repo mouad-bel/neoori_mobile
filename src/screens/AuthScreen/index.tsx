@@ -19,7 +19,9 @@ import { COLORS, FONTS, SPACING, BORDER_RADIUS, SHADOWS } from '../../constants/
 const AuthScreen = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { login, isLoading } = useAuth();
+  const [name, setName] = useState('');
+  const [isRegisterMode, setIsRegisterMode] = useState(false);
+  const { login, register, isLoading } = useAuth();
   const { colors, theme } = useTheme();
   const isDarkMode = theme === 'dark';
 
@@ -31,9 +33,35 @@ const AuthScreen = () => {
 
     try {
       await login(email, password);
-    } catch (error) {
-      Alert.alert('Erreur', 'Échec de la connexion');
+    } catch (error: any) {
+      Alert.alert('Erreur', error.message || 'Échec de la connexion');
     }
+  };
+
+  const handleRegister = async () => {
+    if (!email || !password || !name) {
+      Alert.alert('Erreur', 'Veuillez remplir tous les champs');
+      return;
+    }
+
+    if (password.length < 6) {
+      Alert.alert('Erreur', 'Le mot de passe doit contenir au moins 6 caractères');
+      return;
+    }
+
+    try {
+      await register({ email, password, name });
+      Alert.alert('Succès', 'Inscription réussie ! Vous êtes maintenant connecté.');
+    } catch (error: any) {
+      Alert.alert('Erreur', error.message || 'Échec de l\'inscription');
+    }
+  };
+
+  const toggleMode = () => {
+    setIsRegisterMode(!isRegisterMode);
+    setEmail('');
+    setPassword('');
+    setName('');
   };
 
   return (
@@ -62,6 +90,17 @@ const AuthScreen = () => {
 
         {/* Form */}
         <View style={styles.form}>
+          {isRegisterMode && (
+            <TextInput
+              style={[styles.input, { backgroundColor: colors.cardBackground, color: colors.textPrimary, borderColor: colors.surfaceBackground }]}
+              placeholder="Nom complet"
+              placeholderTextColor={colors.textSecondary}
+              value={name}
+              onChangeText={setName}
+              autoCapitalize="words"
+            />
+          )}
+
           <TextInput
             style={[styles.input, { backgroundColor: colors.cardBackground, color: colors.textPrimary, borderColor: colors.surfaceBackground }]}
             placeholder="Email"
@@ -83,35 +122,45 @@ const AuthScreen = () => {
 
           <TouchableOpacity
             style={[styles.button, { backgroundColor: colors.primary }]}
-            onPress={handleLogin}
+            onPress={isRegisterMode ? handleRegister : handleLogin}
             disabled={isLoading}
           >
             {isLoading ? (
               <ActivityIndicator color={colors.background} />
             ) : (
-              <Text style={[styles.buttonText, { color: colors.background }]}>Se connecter</Text>
+              <Text style={[styles.buttonText, { color: colors.background }]}>
+                {isRegisterMode ? "S'inscrire" : 'Se connecter'}
+              </Text>
             )}
           </TouchableOpacity>
 
-          <TouchableOpacity style={styles.linkButton}>
-            <Text style={[styles.linkText, { color: colors.primary }]}>Mot de passe oublié?</Text>
-          </TouchableOpacity>
+          {!isRegisterMode && (
+            <TouchableOpacity style={styles.linkButton}>
+              <Text style={[styles.linkText, { color: colors.primary }]}>Mot de passe oublié?</Text>
+            </TouchableOpacity>
+          )}
         </View>
 
         {/* Footer */}
         <View style={styles.footer}>
-          <Text style={[styles.footerText, { color: colors.textSecondary }]}>Pas encore de compte?</Text>
-          <TouchableOpacity>
-            <Text style={[styles.footerLink, { color: colors.primary }]}> S'inscrire</Text>
+          <Text style={[styles.footerText, { color: colors.textSecondary }]}>
+            {isRegisterMode ? 'Déjà un compte?' : "Pas encore de compte?"}
+          </Text>
+          <TouchableOpacity onPress={toggleMode}>
+            <Text style={[styles.footerLink, { color: colors.primary }]}>
+              {isRegisterMode ? ' Se connecter' : " S'inscrire"}
+            </Text>
           </TouchableOpacity>
         </View>
 
         {/* Demo Hint */}
-        <View style={[styles.demoHint, { backgroundColor: colors.cardBackground }]}>
-          <Text style={[styles.demoText, { color: colors.textSecondary }]}>
-            💡 Mode démo : utilisez n'importe quel email/mot de passe
-          </Text>
-        </View>
+        {!isRegisterMode && (
+          <View style={[styles.demoHint, { backgroundColor: colors.cardBackground }]}>
+            <Text style={[styles.demoText, { color: colors.textSecondary }]}>
+              💡 Connectez-vous avec votre compte ou créez-en un nouveau
+            </Text>
+          </View>
+        )}
       </View>
     </KeyboardAvoidingView>
   );

@@ -473,6 +473,7 @@ const SkillMatchGame: React.FC<SkillMatchGameProps> = ({
               ]}
               {...panResponder.panHandlers}
             >
+              <View style={styles.cardContent}>
               <View style={styles.cardHeader}>
                 <View style={[styles.cardBadge, { backgroundColor: `${colors.primary}20` }]}>
                   <Ionicons name="document-text" size={20} color={colors.primary} />
@@ -484,10 +485,6 @@ const SkillMatchGame: React.FC<SkillMatchGameProps> = ({
 
               <Text style={[styles.cardTitle, { color: colors.textPrimary }]}>
                 {currentScenario.title}
-              </Text>
-
-              <Text style={[styles.cardDescription, { color: colors.textSecondary }]}>
-                {currentScenario.description}
               </Text>
 
               <View style={[styles.situationBox, { backgroundColor: `${colors.primary}10` }]}>
@@ -532,6 +529,7 @@ const SkillMatchGame: React.FC<SkillMatchGameProps> = ({
                 <Text style={[styles.swipeHintCardText, { color: colors.textSecondary }]}>
                   👈 Glisse ou 👆 Clique
                 </Text>
+                </View>
               </View>
             </Animated.View>
           )}
@@ -650,21 +648,27 @@ const styles = StyleSheet.create({
   },
   cardStack: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
     paddingHorizontal: SPACING.lg,
+    paddingTop: SPACING.md,
+    paddingBottom: SPACING.xl,
   },
   card: {
     width: CARD_WIDTH,
-    height: CARD_HEIGHT,
+    maxHeight: SCREEN_HEIGHT * 0.75,
     borderRadius: BORDER_RADIUS.lg,
-    padding: SPACING.xl,
     position: 'absolute',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 8,
+    overflow: 'hidden',
+  },
+  cardContent: {
+    padding: SPACING.lg,
+    minHeight: '100%',
   },
   cardHeader: {
     marginBottom: SPACING.md,
@@ -683,33 +687,28 @@ const styles = StyleSheet.create({
     fontWeight: '600',
   },
   cardTitle: {
-    fontSize: FONTS.sizes.xxl,
+    fontSize: FONTS.sizes.xl,
     fontWeight: '700',
     marginBottom: SPACING.md,
-    lineHeight: 32,
-  },
-  cardDescription: {
-    fontSize: FONTS.sizes.md,
-    lineHeight: 22,
-    marginBottom: SPACING.lg,
+    lineHeight: 26,
   },
   situationBox: {
-    padding: SPACING.lg,
+    padding: SPACING.md,
     borderRadius: BORDER_RADIUS.md,
-    marginBottom: SPACING.xl,
+    marginBottom: SPACING.lg,
   },
   situationText: {
-    fontSize: FONTS.sizes.lg,
-    fontWeight: '600',
-    lineHeight: 26,
+    fontSize: FONTS.sizes.md,
+    fontWeight: '500',
+    lineHeight: 22,
     textAlign: 'center',
   },
   optionsContainer: {
-    gap: SPACING.md,
-    marginBottom: SPACING.md,
+    gap: SPACING.sm,
+    marginBottom: SPACING.sm,
   },
   optionCard: {
-    padding: SPACING.lg,
+    padding: SPACING.md,
     borderRadius: BORDER_RADIUS.md,
     borderWidth: 2,
   },
@@ -729,10 +728,11 @@ const styles = StyleSheet.create({
   },
   swipeHintCard: {
     alignItems: 'center',
-    marginTop: SPACING.md,
+    marginTop: SPACING.xs,
+    paddingTop: SPACING.xs,
   },
   swipeHintCardText: {
-    fontSize: FONTS.sizes.sm,
+    fontSize: FONTS.sizes.xs,
     fontStyle: 'italic',
   },
 });
