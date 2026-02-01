@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import {
   View,
   Text,
@@ -19,9 +19,8 @@ import { useAuth } from '../../store/AuthContext';
 import { useProfile } from '../../hooks/useProfile';
 import { MainDrawerParamList } from '../../types';
 import ThemeToggle from './ThemeToggle';
-import apiClient from '../../services/api/apiClient';
 import StorageService from '../../services/storage/StorageService';
-import API_CONFIG from '../../config/api';
+import { useAvatar } from '../../hooks/useAvatar';
 
 const { height } = Dimensions.get('window');
 
@@ -33,82 +32,17 @@ interface ProfileModalProps {
 const ProfileModal: React.FC<ProfileModalProps> = ({ visible, onClose }) => {
   const { colors, theme } = useTheme();
   const { user, logout } = useAuth();
-  const { profile } = useProfile();
+  const { profile, refreshProfile } = useProfile();
   const navigation = useNavigation<DrawerNavigationProp<MainDrawerParamList>>();
-  const [avatarDataUri, setAvatarDataUri] = useState<string | null>(null);
+  const { avatarDataUri, avatarVersion } = useAvatar();
 
-  // Helper function to fix localhost URLs
-  const fixAvatarUrl = (url: string | null | undefined): string | null => {
-    if (!url) return null;
-    if (url.includes('localhost')) {
-      try {
-        const apiBaseUrl = API_CONFIG.BASE_URL;
-        const apiUrlObj = new URL(apiBaseUrl);
-        const urlObj = new URL(url);
-        urlObj.host = apiUrlObj.host;
-        urlObj.protocol = apiUrlObj.protocol;
-        return urlObj.toString();
-      } catch (error) {
-        return url;
-      }
-    }
-    return url;
-  };
-
-  // Helper to convert ArrayBuffer to base64
-  const arrayBufferToBase64 = (buffer: ArrayBuffer): string => {
-    const bytes = new Uint8Array(buffer);
-    let binary = '';
-    for (let i = 0; i < bytes.byteLength; i++) {
-      binary += String.fromCharCode(bytes[i]);
-    }
-    return btoa(binary);
-  };
-
-  // Load authenticated avatar image
-  const loadAvatarImage = async (url: string) => {
-    try {
-      if (url.startsWith('file://')) {
-        setAvatarDataUri(url);
-        return;
-      }
-
-      const urlObj = new URL(url);
-      const fullPath = urlObj.pathname;
-      const apiPath = fullPath.startsWith('/api/') 
-        ? fullPath.substring(4)
-        : fullPath.startsWith('/')
-        ? fullPath.substring(1)
-        : fullPath;
-      
-      const response = await apiClient.getClient().get(apiPath, {
-        responseType: 'arraybuffer',
-      });
-
-      const base64 = arrayBufferToBase64(response.data);
-      const contentType = response.headers['content-type'] || 'image/jpeg';
-      const dataUri = `data:${contentType};base64,${base64}`;
-      setAvatarDataUri(dataUri);
-    } catch (error: any) {
-      console.error('Error loading avatar image in ProfileModal:', error);
-      setAvatarDataUri(null);
-    }
-  };
-
+  // Refresh profile when modal opens to get latest completion percentage
   useEffect(() => {
-    if (user?.avatar) {
-      const fixedUrl = fixAvatarUrl(user.avatar);
-      if (fixedUrl && fixedUrl.startsWith('http')) {
-        loadAvatarImage(fixedUrl);
-      } else if (fixedUrl && fixedUrl.startsWith('file://')) {
-        setAvatarDataUri(fixedUrl);
-      } else {
-        setAvatarDataUri(null);
-      }
-    } else {
-      setAvatarDataUri(null);
+    if (visible) {
+      console.log('📊 ProfileModal opened - refreshing profile');
+      refreshProfile();
     }
-  }, [user?.avatar]);
+  }, [visible, refreshProfile]);
 
   // Calculate profile completion percentage
   const profileCompletion = useMemo(() => {
@@ -236,9 +170,10 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ visible, onClose }) => {
                 <Ionicons name="chatbubble-outline" size={24} color={colors.textPrimary} />
                 <View style={[styles.notificationDot, { backgroundColor: COLORS.primary }]} />
               </TouchableOpacity>
-              {user?.avatar && (
+              {user?.avatar && avatarDataUri && (
                 <Image 
-                  source={{ uri: avatarDataUri || fixAvatarUrl(user.avatar) || user.avatar }} 
+                  key={`header-avatar-${user?.avatar}-${avatarVersion}`}
+                  source={{ uri: avatarDataUri }} 
                   style={styles.headerAvatar} 
                 />
               )}
@@ -266,9 +201,10 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ visible, onClose }) => {
               style={styles.profileCard}
             >
               <View style={styles.profileAvatarContainer}>
-                {user?.avatar && (
+                {user?.avatar && avatarDataUri && (
                   <Image 
-                    source={{ uri: avatarDataUri || fixAvatarUrl(user.avatar) || user.avatar }} 
+                    key={`profile-avatar-${user?.avatar}-${avatarVersion}`}
+                    source={{ uri: avatarDataUri }} 
                     style={styles.profileAvatar} 
                   />
                 )}

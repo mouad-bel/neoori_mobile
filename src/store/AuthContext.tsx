@@ -8,6 +8,7 @@ interface AuthContextType extends AuthState {
   register: (data: RegisterRequest) => Promise<void>;
   logout: () => Promise<void>;
   refreshAuth: () => Promise<void>;
+  updateUser: (updatedUser: User) => Promise<void>;
   isLoading: boolean;
 }
 
@@ -192,10 +193,17 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       // Update user in storage and state without refreshing token
       await StorageService.saveUserData(updatedUser);
-      setAuthState((prev) => ({
-        ...prev,
-        user: updatedUser,
-      }));
+      // Create a completely new user object to ensure React detects the change
+      // This forces all components using useAuth() to re-render
+      setAuthState((prev) => {
+        // Create a new state object with a new user object
+        const newUser = { ...updatedUser };
+        return {
+          ...prev,
+          user: newUser, // New object reference ensures React detects the change
+        };
+      });
+      console.log('✅ User updated in AuthContext, all components should re-render');
     } catch (error) {
       console.error('Error updating user:', error);
     }

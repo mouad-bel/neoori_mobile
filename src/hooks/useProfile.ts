@@ -73,7 +73,29 @@ export const useProfile = (): UseProfileReturn => {
       const response = await profileService.updateProfile(data);
       
       if (response.success && response.data) {
-        setProfile(response.data);
+        // Update profile, preserving existing data if response is incomplete
+        setProfile((prevProfile) => {
+          if (!prevProfile) return response.data;
+          // Merge to ensure all data is preserved
+          // Use response data if it exists and is an array, otherwise keep previous
+          return {
+            ...prevProfile,
+            ...response.data,
+            // Ensure arrays are preserved - use response if it's a valid array, otherwise keep previous
+            experiences: Array.isArray(response.data.experiences) 
+              ? response.data.experiences 
+              : (prevProfile.experiences || []),
+            skills: Array.isArray(response.data.skills) 
+              ? response.data.skills 
+              : (prevProfile.skills || []),
+            documents: Array.isArray(response.data.documents) 
+              ? response.data.documents 
+              : (prevProfile.documents || []),
+            education: Array.isArray(response.data.education) 
+              ? response.data.education 
+              : (prevProfile.education || []),
+          };
+        });
       } else {
         throw new Error(response.error || 'Failed to update profile');
       }
@@ -91,7 +113,29 @@ export const useProfile = (): UseProfileReturn => {
       const response = await profileService.updatePreferences(preferences);
       
       if (response.success && response.data) {
-        setProfile(response.data);
+        // Update profile, preserving existing data if response is incomplete
+        setProfile((prevProfile) => {
+          if (!prevProfile) return response.data;
+          // Merge to ensure all data is preserved
+          // Use response data if it exists and is an array, otherwise keep previous
+          return {
+            ...prevProfile,
+            ...response.data,
+            // Ensure arrays are preserved - use response if it's a valid array, otherwise keep previous
+            experiences: Array.isArray(response.data.experiences) 
+              ? response.data.experiences 
+              : (prevProfile.experiences || []),
+            skills: Array.isArray(response.data.skills) 
+              ? response.data.skills 
+              : (prevProfile.skills || []),
+            documents: Array.isArray(response.data.documents) 
+              ? response.data.documents 
+              : (prevProfile.documents || []),
+            education: Array.isArray(response.data.education) 
+              ? response.data.education 
+              : (prevProfile.education || []),
+          };
+        });
       } else {
         throw new Error(response.error || 'Failed to update preferences');
       }
@@ -110,7 +154,29 @@ export const useProfile = (): UseProfileReturn => {
       const response = await profileService.addEducation(education);
       
       if (response.success && response.data) {
-        setProfile(response.data);
+        // Update profile, preserving existing data if response is incomplete
+        setProfile((prevProfile) => {
+          if (!prevProfile) return response.data;
+          // Merge to ensure all data is preserved
+          // Use response data if it exists and is an array, otherwise keep previous
+          return {
+            ...prevProfile,
+            ...response.data,
+            // Ensure arrays are preserved - use response if it's a valid array, otherwise keep previous
+            experiences: Array.isArray(response.data.experiences) 
+              ? response.data.experiences 
+              : (prevProfile.experiences || []),
+            skills: Array.isArray(response.data.skills) 
+              ? response.data.skills 
+              : (prevProfile.skills || []),
+            documents: Array.isArray(response.data.documents) 
+              ? response.data.documents 
+              : (prevProfile.documents || []),
+            education: Array.isArray(response.data.education) 
+              ? response.data.education 
+              : (prevProfile.education || []),
+          };
+        });
       } else {
         throw new Error(response.error || 'Failed to add education');
       }
@@ -129,7 +195,29 @@ export const useProfile = (): UseProfileReturn => {
       const response = await profileService.updateEducation(id, education);
       
       if (response.success && response.data) {
-        setProfile(response.data);
+        // Update profile, preserving existing data if response is incomplete
+        setProfile((prevProfile) => {
+          if (!prevProfile) return response.data;
+          // Merge to ensure all data is preserved
+          // Use response data if it exists and is an array, otherwise keep previous
+          return {
+            ...prevProfile,
+            ...response.data,
+            // Ensure arrays are preserved - use response if it's a valid array, otherwise keep previous
+            experiences: Array.isArray(response.data.experiences) 
+              ? response.data.experiences 
+              : (prevProfile.experiences || []),
+            skills: Array.isArray(response.data.skills) 
+              ? response.data.skills 
+              : (prevProfile.skills || []),
+            documents: Array.isArray(response.data.documents) 
+              ? response.data.documents 
+              : (prevProfile.documents || []),
+            education: Array.isArray(response.data.education) 
+              ? response.data.education 
+              : (prevProfile.education || []),
+          };
+        });
       } else {
         throw new Error(response.error || 'Failed to update education');
       }
@@ -145,7 +233,29 @@ export const useProfile = (): UseProfileReturn => {
       const response = await profileService.deleteEducation(id);
       
       if (response.success && response.data) {
-        setProfile(response.data);
+        // Update profile, preserving existing data if response is incomplete
+        setProfile((prevProfile) => {
+          if (!prevProfile) return response.data;
+          // Merge to ensure all data is preserved
+          // Use response data if it exists and is an array, otherwise keep previous
+          return {
+            ...prevProfile,
+            ...response.data,
+            // Ensure arrays are preserved - use response if it's a valid array, otherwise keep previous
+            experiences: Array.isArray(response.data.experiences) 
+              ? response.data.experiences 
+              : (prevProfile.experiences || []),
+            skills: Array.isArray(response.data.skills) 
+              ? response.data.skills 
+              : (prevProfile.skills || []),
+            documents: Array.isArray(response.data.documents) 
+              ? response.data.documents 
+              : (prevProfile.documents || []),
+            education: Array.isArray(response.data.education) 
+              ? response.data.education 
+              : (prevProfile.education || []),
+          };
+        });
       } else {
         throw new Error(response.error || 'Failed to delete education');
       }
@@ -164,7 +274,29 @@ export const useProfile = (): UseProfileReturn => {
       const response = await profileService.addExperience(experience);
       
       if (response.success && response.data) {
-        setProfile(response.data);
+        // Update profile, preserving existing data if response is incomplete
+        setProfile((prevProfile) => {
+          if (!prevProfile) return response.data;
+          // Merge to ensure all data is preserved
+          // Use response data if it exists and is an array, otherwise keep previous
+          return {
+            ...prevProfile,
+            ...response.data,
+            // Ensure arrays are preserved - use response if it's a valid array, otherwise keep previous
+            experiences: Array.isArray(response.data.experiences) 
+              ? response.data.experiences 
+              : (prevProfile.experiences || []),
+            skills: Array.isArray(response.data.skills) 
+              ? response.data.skills 
+              : (prevProfile.skills || []),
+            documents: Array.isArray(response.data.documents) 
+              ? response.data.documents 
+              : (prevProfile.documents || []),
+            education: Array.isArray(response.data.education) 
+              ? response.data.education 
+              : (prevProfile.education || []),
+          };
+        });
       } else {
         throw new Error(response.error || 'Failed to add experience');
       }
@@ -183,7 +315,29 @@ export const useProfile = (): UseProfileReturn => {
       const response = await profileService.updateExperience(id, experience);
       
       if (response.success && response.data) {
-        setProfile(response.data);
+        // Update profile, preserving existing data if response is incomplete
+        setProfile((prevProfile) => {
+          if (!prevProfile) return response.data;
+          // Merge to ensure all data is preserved
+          // Use response data if it exists and is an array, otherwise keep previous
+          return {
+            ...prevProfile,
+            ...response.data,
+            // Ensure arrays are preserved - use response if it's a valid array, otherwise keep previous
+            experiences: Array.isArray(response.data.experiences) 
+              ? response.data.experiences 
+              : (prevProfile.experiences || []),
+            skills: Array.isArray(response.data.skills) 
+              ? response.data.skills 
+              : (prevProfile.skills || []),
+            documents: Array.isArray(response.data.documents) 
+              ? response.data.documents 
+              : (prevProfile.documents || []),
+            education: Array.isArray(response.data.education) 
+              ? response.data.education 
+              : (prevProfile.education || []),
+          };
+        });
       } else {
         throw new Error(response.error || 'Failed to update experience');
       }
@@ -199,7 +353,29 @@ export const useProfile = (): UseProfileReturn => {
       const response = await profileService.deleteExperience(id);
       
       if (response.success && response.data) {
-        setProfile(response.data);
+        // Update profile, preserving existing data if response is incomplete
+        setProfile((prevProfile) => {
+          if (!prevProfile) return response.data;
+          // Merge to ensure all data is preserved
+          // Use response data if it exists and is an array, otherwise keep previous
+          return {
+            ...prevProfile,
+            ...response.data,
+            // Ensure arrays are preserved - use response if it's a valid array, otherwise keep previous
+            experiences: Array.isArray(response.data.experiences) 
+              ? response.data.experiences 
+              : (prevProfile.experiences || []),
+            skills: Array.isArray(response.data.skills) 
+              ? response.data.skills 
+              : (prevProfile.skills || []),
+            documents: Array.isArray(response.data.documents) 
+              ? response.data.documents 
+              : (prevProfile.documents || []),
+            education: Array.isArray(response.data.education) 
+              ? response.data.education 
+              : (prevProfile.education || []),
+          };
+        });
       } else {
         throw new Error(response.error || 'Failed to delete experience');
       }
@@ -218,7 +394,29 @@ export const useProfile = (): UseProfileReturn => {
       const response = await profileService.addSkill(skill);
       
       if (response.success && response.data) {
-        setProfile(response.data);
+        // Update profile, preserving existing data if response is incomplete
+        setProfile((prevProfile) => {
+          if (!prevProfile) return response.data;
+          // Merge to ensure all data is preserved
+          // Use response data if it exists and is an array, otherwise keep previous
+          return {
+            ...prevProfile,
+            ...response.data,
+            // Ensure arrays are preserved - use response if it's a valid array, otherwise keep previous
+            experiences: Array.isArray(response.data.experiences) 
+              ? response.data.experiences 
+              : (prevProfile.experiences || []),
+            skills: Array.isArray(response.data.skills) 
+              ? response.data.skills 
+              : (prevProfile.skills || []),
+            documents: Array.isArray(response.data.documents) 
+              ? response.data.documents 
+              : (prevProfile.documents || []),
+            education: Array.isArray(response.data.education) 
+              ? response.data.education 
+              : (prevProfile.education || []),
+          };
+        });
       } else {
         throw new Error(response.error || 'Failed to add skill');
       }
@@ -237,7 +435,29 @@ export const useProfile = (): UseProfileReturn => {
       const response = await profileService.updateSkill(id, skill);
       
       if (response.success && response.data) {
-        setProfile(response.data);
+        // Update profile, preserving existing data if response is incomplete
+        setProfile((prevProfile) => {
+          if (!prevProfile) return response.data;
+          // Merge to ensure all data is preserved
+          // Use response data if it exists and is an array, otherwise keep previous
+          return {
+            ...prevProfile,
+            ...response.data,
+            // Ensure arrays are preserved - use response if it's a valid array, otherwise keep previous
+            experiences: Array.isArray(response.data.experiences) 
+              ? response.data.experiences 
+              : (prevProfile.experiences || []),
+            skills: Array.isArray(response.data.skills) 
+              ? response.data.skills 
+              : (prevProfile.skills || []),
+            documents: Array.isArray(response.data.documents) 
+              ? response.data.documents 
+              : (prevProfile.documents || []),
+            education: Array.isArray(response.data.education) 
+              ? response.data.education 
+              : (prevProfile.education || []),
+          };
+        });
       } else {
         throw new Error(response.error || 'Failed to update skill');
       }
@@ -253,7 +473,29 @@ export const useProfile = (): UseProfileReturn => {
       const response = await profileService.deleteSkill(id);
       
       if (response.success && response.data) {
-        setProfile(response.data);
+        // Update profile, preserving existing data if response is incomplete
+        setProfile((prevProfile) => {
+          if (!prevProfile) return response.data;
+          // Merge to ensure all data is preserved
+          // Use response data if it exists and is an array, otherwise keep previous
+          return {
+            ...prevProfile,
+            ...response.data,
+            // Ensure arrays are preserved - use response if it's a valid array, otherwise keep previous
+            experiences: Array.isArray(response.data.experiences) 
+              ? response.data.experiences 
+              : (prevProfile.experiences || []),
+            skills: Array.isArray(response.data.skills) 
+              ? response.data.skills 
+              : (prevProfile.skills || []),
+            documents: Array.isArray(response.data.documents) 
+              ? response.data.documents 
+              : (prevProfile.documents || []),
+            education: Array.isArray(response.data.education) 
+              ? response.data.education 
+              : (prevProfile.education || []),
+          };
+        });
       } else {
         throw new Error(response.error || 'Failed to delete skill');
       }
@@ -273,9 +515,19 @@ export const useProfile = (): UseProfileReturn => {
       setError(null);
       const response = await profileService.uploadDocument(file, category, onProgress);
       
-      if (response.success && response.data) {
-        // Refresh profile to get updated documents list
-        await refreshProfile();
+      if (response.success && response.data && response.data.document) {
+        // Update local state by adding the new document instead of refreshing entire profile
+        setProfile((prevProfile) => {
+          if (!prevProfile) return prevProfile;
+          
+          return {
+            ...prevProfile,
+            documents: [
+              ...(prevProfile.documents || []),
+              response.data!.document,
+            ],
+          };
+        });
       } else {
         throw new Error(response.error || 'Failed to upload document');
       }
@@ -283,7 +535,7 @@ export const useProfile = (): UseProfileReturn => {
       setError(err.message || 'Failed to upload document');
       throw err;
     }
-  }, [refreshProfile]);
+  }, []);
 
   const deleteDocument = useCallback(async (id: string) => {
     try {

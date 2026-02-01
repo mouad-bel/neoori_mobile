@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Image } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -6,8 +6,7 @@ import { FONTS, SPACING, BORDER_RADIUS } from '../../constants/theme';
 import { useTheme } from '../../store/ThemeContext';
 import { useAuth } from '../../store/AuthContext';
 import NeooriLogo from '../common/NeooriLogo';
-import apiClient from '../../services/api/apiClient';
-import API_CONFIG from '../../config/api';
+import { useAvatar } from '../../hooks/useAvatar';
 
 interface AppHeaderProps {
   onMenuPress?: () => void;
@@ -39,80 +38,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
   const { colors, theme } = useTheme();
   const { user } = useAuth();
   const isDarkMode = theme === 'dark';
-  const [avatarDataUri, setAvatarDataUri] = useState<string | null>(null);
-
-  // Helper function to fix localhost URLs
-  const fixAvatarUrl = (url: string | null | undefined): string | null => {
-    if (!url) return null;
-    if (url.includes('localhost')) {
-      try {
-        const apiBaseUrl = API_CONFIG.BASE_URL;
-        const apiUrlObj = new URL(apiBaseUrl);
-        const urlObj = new URL(url);
-        urlObj.host = apiUrlObj.host;
-        urlObj.protocol = apiUrlObj.protocol;
-        return urlObj.toString();
-      } catch (error) {
-        return url;
-      }
-    }
-    return url;
-  };
-
-  // Helper to convert ArrayBuffer to base64
-  const arrayBufferToBase64 = (buffer: ArrayBuffer): string => {
-    const bytes = new Uint8Array(buffer);
-    let binary = '';
-    for (let i = 0; i < bytes.byteLength; i++) {
-      binary += String.fromCharCode(bytes[i]);
-    }
-    return btoa(binary);
-  };
-
-  // Load authenticated avatar image
-  const loadAvatarImage = async (url: string) => {
-    try {
-      if (url.startsWith('file://')) {
-        setAvatarDataUri(url);
-        return;
-      }
-
-      const urlObj = new URL(url);
-      const fullPath = urlObj.pathname;
-      const apiPath = fullPath.startsWith('/api/') 
-        ? fullPath.substring(4)
-        : fullPath.startsWith('/')
-        ? fullPath.substring(1)
-        : fullPath;
-      
-      const response = await apiClient.getClient().get(apiPath, {
-        responseType: 'arraybuffer',
-      });
-
-      const base64 = arrayBufferToBase64(response.data);
-      const contentType = response.headers['content-type'] || 'image/jpeg';
-      const dataUri = `data:${contentType};base64,${base64}`;
-      setAvatarDataUri(dataUri);
-    } catch (error: any) {
-      console.error('Error loading avatar image in AppHeader:', error);
-      setAvatarDataUri(null);
-    }
-  };
-
-  useEffect(() => {
-    if (user?.avatar) {
-      const fixedUrl = fixAvatarUrl(user.avatar);
-      if (fixedUrl && fixedUrl.startsWith('http')) {
-        loadAvatarImage(fixedUrl);
-      } else if (fixedUrl && fixedUrl.startsWith('file://')) {
-        setAvatarDataUri(fixedUrl);
-      } else {
-        setAvatarDataUri(null);
-      }
-    } else {
-      setAvatarDataUri(null);
-    }
-  }, [user?.avatar]);
+  const { avatarDataUri, avatarVersion } = useAvatar();
   
   return (
     <View style={[
@@ -193,6 +119,7 @@ const AppHeader: React.FC<AppHeaderProps> = ({
             {avatarDataUri ? (
               <View style={[styles.profileAvatarContainer, { borderColor: colors.primary }]}>
                 <Image 
+                  key={`header-avatar-${user?.avatar || ''}-${avatarVersion}`}
                   source={{ uri: avatarDataUri }} 
                   style={styles.profileAvatar} 
                 />

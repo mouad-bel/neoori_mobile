@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -50,6 +50,9 @@ const ProfileScreen = () => {
   const [addressText, setAddressText] = useState('');
   const [avatarUri, setAvatarUri] = useState<string | null>(null);
   const [avatarDataUri, setAvatarDataUri] = useState<string | null>(null);
+  const [avatarChanged, setAvatarChanged] = useState(false);
+  const [avatarVersion, setAvatarVersion] = useState(0); // Increment to force Image re-render
+  const [isReloadingAvatar, setIsReloadingAvatar] = useState(false); // Hide image during reload
   const [showEducationModal, setShowEducationModal] = useState(false);
   const [showExperienceModal, setShowExperienceModal] = useState(false);
   const [showSkillModal, setShowSkillModal] = useState(false);
@@ -60,12 +63,23 @@ const ProfileScreen = () => {
   const [experienceForm, setExperienceForm] = useState({ title: '', company: '', period: '', description: '' });
   const [skillForm, setSkillForm] = useState({ name: '', level: '' });
   const [refreshing, setRefreshing] = useState(false);
+  const [isPickingDocument, setIsPickingDocument] = useState(false);
+  const isPickingDocumentRef = useRef(false);
+  const [isOpeningDocument, setIsOpeningDocument] = useState(false);
+  const isOpeningDocumentRef = useRef(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
+  const [isUploading, setIsUploading] = useState(false);
+  const [downloadProgress, setDownloadProgress] = useState(0);
+  const [downloadingDocumentId, setDownloadingDocumentId] = useState<string | null>(null);
+  const scrollViewRef = useRef<ScrollView | null>(null);
+  const scrollPositionRef = useRef(0);
 
   // Helper function to fix localhost URLs for iOS
-  const fixAvatarUrl = (url: string | null | undefined): string | null => {
+  const fixAvatarUrl = (url: string | null | undefined, addCacheBust: boolean = false): string | null => {
     if (!url) return null;
     
     // If URL contains localhost, replace with API base URL's host
+    let fixedUrl = url;
     if (url.includes('localhost')) {
       try {
         const apiBaseUrl = API_CONFIG.BASE_URL; // e.g., http://192.168.1.128:3000/api
@@ -76,16 +90,27 @@ const ProfileScreen = () => {
         urlObj.host = apiUrlObj.host;
         urlObj.protocol = apiUrlObj.protocol;
         
-        const fixedUrl = urlObj.toString();
+        fixedUrl = urlObj.toString();
         console.log('Fixed avatar URL from', url, 'to', fixedUrl);
-        return fixedUrl;
       } catch (error) {
         console.error('Error fixing avatar URL:', error);
-        return url;
+        fixedUrl = url;
       }
     }
     
-    return url;
+    // Add cache-busting query parameter to force image reload
+    if (addCacheBust && fixedUrl.startsWith('http')) {
+      try {
+        const urlObj = new URL(fixedUrl);
+        urlObj.searchParams.set('t', Date.now().toString());
+        fixedUrl = urlObj.toString();
+        console.log('Added cache-bust to avatar URL:', fixedUrl);
+      } catch (error) {
+        console.error('Error adding cache-bust to avatar URL:', error);
+      }
+    }
+    
+    return fixedUrl;
   };
 
   // Load authenticated avatar image
@@ -97,10 +122,13 @@ const ProfileScreen = () => {
         return;
       }
 
-      // Extract the API path from the full URL
-      // URL format: http://192.168.1.128:3000/api/files/avatars/userId/filename
+      // Clear old data URI first to force reload
+      setAvatarDataUri(null);
+      
+      // Extract the API path from the full URL (remove query params for API call)
+      // URL format: http://192.168.1.128:3000/api/files/avatars/userId/filename?t=123456
       // BASE_URL: http://192.168.1.128:3000/api
-      // So we need: /files/avatars/userId/filename (without /api prefix)
+      // So we need: /files/avatars/userId/filename (without /api prefix and query params)
       const urlObj = new URL(url);
       const fullPath = urlObj.pathname; // e.g., /api/files/avatars/userId/filename
       
@@ -114,8 +142,11 @@ const ProfileScreen = () => {
       console.log('Loading avatar image from API path:', apiPath, '(full path:', fullPath, ')');
       
       // Fetch image with authentication using apiClient
+      // Add cache-busting as a query parameter in the request config, not in the path
+      const cacheBust = Date.now();
       const response = await apiClient.getClient().get(apiPath, {
         responseType: 'arraybuffer',
+        params: { t: cacheBust }, // Add cache-busting as query parameter
       });
 
       // Convert ArrayBuffer to base64
@@ -140,24 +171,50 @@ const ProfileScreen = () => {
     if (profile?.location?.address) {
       setAddressText(profile.location.address);
     }
-    if (user?.avatar) {
-      const fixedAvatarUrl = fixAvatarUrl(user.avatar);
-      console.log('Setting avatarUri from user.avatar:', user.avatar, 'fixed to:', fixedAvatarUrl);
-      setAvatarUri(fixedAvatarUrl);
-      
-      // Load the image with authentication if it's an HTTP URL
-      if (fixedAvatarUrl && fixedAvatarUrl.startsWith('http')) {
-        loadAvatarImage(fixedAvatarUrl);
-      } else if (fixedAvatarUrl && fixedAvatarUrl.startsWith('file://')) {
-        setAvatarDataUri(fixedAvatarUrl);
+    // Only update avatar from user if it hasn't been changed by the user
+    if (!avatarChanged) {
+      if (user?.avatar) {
+        // Add cache-busting parameter to force image reload after upload
+        const fixedAvatarUrl = fixAvatarUrl(user.avatar, true);
+        console.log('Setting avatarUri from user.avatar:', user.avatar, 'fixed to:', fixedAvatarUrl);
+        // Always update to ensure cache-busting works and image reloads
+        setAvatarUri(fixedAvatarUrl);
+        
+        // Always load HTTP URLs through loadAvatarImage for authentication
+        // Only use file:// URIs directly
+        if (fixedAvatarUrl && fixedAvatarUrl.startsWith('http')) {
+          // Load with authentication - this will set avatarDataUri
+          loadAvatarImage(fixedAvatarUrl).catch((error) => {
+            console.error('Failed to load avatar image:', error);
+            setAvatarDataUri(null);
+          });
+        } else if (fixedAvatarUrl && fixedAvatarUrl.startsWith('file://')) {
+          setAvatarDataUri(fixedAvatarUrl);
+        } else {
+          setAvatarDataUri(null);
+        }
       } else {
+        console.log('No user avatar found, user:', user);
         setAvatarDataUri(null);
       }
     } else {
-      console.log('No user avatar found, user:', user);
-      setAvatarDataUri(null);
+      console.log('🔄 Avatar changed by user, keeping selected image:', avatarUri);
     }
-  }, [profile, user]);
+  }, [profile, user?.avatar, avatarChanged]);
+
+  // Restore scroll position after profile updates (e.g., after document upload)
+  useEffect(() => {
+    if (profile && scrollPositionRef.current > 0 && scrollViewRef.current && !isUploading) {
+      // Small delay to ensure DOM has updated after profile refresh
+      const timer = setTimeout(() => {
+        scrollViewRef.current?.scrollTo({
+          y: scrollPositionRef.current,
+          animated: false,
+        });
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [profile, isUploading]);
 
   const getDocumentIcon = (type: string) => {
     switch (type?.toLowerCase()) {
@@ -205,6 +262,29 @@ const ProfileScreen = () => {
   };
 
   const handleOpenDocument = async (doc: any) => {
+    // Prevent opening if already opening or picking
+    if (isOpeningDocumentRef.current || isPickingDocumentRef.current) {
+      console.log('⚠️ Document opening blocked - already in progress');
+      return;
+    }
+
+    console.log('📄 Starting to open document:', doc.name);
+    isOpeningDocumentRef.current = true;
+    setIsOpeningDocument(true);
+    setDownloadingDocumentId(doc.id);
+    setDownloadProgress(0);
+
+    // Safety timeout: reset state after 10 seconds if something goes wrong
+    const timeoutId = setTimeout(() => {
+      if (isOpeningDocumentRef.current) {
+        console.warn('⏱️ Document opening timeout - resetting state');
+        isOpeningDocumentRef.current = false;
+        setIsOpeningDocument(false);
+        setDownloadingDocumentId(null);
+        setDownloadProgress(0);
+      }
+    }, 10000);
+
     try {
       if (!doc.url) {
         Alert.alert('Erreur', 'URL du document non disponible');
@@ -227,10 +307,17 @@ const ProfileScreen = () => {
         return;
       }
 
-      // Download file using axios with auth token
+      // Download file using axios with auth token and progress tracking
       const axiosClient = apiClient.getClient();
       const response = await axiosClient.get(endpoint, {
         responseType: 'arraybuffer',
+        onDownloadProgress: (progressEvent) => {
+          if (progressEvent.total) {
+            const progress = Math.round((progressEvent.loaded * 100) / progressEvent.total);
+            setDownloadProgress(progress);
+            console.log('📥 Download progress:', progress + '%');
+          }
+        },
       });
 
       // Convert arraybuffer to base64
@@ -302,6 +389,17 @@ const ProfileScreen = () => {
         'Erreur',
         'Impossible de télécharger ou d\'ouvrir ce document: ' + (error.response?.data?.error || error.message || 'Erreur inconnue')
       );
+    } finally {
+      // Clear timeout and reset state after opening document
+      clearTimeout(timeoutId);
+      console.log('✅ Document opening completed - resetting state');
+      isOpeningDocumentRef.current = false;
+      setIsOpeningDocument(false);
+      setDownloadingDocumentId(null);
+      // Reset progress after a short delay
+      setTimeout(() => {
+        setDownloadProgress(0);
+      }, 500);
     }
   };
 
@@ -353,6 +451,9 @@ const ProfileScreen = () => {
         setAvatarUri(selectedUri);
         // For local files, use directly
         setAvatarDataUri(selectedUri);
+        // Mark that avatar has changed
+        setAvatarChanged(true);
+        console.log('✅ Avatar changed - will upload on save');
       } else {
         console.log('Image selection canceled or no asset');
       }
@@ -362,13 +463,39 @@ const ProfileScreen = () => {
   };
 
   const handleSaveProfile = async () => {
+    console.log('💾 Saving profile...', { 
+      avatarChanged, 
+      avatarUri, 
+      isHttp: avatarUri?.startsWith('http'),
+      avatarUriType: typeof avatarUri,
+      avatarUriLength: avatarUri?.length
+    });
     try {
       // If avatar was changed, upload it first
-      if (avatarUri && avatarUri !== user?.avatar && !avatarUri.startsWith('http')) {
+      // Check if it's a local file (file://, content://, ph://, or expo://)
+      const isLocalFile = avatarUri && (
+        avatarUri.startsWith('file://') || 
+        avatarUri.startsWith('content://') || 
+        avatarUri.startsWith('ph://') ||
+        avatarUri.startsWith('expo://') ||
+        (!avatarUri.startsWith('http') && !avatarUri.startsWith('https') && !avatarUri.startsWith('data:'))
+      );
+      
+      console.log('🔍 Avatar upload check:', { 
+        avatarChanged, 
+        avatarUri, 
+        isLocalFile,
+        uriStart: avatarUri?.substring(0, 20)
+      });
+      
+      if (avatarChanged && avatarUri && isLocalFile) {
+        console.log('📤 Uploading avatar:', avatarUri);
         try {
           // Get file info - need to detect mime type from URI extension
-          const uriParts = avatarUri.split('.');
-          const extension = uriParts[uriParts.length - 1].toLowerCase();
+          // Handle URIs with query parameters: file://path/image.jpg?timestamp=123
+          const uriWithoutQuery = avatarUri.split('?')[0];
+          const uriParts = uriWithoutQuery.split('.');
+          const extension = uriParts.length > 1 ? uriParts[uriParts.length - 1].toLowerCase() : 'jpg';
           const mimeTypes: Record<string, string> = {
             'jpg': 'image/jpeg',
             'jpeg': 'image/jpeg',
@@ -384,14 +511,45 @@ const ProfileScreen = () => {
             name: `avatar.${extension}`,
           };
 
+          console.log('📤 Avatar file object:', file);
+          console.log('📤 Extension detected:', extension, 'MIME type:', file.type);
           await uploadAvatar(file);
+          console.log('✅ Avatar uploaded successfully');
+          // Hide image and clear data URI to force complete reload
+          setIsReloadingAvatar(true);
+          setAvatarDataUri(null);
+          // Increment avatar version to force Image component re-render
+          setAvatarVersion(prev => {
+            const newVersion = prev + 1;
+            console.log(`🔄 Avatar version incremented: ${prev} -> ${newVersion}`);
+            return newVersion;
+          });
+          // Reset the changed flag BEFORE refreshAuth so the useEffect can update to the new HTTP URL
+          // This ensures that when refreshAuth updates the user state, the useEffect will pick up the new avatar URL
+          setAvatarChanged(false);
+          console.log('🔄 Avatar changed flag reset to false');
           // uploadAvatar already updates the user in AuthContext via updateUser
-          // No need to call refreshAuth here
+          // Refresh auth to get updated user with new avatar URL
+          await refreshAuth();
+          console.log('🔄 refreshAuth completed, user state should be updated');
+          // Small delay to ensure state updates propagate before reloading image
+          await new Promise(resolve => setTimeout(resolve, 200));
+          // Re-enable image display after reload
+          setIsReloadingAvatar(false);
         } catch (error: any) {
-          console.error('Upload error:', error);
+          console.error('❌ Upload error:', error);
+          console.error('❌ Error details:', error.response?.data || error.message);
           Alert.alert('Erreur', 'Échec de l\'upload de l\'avatar: ' + (error.message || 'Erreur inconnue'));
           return;
         }
+      } else if (avatarChanged && avatarUri && avatarUri.startsWith('http')) {
+        // If avatar is already an HTTP URL, it means it's already uploaded, just reset the flag
+        console.log('ℹ️ Avatar already uploaded (HTTP URL), skipping upload');
+        setAvatarChanged(false);
+      } else if (!avatarChanged) {
+        console.log('ℹ️ Avatar not changed, skipping upload');
+      } else {
+        console.log('⚠️ Avatar upload condition not met:', { avatarChanged, avatarUri, isHttp: avatarUri?.startsWith('http') });
       }
 
       // Update profile data
@@ -521,19 +679,68 @@ const ProfileScreen = () => {
   };
 
   const handleUploadDocument = async () => {
+    // Prevent multiple simultaneous picker calls using ref for immediate check
+    // Also prevent if a document is currently being opened (share sheet is open)
+    if (isPickingDocumentRef.current || isOpeningDocumentRef.current) {
+      console.log('⚠️ Document upload blocked - isPicking:', isPickingDocumentRef.current, 'isOpening:', isOpeningDocumentRef.current);
+      return;
+    }
+
+    console.log('📤 Starting document picker');
+    // Set both state and ref immediately (synchronously)
+    isPickingDocumentRef.current = true;
+    setIsPickingDocument(true);
+
+    // Safety timeout: reset state after 30 seconds if something goes wrong
+    const timeoutId = setTimeout(() => {
+      if (isPickingDocumentRef.current) {
+        console.warn('Document picking timeout - resetting state');
+        isPickingDocumentRef.current = false;
+        setIsPickingDocument(false);
+      }
+    }, 30000);
+    
     try {
       const result = await DocumentPicker.getDocumentAsync({
         type: ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
         copyToCacheDirectory: true,
       });
 
-      if (!result.canceled && result.assets[0]) {
+      if (!result.canceled && result.assets && result.assets[0]) {
         const file = result.assets[0];
-        await uploadDocument(file, 'other');
-        Alert.alert('Succès', 'Document uploadé avec succès');
+        setIsUploading(true);
+        setUploadProgress(0);
+        
+        try {
+          await uploadDocument(file, 'other', (progress) => {
+            setUploadProgress(progress);
+            console.log('📊 Upload progress:', progress + '%');
+          });
+          setUploadProgress(100);
+          Alert.alert('Succès', 'Document uploadé avec succès');
+        } catch (uploadError: any) {
+          // Error already shown by uploadDocument
+          throw uploadError;
+        } finally {
+          setIsUploading(false);
+          // Reset progress after a short delay to show 100%
+          setTimeout(() => {
+            setUploadProgress(0);
+          }, 1000);
+        }
       }
+      // If canceled, silently return - no error needed
     } catch (error: any) {
-      Alert.alert('Erreur', error.message || 'Échec de l\'upload');
+      // Only show error if it's not a cancellation
+      if (error.code !== 'E_DOCUMENT_PICKER_CANCELED' && error.message !== 'User canceled document picker') {
+        Alert.alert('Erreur', error.message || 'Échec de l\'upload');
+      }
+    } finally {
+      // Clear timeout and reset both state and ref, even if picker was canceled or error occurred
+      clearTimeout(timeoutId);
+      console.log('✅ Document picker completed - resetting state');
+      isPickingDocumentRef.current = false;
+      setIsPickingDocument(false);
     }
   };
 
@@ -553,8 +760,13 @@ const ProfileScreen = () => {
         title="Mon Profil"
       />
       <ScrollView
+        ref={scrollViewRef}
         style={styles.scrollContent}
         showsVerticalScrollIndicator={false}
+        onScroll={(event) => {
+          scrollPositionRef.current = event.nativeEvent.contentOffset.y;
+        }}
+        scrollEventThrottle={16}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}
@@ -576,7 +788,11 @@ const ProfileScreen = () => {
               {/* Pencil icon in top right */}
               <TouchableOpacity 
                 style={styles.editProfileIconButton}
-                onPress={() => setShowEditProfileModal(true)}
+                  onPress={() => {
+                    // Reset avatar changed flag when opening modal (fresh start)
+                    setAvatarChanged(false);
+                    setShowEditProfileModal(true);
+                  }}
               >
                 <Ionicons name="pencil" size={20} color={colors.primary} />
               </TouchableOpacity>
@@ -585,12 +801,23 @@ const ProfileScreen = () => {
                 <View style={styles.avatarContainer}>
                   <View style={[styles.avatarBorder, { borderColor: colors.primary }]}>
                     {(() => {
-                      // Use data URI if available (for authenticated images), otherwise use direct URI
-                      const imageSource = avatarDataUri || (avatarUri && avatarUri.startsWith('file://') ? avatarUri : (user?.avatar ? fixAvatarUrl(user.avatar) : null));
+                      // Hide image during reload to force fresh render
+                      if (isReloadingAvatar) {
+                        return (
+                          <View style={[styles.avatarPlaceholder, { backgroundColor: colors.surfaceBackground }]}>
+                            <ActivityIndicator size="small" color={colors.primary} />
+                          </View>
+                        );
+                      }
+                      
+                      // Use data URI if available (for authenticated images), otherwise use direct URI for local files only
+                      // Never use HTTP URLs directly - they need authentication via loadAvatarImage
+                      const imageSource = avatarDataUri || (avatarUri && avatarUri.startsWith('file://') ? avatarUri : null);
                       
                       if (imageSource) {
                         return (
                           <Image 
+                            key={`avatar-${avatarVersion}-${user?.avatar || avatarUri || Date.now()}`} // Force re-render when avatar changes
                             source={{ uri: imageSource }} 
                             style={styles.avatar}
                             onError={(error) => {
@@ -878,17 +1105,50 @@ const ProfileScreen = () => {
                 Importer des documents
               </Text>
               <TouchableOpacity
-                style={[styles.uploadArea, { borderColor: colors.border }]}
+                style={[
+                  styles.uploadArea, 
+                  { 
+                    borderColor: colors.border,
+                    opacity: (isPickingDocument || isOpeningDocument || isUploading) ? 0.5 : 1,
+                  }
+                ]}
                 activeOpacity={0.7}
                 onPress={handleUploadDocument}
+                disabled={isPickingDocument || isOpeningDocument || isUploading}
               >
-                <Ionicons name="cloud-upload-outline" size={40} color={colors.textTertiary} />
-                <Text style={[styles.uploadTitle, { color: colors.textPrimary }]}>
-                  Déposer un document
-                </Text>
-                <Text style={[styles.uploadSubtitle, { color: colors.textSecondary }]}>
-                  Cliquez pour sélectionner un fichier
-                </Text>
+                {isUploading ? (
+                  <>
+                    <ActivityIndicator size="large" color={colors.primary} style={{ marginBottom: SPACING.md }} />
+                    <Text style={[styles.uploadTitle, { color: colors.textPrimary }]}>
+                      Upload en cours...
+                    </Text>
+                    <Text style={[styles.uploadSubtitle, { color: colors.textSecondary, marginTop: SPACING.xs }]}>
+                      {uploadProgress}%
+                    </Text>
+                    {/* Progress Bar */}
+                    <View style={[styles.progressBarContainer, { backgroundColor: colors.surfaceBackground, marginTop: SPACING.md }]}>
+                      <View 
+                        style={[
+                          styles.progressBarFill, 
+                          { 
+                            width: `${uploadProgress}%`,
+                            backgroundColor: colors.primary,
+                          }
+                        ]} 
+                      />
+                    </View>
+                  </>
+                ) : (
+                  <>
+                    <Ionicons name="cloud-upload-outline" size={40} color={colors.textTertiary} />
+                    <Text style={[styles.uploadTitle, { color: colors.textPrimary }]}>
+                      {isPickingDocument ? 'Ouverture...' : isOpeningDocument ? 'Document en cours...' : 'Déposer un document'}
+                    </Text>
+                    <Text style={[styles.uploadSubtitle, { color: colors.textSecondary }]}>
+                      {(isPickingDocument || isOpeningDocument) ? 'Veuillez patienter' : 'Cliquez pour sélectionner un fichier'}
+                    </Text>
+                  </>
+                )}
               </TouchableOpacity>
             </View>
 
@@ -899,8 +1159,19 @@ const ProfileScreen = () => {
                 <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
                   Mes Documents
                 </Text>
-                <TouchableOpacity style={styles.addButton} onPress={handleUploadDocument}>
-                  <Ionicons name="add" size={20} color={colors.primary} />
+                <TouchableOpacity 
+                  style={[
+                    styles.addButton,
+                    { opacity: (isPickingDocument || isOpeningDocument || isUploading) ? 0.5 : 1 }
+                  ]} 
+                  onPress={handleUploadDocument}
+                  disabled={isPickingDocument || isOpeningDocument || isUploading}
+                >
+                  {isUploading ? (
+                    <ActivityIndicator size="small" color={colors.primary} />
+                  ) : (
+                    <Ionicons name="add" size={20} color={colors.primary} />
+                  )}
                 </TouchableOpacity>
               </View>
 
@@ -916,35 +1187,63 @@ const ProfileScreen = () => {
                 return profile?.documents && Array.isArray(profile.documents) && profile.documents.length > 0;
               })() ? (
                 profile.documents.map((doc) => (
-                  <TouchableOpacity 
-                    key={doc.id} 
-                    style={styles.documentItem}
-                    onPress={() => handleOpenDocument(doc)}
-                    activeOpacity={0.7}
-                  >
-                    <View style={[styles.documentIcon, { backgroundColor: '#EF444420' }]}>
-                      <Ionicons name={getDocumentIcon(doc.type || '') as any} size={20} color="#EF4444" />
-                    </View>
-                    <View style={styles.documentInfo}>
-                      <Text style={[styles.documentName, { color: colors.textPrimary }]}>
-                        {doc.name}
-                      </Text>
-                      <Text style={[styles.documentMeta, { color: colors.textSecondary }]}>
-                        {formatFileSize(doc.size || 0)} • {formatDate(doc.uploadedAt)}
-                      </Text>
-                    </View>
+                  <View key={doc.id}>
                     <TouchableOpacity 
-                      onPress={(e) => {
-                        e.stopPropagation();
-                        Alert.alert('Supprimer', 'Voulez-vous supprimer ce document?', [
-                          { text: 'Annuler', style: 'cancel' },
-                          { text: 'Supprimer', style: 'destructive', onPress: () => deleteDocument(doc.id) },
-                        ]);
-                      }}
+                      style={styles.documentItem}
+                      onPress={() => handleOpenDocument(doc)}
+                      activeOpacity={0.7}
+                      disabled={downloadingDocumentId === doc.id}
                     >
-                      <Ionicons name="trash-outline" size={18} color={colors.textSecondary} />
+                      <View style={[styles.documentIcon, { backgroundColor: '#EF444420' }]}>
+                        {downloadingDocumentId === doc.id ? (
+                          <ActivityIndicator size="small" color="#FF6B35" />
+                        ) : (
+                          <Ionicons name={getDocumentIcon(doc.type || '') as any} size={20} color="#EF4444" />
+                        )}
+                      </View>
+                      <View style={styles.documentInfo}>
+                        <Text style={[styles.documentName, { color: colors.textPrimary }]}>
+                          {doc.name}
+                        </Text>
+                        <Text style={[styles.documentMeta, { color: colors.textSecondary }]}>
+                          {downloadingDocumentId === doc.id 
+                            ? `Téléchargement... ${downloadProgress}%`
+                            : `${formatFileSize(doc.size || 0)} • ${formatDate(doc.uploadedAt)}`
+                          }
+                        </Text>
+                      </View>
+                      <TouchableOpacity 
+                        onPress={(e) => {
+                          e.stopPropagation();
+                          Alert.alert('Supprimer', 'Voulez-vous supprimer ce document?', [
+                            { text: 'Annuler', style: 'cancel' },
+                            { text: 'Supprimer', style: 'destructive', onPress: () => deleteDocument(doc.id) },
+                          ]);
+                        }}
+                        disabled={downloadingDocumentId === doc.id}
+                      >
+                        <Ionicons 
+                          name="trash-outline" 
+                          size={18} 
+                          color={downloadingDocumentId === doc.id ? colors.textTertiary : colors.textSecondary} 
+                        />
+                      </TouchableOpacity>
                     </TouchableOpacity>
-                  </TouchableOpacity>
+                    {/* Orange Progress Bar */}
+                    {downloadingDocumentId === doc.id && (
+                      <View style={styles.documentProgressContainer}>
+                        <View 
+                          style={[
+                            styles.documentProgressBar,
+                            { 
+                              width: `${downloadProgress}%`,
+                              backgroundColor: '#FF6B35', // Orange color
+                            }
+                          ]} 
+                        />
+                      </View>
+                    )}
+                  </View>
                 ))
               ) : (
                 <Text style={[styles.emptyText, { color: colors.textSecondary }]}>
@@ -1000,6 +1299,15 @@ const ProfileScreen = () => {
                 <Text style={[styles.modalLabel, { color: colors.textSecondary }]}>Photo de profil</Text>
                 <View style={styles.imagePickerContainer}>
                     {(() => {
+                      // Hide image during reload to force fresh render
+                      if (isReloadingAvatar) {
+                        return (
+                          <View style={[styles.editAvatarPlaceholder, { backgroundColor: colors.surfaceBackground }]}>
+                            <ActivityIndicator size="small" color={colors.primary} />
+                          </View>
+                        );
+                      }
+                      
                       // Use data URI if available (for authenticated images), otherwise use direct URI for local files
                       const imageSource = avatarDataUri || (avatarUri && avatarUri.startsWith('file://') ? avatarUri : null);
                       console.log('Edit Profile Modal - Image source:', imageSource ? 'available' : 'none', 'dataUri:', !!avatarDataUri, 'avatarUri:', avatarUri);
@@ -1007,6 +1315,7 @@ const ProfileScreen = () => {
                       if (imageSource) {
                         return (
                           <Image 
+                            key={`edit-avatar-${avatarVersion}-${user?.avatar || avatarUri || Date.now()}`} // Force re-render when avatar changes
                             source={{ uri: imageSource }} 
                             style={styles.editAvatar}
                             onError={(error) => {
@@ -1075,7 +1384,12 @@ const ProfileScreen = () => {
                     // Reset to original values
                     if (profile?.bio) setBioText(profile.bio);
                     if (profile?.location?.address) setAddressText(profile.location.address);
-                    if (user?.avatar) setAvatarUri(user.avatar);
+                    if (user?.avatar) {
+                      const fixedUrl = fixAvatarUrl(user.avatar);
+                      setAvatarUri(fixedUrl);
+                    }
+                    // Reset avatar changed flag when canceling
+                    setAvatarChanged(false);
                   }} 
                   style={[styles.modalButton, { backgroundColor: colors.surfaceBackground }]}
                 >
@@ -1515,6 +1829,18 @@ const styles = StyleSheet.create({
     fontSize: FONTS.sizes.sm,
     marginTop: SPACING.xs,
   },
+  progressBarContainer: {
+    width: '100%',
+    height: 8,
+    borderRadius: BORDER_RADIUS.sm,
+    overflow: 'hidden',
+    marginTop: SPACING.md,
+  },
+  progressBarFill: {
+    height: '100%',
+    borderRadius: BORDER_RADIUS.sm,
+    transition: 'width 0.3s ease',
+  },
   documentItem: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -1530,6 +1856,20 @@ const styles = StyleSheet.create({
     borderRadius: BORDER_RADIUS.sm,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  documentProgressContainer: {
+    width: '100%',
+    height: 3,
+    backgroundColor: 'rgba(255, 107, 53, 0.2)', // Light orange background
+    borderRadius: BORDER_RADIUS.xs,
+    overflow: 'hidden',
+    marginTop: -SPACING.md,
+    marginBottom: SPACING.md,
+  },
+  documentProgressBar: {
+    height: '100%',
+    borderRadius: BORDER_RADIUS.xs,
+    transition: 'width 0.3s ease',
   },
   documentInfo: {
     flex: 1,

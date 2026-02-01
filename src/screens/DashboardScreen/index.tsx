@@ -115,37 +115,51 @@ const DashboardScreen = () => {
     return sections;
   }, [profile, user]);
 
-  // Load games with progress
-  useEffect(() => {
-    const loadGames = async () => {
-      try {
-        const allProgress = await StorageService.getAllGameProgress();
-        const updatedGames = MOCK_GAMES.slice(0, 2).map(game => {
-          const progress = allProgress.find(p => p.gameId === game.id);
-          if (progress) {
-            let progressPercentage = 0;
-            if (progress.completed) {
-              progressPercentage = 100;
-            } else if (progress.currentQuestion !== undefined && progress.totalQuestions !== undefined) {
-              progressPercentage = Math.round(((progress.currentQuestion + 1) / progress.totalQuestions) * 100);
-            }
-            
-            return {
-              ...game,
-              progress: progressPercentage,
-              status: progress.completed ? 'completed' as const : 'in-progress' as const,
-            };
+  // Function to load games with progress
+  const loadGames = async () => {
+    try {
+      const allProgress = await StorageService.getAllGameProgress();
+      const updatedGames = MOCK_GAMES.slice(0, 2).map(game => {
+        const progress = allProgress.find(p => p.gameId === game.id);
+        if (progress) {
+          let progressPercentage = 0;
+          if (progress.completed) {
+            progressPercentage = 100;
+          } else if (progress.currentQuestion !== undefined && progress.totalQuestions !== undefined) {
+            progressPercentage = Math.round(((progress.currentQuestion + 1) / progress.totalQuestions) * 100);
           }
-          return { ...game, progress: 0, status: 'not-started' as const };
-        });
-        setGamesWithProgress(updatedGames);
-      } catch (error) {
-        console.error('Error loading games:', error);
-        setGamesWithProgress(MOCK_GAMES.slice(0, 2));
-      }
-    };
+          
+          return {
+            ...game,
+            progress: progressPercentage,
+            status: progress.completed ? 'completed' as const : 'in-progress' as const,
+          };
+        }
+        return { ...game, progress: 0, status: 'not-started' as const };
+      });
+      setGamesWithProgress(updatedGames);
+    } catch (error) {
+      console.error('Error loading games:', error);
+      setGamesWithProgress(MOCK_GAMES.slice(0, 2));
+    }
+  };
+
+  // Load games with progress on mount
+  useEffect(() => {
     loadGames();
   }, []);
+
+  // Reload games progress when screen comes into focus (e.g., after completing a game)
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('focus', () => {
+      console.log('📊 Dashboard focused - reloading progress');
+      loadGames();
+      // Also refresh profile to get latest completion percentage
+      refreshProfile();
+    });
+
+    return unsubscribe;
+  }, [navigation, refreshProfile]);
 
   // Calculate completed games count
   const completedGamesCount = useMemo(() => {
