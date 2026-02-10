@@ -51,8 +51,13 @@ class ApiClient {
           _retry?: boolean;
         };
 
-        // If error is 401 and we haven't tried to refresh yet
-        if (error.response?.status === 401 && !originalRequest._retry) {
+        // Skip token refresh for auth endpoints (they handle 401 themselves)
+        const isAuthEndpoint = originalRequest.url?.includes('/auth/login') ||
+          originalRequest.url?.includes('/auth/register') ||
+          originalRequest.url?.includes('/auth/refresh');
+
+        // If error is 401, not an auth endpoint, and we haven't tried to refresh yet
+        if (error.response?.status === 401 && !isAuthEndpoint && !originalRequest._retry) {
           if (this.isRefreshing) {
             // If already refreshing, queue this request
             return new Promise((resolve, reject) => {
@@ -75,7 +80,7 @@ class ApiClient {
           try {
             const refreshToken = await StorageService.getRefreshToken();
             if (!refreshToken) {
-              throw new Error('No refresh token');
+              throw new Error('Session expirée. Veuillez vous reconnecter.');
             }
 
             // Call refresh token endpoint

@@ -85,7 +85,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
     try {
       const refreshToken = await StorageService.getRefreshToken();
       if (!refreshToken) {
-        throw new Error('No refresh token');
+        throw new Error('Votre session a expiré. Veuillez vous reconnecter.');
       }
 
       const response = await authService.refreshToken(refreshToken);
@@ -159,25 +159,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const register = async (data: RegisterRequest) => {
     try {
       setIsLoading(true);
-      
+
       const response = await authService.register(data);
 
       if (response.success && response.data) {
-        const { user, accessToken, refreshToken } = response.data;
-        
-        // Save tokens and user data
-        await StorageService.saveAuthToken(accessToken);
-        if (refreshToken) {
-          await StorageService.saveRefreshToken(refreshToken);
-        }
-        await StorageService.saveUserData(user);
-
-        setAuthState({
-          isAuthenticated: true,
-          user,
-          token: accessToken,
-          refreshToken: refreshToken || undefined,
-        });
+        // Registration successful - do NOT auto-login
+        // User will be redirected to login page to sign in
+        return;
       } else {
         throw new Error(response.error || 'Registration failed');
       }

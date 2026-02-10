@@ -73,6 +73,14 @@ const ProfileScreen = () => {
   const [downloadingDocumentId, setDownloadingDocumentId] = useState<string | null>(null);
   const scrollViewRef = useRef<ScrollView | null>(null);
   const scrollPositionRef = useRef(0);
+  const [synthesis, setSynthesis] = useState<any>(null);
+  const [synthesisLoading, setSynthesisLoading] = useState(false);
+  const [synthesisError, setSynthesisError] = useState<string | null>(null);
+  const [synthesisStatus, setSynthesisStatus] = useState<'idle' | 'cooldown' | 'up_to_date' | 'incomplete'>('idle');
+  const [cooldownRemaining, setCooldownRemaining] = useState(0);
+  const [missingSections, setMissingSections] = useState<string[]>([]);
+  const [completenessPercent, setCompletenessPercent] = useState(0);
+  const cooldownTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   // Helper function to fix localhost URLs for iOS
   const fixAvatarUrl = (url: string | null | undefined, addCacheBust: boolean = false): string | null => {
@@ -699,7 +707,7 @@ const ProfileScreen = () => {
         setIsPickingDocument(false);
       }
     }, 30000);
-    
+
     try {
       const result = await DocumentPicker.getDocumentAsync({
         type: ['application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'],
@@ -710,7 +718,7 @@ const ProfileScreen = () => {
         const file = result.assets[0];
         setIsUploading(true);
         setUploadProgress(0);
-        
+
         try {
           await uploadDocument(file, 'other', (progress) => {
             setUploadProgress(progress);
@@ -741,6 +749,120 @@ const ProfileScreen = () => {
       console.log('✅ Document picker completed - resetting state');
       isPickingDocumentRef.current = false;
       setIsPickingDocument(false);
+    }
+  };
+
+  // Start cooldown countdown timer
+  const startCooldownTimer = (seconds: number) => {
+    if (cooldownTimerRef.current) clearInterval(cooldownTimerRef.current);
+    setCooldownRemaining(seconds);
+    setSynthesisStatus('cooldown');
+    cooldownTimerRef.current = setInterval(() => {
+      setCooldownRemaining((prev) => {
+        if (prev <= 1) {
+          if (cooldownTimerRef.current) clearInterval(cooldownTimerRef.current);
+          setSynthesisStatus('idle');
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+  };
+
+  // Cleanup timer on unmount
+  useEffect(() => {
+    return () => {
+      if (cooldownTimerRef.current) clearInterval(cooldownTimerRef.current);
+    };
+  }, []);
+
+  // Format seconds to "Xm Xs"
+  const formatCooldown = (seconds: number) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    if (m > 0) return `${m}m ${s.toString().padStart(2, '0')}s`;
+    return `${s}s`;
+  };
+
+  const handleGenerateSynthesis = async () => {
+    if (!user?.id) {
+      setSynthesisError('Vous devez être connecté pour générer une synthèse.');
+      return;
+    }
+
+    if (synthesisStatus === 'cooldown' && cooldownRemaining > 0) {
+      return; // Button is disabled during cooldown
+    }
+
+    setSynthesisLoading(true);
+    setSynthesisError(null);
+    setSynthesisStatus('idle');
+
+    try {
+      const response = await apiClient.getClient().post(`/profile/${user.id}/analyze`);
+      const data = response.data;
+
+      switch (data.status) {
+        case 'incomplete':
+          setSynthesisStatus('incomplete');
+          setMissingSections(data.missing_sections || []);
+          setCompletenessPercent(data.completeness_percentage || 0);
+          break;
+
+        case 'cooldown':
+          startCooldownTimer(data.retry_after_seconds || 600);
+          if (data.synthesis) {
+            setSynthesis(data.synthesis);
+          }
+          break;
+
+        case 'up_to_date':
+          setSynthesisStatus('up_to_date');
+          setSynthesis(data.synthesis);
+          break;
+
+        case 'generated':
+          setSynthesisStatus('idle');
+          setSynthesis(data.synthesis);
+          break;
+
+        case 'error':
+          throw new Error(data.message || 'Erreur lors de la génération');
+
+        default:
+          throw new Error('Réponse inattendue du serveur');
+      }
+    } catch (error: any) {
+      console.error('Synthesis generation error:', error);
+      const status = error.response?.status;
+      let errorMessage: string;
+
+      if (!error.response && error.message?.includes('timeout')) {
+        errorMessage = 'La génération a pris trop de temps. Veuillez réessayer.';
+      } else if (!error.response && error.message?.includes('Network')) {
+        errorMessage = 'Impossible de se connecter au serveur. Vérifiez votre connexion internet.';
+      } else if (status === 503) {
+        errorMessage = 'Le service IA est temporairement indisponible. Réessayez dans quelques instants.';
+      } else if (status === 500) {
+        errorMessage = 'Erreur interne du serveur. Notre équipe est informée.';
+      } else if (status === 429) {
+        const retryAfter = error.response?.data?.retry_after_seconds;
+        if (retryAfter && retryAfter > 0) {
+          startCooldownTimer(retryAfter);
+          errorMessage = '';
+        } else {
+          startCooldownTimer(60);
+          errorMessage = 'Trop de requêtes. Veuillez patienter avant de réessayer.';
+        }
+      } else {
+        errorMessage = error.response?.data?.message || error.message || 'Impossible de générer la synthèse. Veuillez réessayer.';
+      }
+
+      if (errorMessage) {
+        setSynthesisError(errorMessage);
+      }
+    } finally {
+      setSynthesisLoading(false);
     }
   };
 
@@ -884,46 +1006,142 @@ const ProfileScreen = () => {
                 <Text style={[styles.sectionTitle, { color: colors.textPrimary }]}>
                   Synthèse IA
                 </Text>
+                <TouchableOpacity
+                  style={[
+                    styles.addButton,
+                    { opacity: (synthesisLoading || synthesisStatus === 'cooldown') ? 0.5 : 1 }
+                  ]}
+                  onPress={handleGenerateSynthesis}
+                  disabled={synthesisLoading || synthesisStatus === 'cooldown'}
+                >
+                  {synthesisLoading ? (
+                    <ActivityIndicator size="small" color={colors.primary} />
+                  ) : (
+                    <Ionicons name="refresh" size={20} color={synthesisStatus === 'cooldown' ? colors.textSecondary : colors.primary} />
+                  )}
+                </TouchableOpacity>
               </View>
 
-              <View style={styles.synthesisItem}>
-                <View style={styles.synthesisHeader}>
-                  <View style={styles.greenDot} />
-                  <Text style={[styles.synthesisTitle, { color: colors.textPrimary }]}>Forces</Text>
-                </View>
-                <Text style={[styles.synthesisText, { color: colors.textSecondary }]}>
-                  Excellente communicante avec de solides compétences rédactionnelles. Vous avez une
-                  bonne expérience en marketing et communication qui vous donne une base solide pour
-                  votre projet de reconversion.
-                </Text>
-              </View>
-
-              <View style={styles.synthesisItem}>
-                <View style={styles.synthesisHeader}>
-                  <View style={styles.greenDot} />
-                  <Text style={[styles.synthesisTitle, { color: colors.textPrimary }]}>
-                    Axes de progression
+              {/* Status banner: cooldown */}
+              {synthesisStatus === 'cooldown' && cooldownRemaining > 0 && (
+                <View style={[styles.synthesisBanner, { backgroundColor: '#FFF3E0' }]}>
+                  <Ionicons name="time-outline" size={18} color="#E65100" />
+                  <Text style={[styles.synthesisBannerText, { color: '#E65100' }]}>
+                    Nouvelle génération disponible dans {formatCooldown(cooldownRemaining)}
                   </Text>
                 </View>
-                <Text style={[styles.synthesisText, { color: colors.textSecondary }]}>
-                  Développer davantage vos compétences techniques, notamment en design graphique qui
-                  pourrait compléter votre profil.
-                </Text>
-              </View>
+              )}
 
-              <View style={styles.synthesisItem}>
-                <View style={styles.synthesisHeader}>
-                  <View style={styles.greenDot} />
-                  <Text style={[styles.synthesisTitle, { color: colors.textPrimary }]}>
-                    Intérêts clés
+              {/* Status banner: up_to_date */}
+              {synthesisStatus === 'up_to_date' && (
+                <View style={[styles.synthesisBanner, { backgroundColor: '#E8F5E9' }]}>
+                  <Ionicons name="checkmark-circle-outline" size={18} color="#2E7D32" />
+                  <Text style={[styles.synthesisBannerText, { color: '#2E7D32' }]}>
+                    Votre synthèse est déjà à jour. Modifiez votre profil pour en générer une nouvelle.
                   </Text>
                 </View>
-                <Text style={[styles.synthesisText, { color: colors.textSecondary }]}>
-                  D'après vos tests, vous montrez un fort intérêt pour la créativité, l'innovation et
-                  le travail en équipe. Ces éléments sont de bons indicateurs pour orienter votre
-                  reconversion.
-                </Text>
-              </View>
+              )}
+
+              {/* Status banner: incomplete */}
+              {synthesisStatus === 'incomplete' && (
+                <View style={[styles.synthesisBanner, { backgroundColor: '#FFF8E1' }]}>
+                  <Ionicons name="warning-outline" size={18} color="#F57F17" />
+                  <View style={{ flex: 1 }}>
+                    <Text style={[styles.synthesisBannerText, { color: '#F57F17', fontWeight: '600' }]}>
+                      Profil incomplet ({completenessPercent}%)
+                    </Text>
+                    <Text style={[styles.synthesisBannerText, { color: '#F57F17', marginTop: 4 }]}>
+                      Ajoutez: {missingSections.map(s =>
+                        s === 'education' ? 'Formation' :
+                        s === 'experience' ? 'Expérience' :
+                        s === 'skills' ? 'Compétences' : s
+                      ).join(', ')}
+                    </Text>
+                  </View>
+                </View>
+              )}
+
+              {synthesisLoading ? (
+                <View style={styles.synthesisLoadingContainer}>
+                  <ActivityIndicator size="large" color={colors.primary} />
+                  <Text style={[styles.synthesisLoadingText, { color: colors.textSecondary }]}>
+                    Analyse de votre profil en cours...
+                  </Text>
+                  <Text style={[styles.synthesisLoadingText, { color: colors.textSecondary, fontSize: 12 }]}>
+                    Cela peut prendre quelques secondes
+                  </Text>
+                </View>
+              ) : synthesisError ? (
+                <View style={styles.synthesisErrorContainer}>
+                  <Ionicons name="cloud-offline-outline" size={40} color="#E53935" />
+                  <Text style={[styles.synthesisErrorText, { color: '#E53935' }]}>
+                    {synthesisError}
+                  </Text>
+                  <TouchableOpacity
+                    style={[styles.retryButton, { backgroundColor: colors.primary }]}
+                    onPress={handleGenerateSynthesis}
+                  >
+                    <Ionicons name="refresh-outline" size={16} color="white" />
+                    <Text style={styles.retryButtonText}>Réessayer</Text>
+                  </TouchableOpacity>
+                </View>
+              ) : synthesis ? (
+                <>
+                  {synthesis.forces && (
+                    <View style={styles.synthesisItem}>
+                      <View style={styles.synthesisHeader}>
+                        <View style={styles.greenDot} />
+                        <Text style={[styles.synthesisTitle, { color: colors.textPrimary }]}>Forces</Text>
+                      </View>
+                      <Text style={[styles.synthesisText, { color: colors.textSecondary }]}>
+                        {synthesis.forces}
+                      </Text>
+                    </View>
+                  )}
+
+                  {synthesis.axes_progression && (
+                    <View style={styles.synthesisItem}>
+                      <View style={styles.synthesisHeader}>
+                        <View style={styles.greenDot} />
+                        <Text style={[styles.synthesisTitle, { color: colors.textPrimary }]}>
+                          Axes de progression
+                        </Text>
+                      </View>
+                      <Text style={[styles.synthesisText, { color: colors.textSecondary }]}>
+                        {synthesis.axes_progression}
+                      </Text>
+                    </View>
+                  )}
+
+                  {synthesis.interets_cles && (
+                    <View style={styles.synthesisItem}>
+                      <View style={styles.synthesisHeader}>
+                        <View style={styles.greenDot} />
+                        <Text style={[styles.synthesisTitle, { color: colors.textPrimary }]}>
+                          Intérêts clés
+                        </Text>
+                      </View>
+                      <Text style={[styles.synthesisText, { color: colors.textSecondary }]}>
+                        {synthesis.interets_cles}
+                      </Text>
+                    </View>
+                  )}
+                </>
+              ) : (
+                <View style={styles.synthesisEmptyContainer}>
+                  <Ionicons name="bulb-outline" size={40} color={colors.textSecondary} />
+                  <Text style={[styles.synthesisEmptyText, { color: colors.textSecondary }]}>
+                    Aucune synthèse générée
+                  </Text>
+                  <TouchableOpacity
+                    style={[styles.generateButton, { backgroundColor: colors.primary }]}
+                    onPress={handleGenerateSynthesis}
+                  >
+                    <Ionicons name="sparkles" size={18} color="white" />
+                    <Text style={styles.generateButtonText}>Générer la synthèse</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
             </View>
 
             {/* Expériences professionnelles Section */}
@@ -2028,6 +2246,77 @@ const styles = StyleSheet.create({
   },
   editFieldSection: {
     marginBottom: SPACING.lg,
+  },
+  synthesisBanner: {
+    flexDirection: 'row',
+    alignItems: 'flex-start',
+    padding: SPACING.md,
+    borderRadius: BORDER_RADIUS.sm,
+    marginBottom: SPACING.md,
+    gap: SPACING.sm,
+  },
+  synthesisBannerText: {
+    flex: 1,
+    fontSize: FONTS.sizes.xs,
+    lineHeight: 18,
+  },
+  synthesisLoadingContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: SPACING.xl,
+    gap: SPACING.md,
+  },
+  synthesisLoadingText: {
+    fontSize: FONTS.sizes.sm,
+    textAlign: 'center',
+  },
+  synthesisErrorContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: SPACING.xl,
+    gap: SPACING.md,
+  },
+  synthesisErrorText: {
+    fontSize: FONTS.sizes.sm,
+    textAlign: 'center',
+  },
+  retryButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.xs,
+    paddingHorizontal: SPACING.lg,
+    paddingVertical: SPACING.md,
+    borderRadius: BORDER_RADIUS.md,
+    marginTop: SPACING.sm,
+  },
+  retryButtonText: {
+    color: 'white',
+    fontSize: FONTS.sizes.sm,
+    fontWeight: FONTS.weights.semiBold,
+  },
+  synthesisEmptyContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: SPACING.xl,
+    gap: SPACING.md,
+  },
+  synthesisEmptyText: {
+    fontSize: FONTS.sizes.sm,
+    textAlign: 'center',
+  },
+  generateButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: SPACING.xs,
+    paddingHorizontal: SPACING.lg,
+    paddingVertical: SPACING.md,
+    borderRadius: BORDER_RADIUS.md,
+    marginTop: SPACING.sm,
+  },
+  generateButtonText: {
+    color: 'white',
+    fontSize: FONTS.sizes.sm,
+    fontWeight: FONTS.weights.semiBold,
   },
 });
 

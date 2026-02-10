@@ -51,7 +51,15 @@ const AuthScreen = () => {
 
     try {
       await register({ email, password, name });
-      Alert.alert('Succès', 'Inscription réussie ! Vous êtes maintenant connecté.');
+      Alert.alert(
+        'Inscription réussie',
+        'Votre compte a été créé avec succès. Veuillez vous connecter.',
+        [{ text: 'Se connecter', onPress: () => {
+          setIsRegisterMode(false);
+          setName('');
+          setPassword('');
+        }}]
+      );
     } catch (error: any) {
       Alert.alert('Erreur', error.message || 'Échec de l\'inscription');
     }
