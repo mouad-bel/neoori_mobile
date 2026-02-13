@@ -140,6 +140,17 @@ const ProfileModal: React.FC<ProfileModalProps> = ({ visible, onClose }) => {
         navigation.navigate('About');
       },
     },
+    {
+      id: 'rooms',
+      icon: 'people-outline',
+      title: 'Rooms',
+      subtitle: 'Rejoindre une communauté',
+      iconBg: COLORS.primary,
+      onPress: () => {
+        onClose();
+        navigation.navigate('Rooms');
+      },
+    },
   ];
 
   return (

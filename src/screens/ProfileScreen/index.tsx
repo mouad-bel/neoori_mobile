@@ -769,12 +769,29 @@ const ProfileScreen = () => {
     }, 1000);
   };
 
-  // Cleanup timer on unmount
+  // Fetch existing synthesis on mount
   useEffect(() => {
+    const fetchExistingSynthesis = async () => {
+      if (!user?.id) return;
+      try {
+        const response: any = await apiClient.getClient().get(`/profile/${user.id}/synthesis`);
+        const data = response.data;
+        if (data?.synthesis) {
+          const synthData = typeof data.synthesis === 'string'
+            ? JSON.parse(data.synthesis)
+            : data.synthesis;
+          setSynthesis(synthData);
+        }
+      } catch {
+        // No existing synthesis - that's fine, user can generate one
+      }
+    };
+    fetchExistingSynthesis();
+
     return () => {
       if (cooldownTimerRef.current) clearInterval(cooldownTimerRef.current);
     };
-  }, []);
+  }, [user?.id]);
 
   // Format seconds to "Xm Xs"
   const formatCooldown = (seconds: number) => {

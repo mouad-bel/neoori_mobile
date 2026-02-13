@@ -1,7 +1,7 @@
 {
   "cli": {
     "version": ">= 13.2.0",
-    "appVersionSource": "remote"
+    "appVersionSource": "local"
   },
   "build": {
     "development": {
@@ -16,6 +16,9 @@
     "production": {
       "android": {
         "buildType": "app-bundle"
+      },
+      "env": {
+        "EXPO_PUBLIC_API_URL": "http://162.0.236.73:3000/api"
       }
     }
   },
