@@ -17,18 +17,16 @@ import DurationBadge from '../common/DurationBadge';
 import InteractionBar from './InteractionBar';
 
 const { width } = Dimensions.get('window');
-const { height: screenHeight } = Dimensions.get('window');
-const BOTTOM_BAR_HEIGHT = 70; // Bottom bar height
-const VIDEO_HEIGHT = screenHeight - BOTTOM_BAR_HEIGHT;
 
 interface VideoCardProps {
   video: VideoContent;
+  videoHeight: number;
   onPress?: () => void;
   isActive?: boolean; // Whether this video is currently visible/active
   onVideoRef?: (ref: any) => void; // Callback to pass video ref to parent
 }
 
-const VideoCard: React.FC<VideoCardProps> = ({ video, onPress, isActive = false, onVideoRef }) => {
+const VideoCard: React.FC<VideoCardProps> = ({ video, videoHeight, onPress, isActive = false, onVideoRef }) => {
   const { colors } = useTheme();
   const videoRef = useRef<Video>(null);
   const [showThumbnail, setShowThumbnail] = useState(true);
@@ -117,7 +115,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onPress, isActive = false,
       onLongPress={handleLongPress}
       delayLongPress={300}
     >
-      <View style={styles.container}>
+      <View style={[styles.container, { height: videoHeight }]}>
         {/* Video Player */}
         {videoSource ? (
           <Video
@@ -209,7 +207,7 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onPress, isActive = false,
         </View>
 
         {/* Bottom Left - Creator Info and Description (Instagram style) */}
-        <View style={[styles.bottomSection, { bottom: BOTTOM_BAR_HEIGHT }]}>
+        <View style={styles.bottomSection}>
           {/* Creator Info */}
           <View style={styles.creatorRow}>
             <Image
@@ -237,7 +235,6 @@ const VideoCard: React.FC<VideoCardProps> = ({ video, onPress, isActive = false,
 const styles = StyleSheet.create({
   container: {
     width,
-    height: VIDEO_HEIGHT,
     backgroundColor: '#0F172A',
     position: 'relative',
     overflow: 'hidden',
@@ -306,7 +303,7 @@ const styles = StyleSheet.create({
   rightInteractionBar: {
     position: 'absolute',
     right: SPACING.md,
-    bottom: BOTTOM_BAR_HEIGHT + SPACING.lg, // Position above bottom bar
+    bottom: SPACING.lg,
     zIndex: 10,
     alignItems: 'center',
   },
@@ -315,11 +312,7 @@ const styles = StyleSheet.create({
     position: 'absolute',
     left: SPACING.lg,
     right: 80, // Leave space for right interaction buttons
-    // bottom: BOTTOM_BAR_HEIGHT (set inline) - positions container just above bottom bar
-    paddingBottom: 0,
-    paddingTop: 0,
-    marginBottom: 0,
-    marginTop: 0,
+    bottom: SPACING.lg,
     zIndex: 10,
   },
   creatorRow: {

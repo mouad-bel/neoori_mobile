@@ -1,6 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useTheme } from '../store/ThemeContext';
 import { FONTS } from '../constants/theme';
 
@@ -22,6 +23,8 @@ const Tab = createBottomTabNavigator<BottomTabParamList>();
 const BottomTabNavigator = () => {
   const { colors, theme } = useTheme();
   const isDarkMode = theme === 'dark';
+  const insets = useSafeAreaInsets();
+  const bottomPadding = Math.max(insets.bottom, 12);
 
   return (
     <Tab.Navigator
@@ -33,8 +36,8 @@ const BottomTabNavigator = () => {
           backgroundColor: colors.cardBackground,
           borderTopColor: isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(0, 0, 0, 0.1)',
           borderTopWidth: 1,
-          height: 70,
-          paddingBottom: 12,
+          height: 58 + bottomPadding,
+          paddingBottom: bottomPadding,
           paddingTop: 8,
           elevation: 10,
           shadowColor: '#000',
